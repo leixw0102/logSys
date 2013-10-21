@@ -15,6 +15,11 @@
 
 package tv.icntv.logsys.config;
 
+import tv.icntv.logsys.xmlObj.XmlLog;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -22,5 +27,53 @@ package tv.icntv.logsys.config;
  * Time: 上午11:49
  * To change this template use File | Settings | File Templates.
  */
-public class LogConfiguration {
+public class LogConfiguration implements LogConfigurable{
+    private XmlLog xmlLog;
+    @Override
+    public XmlLog getConf() {
+        try {
+            parserXml();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return xmlLog;
+    }
+
+    public void parserXml() throws Exception{
+        SAXReader reader = new SAXReader();
+        Document document = reader.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("ysten_log_mapping.xml"));
+        Element  root = document.getRootElement();
+        String token = root.attributeValue("token");
+        String table = root.attributeValue("table");
+        String[][] arrRowConfig = new String[root.elements().size()][3];
+
+        for(int i=0;i<root.elements().size();i++){
+            Element row = (Element) root.elements().get(i);
+
+            arrRowConfig[i][0] = row.attributeValue("index");
+            arrRowConfig[i][1] = row.attributeValue("cf");
+            arrRowConfig[i][2] = row.attributeValue("qualifier");
+        }
+        this.xmlLog = new XmlLog(arrRowConfig,token,table);
+
+    }
+
+
+//    public static void main(String[] args) throws IOException {
+//        LogConfiguration logConfiguration = new LogConfiguration();
+//        XmlLog xmlLog = logConfiguration.getConf();
+//        System.out.println("token:"+xmlLog.getToken());
+//        String[][] arrConf = xmlLog.getLogToTableMaping();
+//        for(int i=0;i<arrConf.length;i++){
+//            for(int j=0;j<arrConf[0].length;j++){
+//                System.out.print(arrConf[i][j] + "    ");
+//            }
+//            System.out.println();
+//        }
+//        try {
+//            logConfiguration.parserXml();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

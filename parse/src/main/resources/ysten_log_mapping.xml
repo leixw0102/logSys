@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<logfile name="ysten_stb" token="&lt;/&gt;" table="stb_log">
+    <column index="1" cf="base" qualifier="log_id">日志编号</column>
+	<column index="2" cf="base" qualifier="seq_id">请求编号</column>
+    <column index="3" cf="base" qualifier="retry_seqid">重试请求编号</column>
+    <column index="4" cf="base" qualifier="device_id">设备编号</column>
+    <column index="5" cf="base" qualifier="version_id">终端版本号</column>
+    <column index="6" cf="base" qualifier="platform_id">平台号</column>
+    <column index="7" cf="base" qualifier="mac">终端mac</column>
+    <column index="8" cf="base" qualifier="ip">终端ip</column>
+    <column index="9" cf="base" qualifier="req_time">终端发送日志请求的时间</column>
+    <column index="10" cf="base" qualifier="cur_time">日志产生时的终端时间</column>
+    <column index="11" cf="base" qualifier="client_time">日志产生时的服务器时间</column>
+    <column index="12" cf="base" qualifier="server_time">接收到日志时的服务器时间</column>
+    <column index="13" cf="base" qualifier="level">日志等级</column>
+    <column index="14" cf="base" qualifier="module">模块</column>
+    <column index="15" cf="base" qualifier="action">操作</column>
+    <column index="16" cf="base" qualifier="content">日志内容</column>
+</logfile>

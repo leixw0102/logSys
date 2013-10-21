@@ -21,15 +21,10 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-import tv.icntv.logsys.config.LogConfigurable;
-import tv.icntv.logsys.config.LogConfiguration;
 import tv.icntv.logsys.config.LogConfigurationFactory;
 import tv.icntv.logsys.mapper.IcntvHdfsNoWithReducer;
-
-import javax.xml.parsers.FactoryConfigurationError;
+import tv.icntv.logsys.xmlObj.XmlLog;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,17 +36,27 @@ import java.util.List;
 public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,ImmutableBytesWritable,Put> {
     @Override
     protected String[] getSplit(Object value) {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+       Text test = (Text) value;
+        return test.toString().split(getConf().getToken());
     }
 
     @Override
-    public void parser(String[] values, LogConfigurable configurable, Context context) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void parser(String[] values, XmlLog xmlLog, Context context) throws IOException, InterruptedException {
+
+        String rowkey = values[0] ;
+        Put put = new Put(Bytes.toBytes(rowkey)) ;
+        String[][] rowConf = xmlLog.getLogToTableMaping();
+        for(int i=0;i<rowConf.length;i++){
+            int index = Integer.parseInt(rowConf[i][0]);
+            put.add(rowConf[i][1].getBytes(),rowConf[i][2].getBytes(),values[index-1].getBytes());
+        }
+
+        context.write(new ImmutableBytesWritable(rowkey.getBytes()), put) ;
     }
 
     @Override
-    public LogConfigurable getConf() {
-        return LogConfigurationFactory.getLogConfigurableInstance("");  //To change body of implemented methods use File | Settings | File Templates.
+    public XmlLog getConf() {
+        return LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration").getConf();
     }
 
 //    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
