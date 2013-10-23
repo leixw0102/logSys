@@ -15,9 +15,9 @@
 
 package tv.icntv.logsys.Parser;
 
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Reducer;
 import tv.icntv.logsys.config.LogConfigurable;
+import tv.icntv.logsys.xmlObj.XmlLog;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,5 +28,5 @@ import tv.icntv.logsys.config.LogConfigurable;
  */
 public interface LogReducerParser extends LogConfigurable{
 
-    public void parser(Iterable values,LogConfigurable configuration,Reducer.Context context) ;
+    public void parser(Iterable values,XmlLog configuration,Reducer.Context context) ;
 }

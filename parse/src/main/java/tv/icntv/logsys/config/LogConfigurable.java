@@ -14,6 +14,8 @@
  */
 package tv.icntv.logsys.config;
 
+import tv.icntv.logsys.xmlObj.XmlLog;
+
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -22,5 +24,5 @@ package tv.icntv.logsys.config;
  * To change this template use File | Settings | File Templates.
  */
 public interface LogConfigurable {
-    public LogConfigurable getConf();
+    public XmlLog getConf();
 }

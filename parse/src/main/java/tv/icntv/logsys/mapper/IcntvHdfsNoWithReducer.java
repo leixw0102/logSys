@@ -16,12 +16,9 @@
 package tv.icntv.logsys.mapper;
 
 
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 import tv.icntv.logsys.Parser.LogMapperParser;
-
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

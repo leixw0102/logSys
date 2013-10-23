@@ -21,8 +21,9 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+import tv.icntv.logsys.config.LogConfigurationFactory;
+import tv.icntv.logsys.xmlObj.XmlLog;
 
 import java.io.IOException;
 
@@ -36,10 +37,11 @@ import java.io.IOException;
 public class YstenParser {
 
     public static void main(String [] args) throws IOException, ClassNotFoundException, InterruptedException {
-       Configuration  configuration=HBaseConfiguration.create();
-       String[] arrayArgs=new GenericOptionsParser(configuration,args).getRemainingArgs();
-        if(null == arrayArgs|| arrayArgs.length!=2){
-            System.out.println("args <path> <table>");
+
+        Configuration  configuration=HBaseConfiguration.create();
+        String[] arrayArgs=new GenericOptionsParser(configuration,args).getRemainingArgs();
+        if(null == arrayArgs|| arrayArgs.length!=1){
+            System.out.println("please specify parameter < full_file_path>!");
             return;
         }
         Job job=configureJob(configuration,arrayArgs);
@@ -47,15 +49,18 @@ public class YstenParser {
     }
 
     private static Job configureJob(Configuration configuration, String[] arrayArgs) throws IOException {
+
+        XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration").getConf();
+
         Path inputPath=new Path(arrayArgs[0]);
-        String tableName=arrayArgs[1];
+        String tableName=xmlLog.getTable();
         Job job = new Job(configuration,"icntv_"+tableName);
-        job.setMapperClass(YstenMapper.class);
+        job.setJarByClass(YstenMapper.class);
         FileInputFormat.setInputPaths(job,inputPath);
-//        job.setInputFormatClass(SequenceFileInputFormat.class);
         job.setMapperClass(YstenMapper.class);
+
         TableMapReduceUtil.initTableReducerJob(tableName,null,job);
         job.setNumReduceTasks(0);
-        return job;  //To change body of created methods use File | Settings | File Templates.
+        return job;
     }
 }

@@ -25,6 +25,19 @@ package tv.icntv.logsys.config;
 public class LogConfigurationFactory {
 
     public static LogConfigurable getLogConfigurableInstance(String className){
+        try {
+            return (LogConfigurable) Class.forName(className).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         return null;
+    }
+
+    public static void main(String[] args){
+
     }
 }

@@ -14,14 +14,10 @@
  */
 
 package tv.icntv.logsys.Parser;
-
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 import tv.icntv.logsys.config.LogConfigurable;
-import tv.icntv.logsys.config.LogConfiguration;
-
-import java.util.List;
+import tv.icntv.logsys.xmlObj.XmlLog;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,6 +28,6 @@ import java.util.List;
  */
 public interface LogMapperParser extends LogConfigurable{
 
-      public void parser(String[] values,LogConfigurable configurable,Mapper.Context context);
+      public void parser(String[] values,XmlLog configurable,Mapper.Context context) throws IOException, InterruptedException;
 
 }
