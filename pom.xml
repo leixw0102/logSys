@@ -12,6 +12,7 @@
         <module>parse</module>
     </modules>
     <packaging>pom</packaging>
+
     <build>
         <plugins>
             <plugin>
