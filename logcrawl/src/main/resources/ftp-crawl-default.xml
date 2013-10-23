@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property>
+        <name>ftp.name</name>
+        <value>cdnlog</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.pwd</name>
+        <value>CdNLoG</value>
+        <describe></describe>
+    </property>
+   <!-- <property>
+        <name>ftp.port</name>
+        <value>21</value>
+    </property> -->
+    <property>
+        <name>ftp.content.limit</name>
+        <value>-1</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.timeout</name>
+        <value>60000</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.server.timeout</name>
+        <value>100000</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.keep.connection</name>
+        <value>false</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.fetch.directory</name>
+        <value>true</value>
+        <describe></describe>
+    </property>
+
+    <property>
+        <name>ftp.data.sort.type</name>
+        <value>hdfs</value>
+        <describe>hdfs|db|file</describe>
+    </property>
+    <!-- <property>
+        <name>ftp.data.sort.class</name>
+        <value></value>
+        <describe>hdfs|db|file</describe>
+    </property> -->
+    <property>
+        <name>ftp.encoding</name>
+        <value>UTF-8</value>
+    </property>
+</configuration>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+
+
+     <property>
+         <name>ftp.directory.exclude</name>
+         <value>images.is.ysten.com,vod01.media.ysten.com,images.is.ysten.com,sns.is.ysten.com,poms.is.ysten.com,panel.is.ysten.com,cold.icntv.cctvcdn.net</value>
+     </property>
+     <property>
+         <name>ftp.dst.directory</name>
+         <value>/icntv/log</value>
+     </property>
+</configuration>
