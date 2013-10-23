@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>tv.icntv.logsys.stb.YstenParser</mainClass>
+                            <mainClass>tv.icntv.logsys.cdn.CdnParser</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
