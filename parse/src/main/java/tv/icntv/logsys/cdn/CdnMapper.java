@@ -13,7 +13,7 @@
  *      limitations under the License.
  */
 
-package tv.icntv.logsys.stb;
+package tv.icntv.logsys.cdn;
 
 
 import org.apache.hadoop.hbase.client.Put;
@@ -29,12 +29,12 @@ import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
- * User: lei
- * Date: 13-10-17
- * Time: 上午10:24
+ * User: wangl
+ * Date: 13-10-22
+ * Time: 下午5:12
  * To change this template use File | Settings | File Templates.
  */
-public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,ImmutableBytesWritable,Put> {
+public class CdnMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,ImmutableBytesWritable,Put> {
 
     protected String[] getSplit(Object value) {
        Text test = (Text) value;
@@ -65,7 +65,7 @@ public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,Immuta
     }
 
     public XmlLog getConf() {
-       return  LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","ysten_log_mapping.xml").getConf();
+       return  LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","cdn_log_mapping.xml").getConf();
     }
 
 //    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {

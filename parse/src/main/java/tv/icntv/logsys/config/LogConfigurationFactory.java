@@ -15,6 +15,9 @@
 
 package tv.icntv.logsys.config;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -24,14 +27,21 @@ package tv.icntv.logsys.config;
  */
 public class LogConfigurationFactory {
 
-    public static LogConfigurable getLogConfigurableInstance(String className){
+    public static LogConfigurable getLogConfigurableInstance(String className,String fileName){
         try {
-            return (LogConfigurable) Class.forName(className).newInstance();
+           // return (LogConfigurable) Class.forName(className).newInstance(fileName);
+            Class<?> clas=Class.forName(className);
+            Constructor<?> constructor=clas.getConstructor(String.class);
+            return (LogConfigurable) constructor.newInstance(fileName);
         } catch (InstantiationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (IllegalAccessException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InvocationTargetException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;

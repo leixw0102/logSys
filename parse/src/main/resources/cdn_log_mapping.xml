@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<logfile name="cdn_log" token=" " table="cdn_log">
+    <column index="1" cf="base" qualifier="host">host</column>
+	<column index="2" cf="base" qualifier="ident">ident</column>
+    <column index="3" cf="base" qualifier="username">username</column>
+    <column index="4" cf="base" qualifier="date_time">date_time</column>
+    <column index="5" cf="base" qualifier="url">cs-method cs-uri cs-version</column>
+    <column index="6" cf="base" qualifier="sc_status">sc_status</column>
+    <column index="7" cf="base" qualifier="bytes">bytes</column>
+    <column index="8" cf="base" qualifier="cs_referer">cs_referer</column>
+    <column index="9" cf="base" qualifier="cs_useragent">cs_useragent</column>
+</logfile>

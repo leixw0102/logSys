@@ -20,8 +20,6 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import java.io.IOException;
-
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -43,7 +41,7 @@ public class LogConfiguration implements LogConfigurable{
 
     public void parserXml() throws Exception{
         SAXReader reader = new SAXReader();
-        Document document = reader.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("ysten_log_mapping.xml"));
+        Document document = reader.read(Thread.currentThread().getContextClassLoader().getResourceAsStream(getFileName()));
         Element  root = document.getRootElement();
         String token = root.attributeValue("token");
         String table = root.attributeValue("table");
@@ -59,10 +57,22 @@ public class LogConfiguration implements LogConfigurable{
         this.xmlLog = new XmlLog(arrRowConfig,token,table);
 
     }
+    private String fileName;
 
+    public LogConfiguration(String fileName) {
+        this.fileName = fileName;
+    }
 
-//    public static void main(String[] args) throws IOException {
-//        LogConfiguration logConfiguration = new LogConfiguration();
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+//    public static void main(String[] args) {
+//        LogConfiguration logConfiguration = new LogConfiguration("cdn_log_mapping.xml");
 //        XmlLog xmlLog = logConfiguration.getConf();
 //        System.out.println("token:"+xmlLog.getToken());
 //        String[][] arrConf = xmlLog.getLogToTableMaping();
@@ -71,11 +81,6 @@ public class LogConfiguration implements LogConfigurable{
 //                System.out.print(arrConf[i][j] + "    ");
 //            }
 //            System.out.println();
-//        }
-//        try {
-//            logConfiguration.parserXml();
-//        } catch (Exception e) {
-//            e.printStackTrace();
 //        }
 //    }
 }

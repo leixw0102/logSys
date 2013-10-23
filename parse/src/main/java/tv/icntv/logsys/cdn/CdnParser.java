@@ -13,7 +13,7 @@
  *      limitations under the License.
  */
 
-package tv.icntv.logsys.stb;
+package tv.icntv.logsys.cdn;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -23,18 +23,19 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import tv.icntv.logsys.config.LogConfigurationFactory;
+import tv.icntv.logsys.stb.*;
 import tv.icntv.logsys.xmlObj.XmlLog;
 
 import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
- * User: lei
- * Date: 13-10-17
- * Time: 上午9:24
+ * User: wangl
+ * Date: 13-10-22
+ * Time: 下午5:12
  * To change this template use File | Settings | File Templates.
  */
-public class YstenParser {
+public class CdnParser {
 
     public static void main(String [] args) throws IOException, ClassNotFoundException, InterruptedException {
 
@@ -50,14 +51,14 @@ public class YstenParser {
 
     private static Job configureJob(Configuration configuration, String[] arrayArgs) throws IOException {
 
-        XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","ysten_log_mapping.xml").getConf();
+        XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","cdn_log_mapping.xml").getConf();
 
         Path inputPath=new Path(arrayArgs[0]);
         String tableName=xmlLog.getTable();
         Job job = new Job(configuration,"icntv_"+tableName);
-        job.setJarByClass(YstenMapper.class);
+        job.setJarByClass(tv.icntv.logsys.stb.YstenMapper.class);
         FileInputFormat.setInputPaths(job,inputPath);
-        job.setMapperClass(YstenMapper.class);
+        job.setMapperClass(tv.icntv.logsys.stb.YstenMapper.class);
 
         TableMapReduceUtil.initTableReducerJob(tableName,null,job);
         job.setNumReduceTasks(0);
