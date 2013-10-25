@@ -28,5 +28,7 @@ import tv.icntv.logsys.xmlObj.XmlLog;
  */
 public interface LogReducerParser extends LogConfigurable{
 
-    public void parser(Iterable values,XmlLog configuration,Reducer.Context context) ;
+   // public void parser(Iterable values,XmlLog configuration,Reducer.Context context) ;
+
+    public void parser(Object key,Iterable values,XmlLog configuration,Reducer.Context context) ;
 }

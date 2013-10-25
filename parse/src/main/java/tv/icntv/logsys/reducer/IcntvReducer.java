@@ -31,6 +31,6 @@ import java.io.IOException;
 */
 public abstract class IcntvReducer<KEYIN, VALUEIN, KEYOUT> extends TableReducer implements LogReducerParser {
     protected void reduce(Object key, Iterable values, Context context) throws IOException, InterruptedException {
-        parser(values,getConf(),context);
+        parser(key,values,getConf(),context);
     }
 }

@@ -19,6 +19,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -56,12 +57,12 @@ public class CdnParser {
         Path inputPath=new Path(arrayArgs[0]);
         String tableName=xmlLog.getTable();
         Job job = new Job(configuration,"icntv_"+tableName);
-        job.setJarByClass(tv.icntv.logsys.stb.YstenMapper.class);
-        FileInputFormat.setInputPaths(job,inputPath);
-        job.setMapperClass(tv.icntv.logsys.stb.YstenMapper.class);
-
-        TableMapReduceUtil.initTableReducerJob(tableName,null,job);
-        job.setNumReduceTasks(0);
+        job.setJarByClass(tv.icntv.logsys.cdn.CdnParser.class);
+        FileInputFormat.setInputPaths(job, inputPath);
+        job.setMapperClass(tv.icntv.logsys.cdn.CdnMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
+        TableMapReduceUtil.initTableReducerJob(tableName,tv.icntv.logsys.cdn.CdnReducer.class,job);
         return job;
     }
 }
