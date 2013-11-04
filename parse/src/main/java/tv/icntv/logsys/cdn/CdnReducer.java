@@ -1,5 +1,6 @@
 package tv.icntv.logsys.cdn;
 
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -23,6 +24,20 @@ import java.util.Locale;
  * Time: 下午3:03
  */
 public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
+    HTable hTable = null;
+    @Override
+    protected void setup(Context context) throws IOException, InterruptedException {
+        hTable = new HTable(context.getConfiguration(),getConf().getTable());
+        hTable.setAutoFlush(false);
+        //super.setup(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+        hTable.flushCommits();
+        hTable.close();
+        //super.cleanup(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 
     @Override
     public void parser(Object key, Iterable values, XmlLog configuration, Context context) {
