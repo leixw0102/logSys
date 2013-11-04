@@ -4,6 +4,7 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
+    <!--
 	<property>
 		<name>fs.default.name</name>
 		<value>hdfs://slave1:8020/</value>
@@ -12,4 +13,21 @@
 		<name>hadoop.tmp.dir</name>
 		<value>/home/hadoop/tmp/hadoop-${user.name}</value>
 	</property>
+	-->
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/data/bigData/hadoopData/tmp/hadoop-${user.name}</value>
+        <description>A base for other temporary directories.</description>
+    </property>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://slave102:8020/</value>
+    </property>
+    <property>
+        <name>fs.trash.interval</name>
+        <value>1440</value>
+        <description>Number of minutes between trash checkpoints.
+            If zero, the trash feature is disabled.
+        </description>
+    </property>
 </configuration>

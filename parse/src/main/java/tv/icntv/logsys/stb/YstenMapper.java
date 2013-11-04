@@ -16,6 +16,7 @@
 package tv.icntv.logsys.stb;
 
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -35,7 +36,11 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,ImmutableBytesWritable,Put> {
-
+    private static final String STB_PARSER_CLASSNAME="parser.log.config.className";
+    private static final String STB_PARSER_DEFAULT_CLASS="tv.icntv.logsys.config.LogConfiguration";
+    private static final String STB_PARSER_CONFIGXML="stb.ysten.parser.configXml";
+    private String className=null;
+    private String configXml=null;
     protected String[] getSplit(Object value) {
        Text test = (Text) value;
         return test.toString().split(getConf().getToken());
@@ -43,13 +48,14 @@ public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,Immuta
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        super.setup(context);    //To change body of overridden methods use File | Settings | File Templates.
-
+       Configuration configuration=context.getConfiguration();
+       className=configuration.get(STB_PARSER_CLASSNAME,STB_PARSER_DEFAULT_CLASS);
+       configXml=configuration.get(STB_PARSER_CONFIGXML,"ysten_log_mapping.xml");
     }
 
     public void parser(String[] values, XmlLog xmlLog, Mapper.Context context) throws IOException, InterruptedException {
 
-        String rowkey = values[0] ;
+        String rowkey = values[3]+values[0] ;
         Put put = new Put(Bytes.toBytes(rowkey)) ;
         String[][] rowConf = xmlLog.getLogToTableMaping();
 
@@ -65,7 +71,7 @@ public class YstenMapper extends IcntvHdfsNoWithReducer<LongWritable,Text,Immuta
     }
 
     public XmlLog getConf() {
-       return  LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","ysten_log_mapping.xml").getConf();
+       return  LogConfigurationFactory.getLogConfigurableInstance(className,configXml).getConf();
     }
 
 //    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {

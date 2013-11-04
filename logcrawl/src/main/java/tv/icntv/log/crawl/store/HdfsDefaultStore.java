@@ -18,15 +18,19 @@ package tv.icntv.log.crawl.store;
 import com.google.common.base.Charsets;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.io.IOUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.icntv.log.crawl.thread.FtpDownThreadPools;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,7 +41,6 @@ import java.io.OutputStream;
  */
 public class HdfsDefaultStore implements FileStoreData {
     protected static Configuration configuration = new Configuration();
-    //protected static CompressionCodecFactory compressionCodecFactory = new CompressionCodecFactory(configuration);
     private static Logger logger = LoggerFactory.getLogger(HdfsDefaultStore.class);
 
     @Override
@@ -48,8 +51,8 @@ public class HdfsDefaultStore implements FileStoreData {
         }
         FileSystem fileSystem=null;
         try {
-            fileSystem = FileSystem.get(configuration);
             Path path= new Path(directoryName);
+            fileSystem=FileSystem.get(configuration);
             if(!fileSystem.exists(path)) {
                 logger.info("create directory {}", directoryName);
                 return fileSystem.mkdirs(path);
@@ -60,14 +63,13 @@ public class HdfsDefaultStore implements FileStoreData {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return false;
         } finally {
-            if(null!=fileSystem){
-                try {
-                    fileSystem.close();
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-
-            }
+             if(null!=fileSystem){
+                 try {
+                     fileSystem.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 }
+             }
         }
     }
 
@@ -78,19 +80,19 @@ public class HdfsDefaultStore implements FileStoreData {
         }
         FileSystem fileSystem=null;
         try {
-            fileSystem= FileSystem.get(configuration);
+            fileSystem=FileSystem.get(configuration);
             return fileSystem.exists(new Path(name));
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return false;
         } finally {
-            if(null != fileSystem){
-                try {
-                    fileSystem.close();
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            }
+             if(null!=fileSystem){
+                 try {
+                     fileSystem.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 }
+             }
         }
     }
 
@@ -101,8 +103,10 @@ public class HdfsDefaultStore implements FileStoreData {
         if (isNull(writeFile)) {
             return null;
         }
+        FileSystem fileSystem=null;
+
         try {
-            FileSystem fileSystem = FileSystem.get(configuration);
+            fileSystem=FileSystem.get(configuration);
             return fileSystem.create(new Path(writeFile));
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -143,8 +147,8 @@ public class HdfsDefaultStore implements FileStoreData {
         FSDataOutputStream out = null;
         FileSystem fileSystem=null;
         try {
-            fileSystem = FileSystem.get(configuration);
             Path path =new Path(name);
+            fileSystem=FileSystem.get(configuration);
             if(fileSystem.exists(path)){
                 return;
             }
@@ -157,7 +161,7 @@ public class HdfsDefaultStore implements FileStoreData {
         } finally {
 
             IOUtils.closeStream(out);
-            if(null != fileSystem){
+            if(null!=fileSystem){
                 try {
                     fileSystem.close();
                 } catch (IOException e) {
@@ -169,10 +173,10 @@ public class HdfsDefaultStore implements FileStoreData {
 
     @Override
     public boolean rename(String srcName, String name) {
-        FileSystem fileSystem=null;
         FSDataOutputStream out=null;
+        FileSystem fileSystem=null;
         try {
-             fileSystem= FileSystem.get(configuration);
+            fileSystem=FileSystem.get(configuration);
             if (fileSystem.exists(new Path(srcName))) {
                 return fileSystem.rename(new Path(srcName), new Path(name));
             }
@@ -188,7 +192,7 @@ public class HdfsDefaultStore implements FileStoreData {
             if(null != out){
                 IOUtils.closeStream(out);
             }
-            if(null !=fileSystem){
+            if(null!=fileSystem){
                 try {
                     fileSystem.close();
                 } catch (IOException e) {
@@ -202,7 +206,7 @@ public class HdfsDefaultStore implements FileStoreData {
     public void delete(String name) {
         FileSystem fileSystem=null;
         try {
-            fileSystem= FileSystem.get(configuration);
+            fileSystem=FileSystem.get(configuration);
             if (fileSystem.exists(new Path(name))) {
                 fileSystem.delete(new Path(name), true);
             }
@@ -212,6 +216,34 @@ public class HdfsDefaultStore implements FileStoreData {
             logger.error("rename error:", e);
 
         } finally {
+             if(null!=fileSystem){
+                 try {
+                     fileSystem.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 }
+             }
+        }
+    }
+
+    @Override
+    public long getSize(String file) {
+        FileSystem fileSystem=null;
+        if(null == file|| file.equals("")){
+            return 0;
+        }
+        try {
+             fileSystem=FileSystem.get(configuration);
+            Path path=new Path(file);
+            if(fileSystem.exists(path)){
+                FileStatus fileStatus=fileSystem.getFileStatus(new Path(file));
+                return fileStatus.getLen();
+            }
+
+        }   catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }finally {
             if(null!=fileSystem){
                 try {
                     fileSystem.close();
@@ -220,15 +252,25 @@ public class HdfsDefaultStore implements FileStoreData {
                 }
             }
         }
+
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     protected boolean isNull(String name) {
         return null == name || name.equals("");
     }
     public static void main(String[]args){
-        HdfsDefaultStore store=new HdfsDefaultStore();
-        store.createDirectory("/test/123");
-        store.createFile("/test/123/123.gz.writed") ;
+        for(int i=0;i<3;i++){
+        FtpDownThreadPools.getExecutorService().submit(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                HdfsDefaultStore store=new HdfsDefaultStore();
+                store.createDirectory("/test/123");
+                store.createFile("/test/123/123.gz.writed") ;
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        }) ;
+        }
 
     }
 }

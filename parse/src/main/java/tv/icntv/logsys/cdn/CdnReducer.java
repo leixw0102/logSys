@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import tv.icntv.logsys.config.LogConfigurationFactory;
 import tv.icntv.logsys.reducer.IcntvReducer;
+import tv.icntv.logsys.utils.GenerateId;
 import tv.icntv.logsys.xmlObj.XmlLog;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -89,7 +90,7 @@ public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
             put.add(rowConf[i][1].getBytes(),rowConf[i][2].getBytes(),arrResultRow[index-1].getBytes());
         }
         try {
-            context.write(new ImmutableBytesWritable(key1.toString().getBytes()), put) ;
+            context.write(new ImmutableBytesWritable((key1.toString()+ GenerateId.generateIdSuffix()).getBytes()), put) ;
 
         } catch (IOException e) {
             e.printStackTrace();

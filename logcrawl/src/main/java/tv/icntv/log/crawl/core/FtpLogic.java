@@ -15,6 +15,7 @@
 
 package tv.icntv.log.crawl.core;
 
+import org.apache.commons.net.ftp.FTPClient;
 import tv.icntv.log.crawl.conf.FtpConfig;
 
 /**
@@ -48,7 +49,7 @@ public class FtpLogic {
         this.strIp = strIp;
     }
 
-    public void src2Dest() {
+    public void src2Dest(String path) {
         try {
             if (null == user || user.equals("") || null == pwd || pwd.equals("")) {
                 if (!ftpService.login(this.strIp, this.intPort)) {
@@ -59,7 +60,7 @@ public class FtpLogic {
                     return;
                 }
             }
-            ftpService.downLoadDirectory(FtpConfig.getFtpDstDirectory(), "/");
+            ftpService.downLoadDirectory(FtpConfig.getFtpDstDirectory(), path);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -67,4 +68,28 @@ public class FtpLogic {
         }
 
     }
+//    public static void main(String[] args){
+//        String directory=FtpConfig.getFtpDirectoryExclude();
+//        if(null == directory||directory.equals("")){
+//            System.out.println(true+";;");
+//            return;
+//        }
+//        String [] dirs=directory.split(",");
+//        for(String dir:dirs){
+//
+//            if(matcher("cold.icntv.cctvcdn.net",dir)){
+//               System.out.println(false);
+//                return;
+//            }
+//        }
+//        System.out.println(true+" .");
+//    }
+//    public static boolean matcher(String name, String regular) {
+//        if(null == regular || regular.equals("") || null ==name || name.equals("")){
+//            return true;
+//        }
+//        return name.contains(regular);
+//    }
+
+
 }

@@ -16,12 +16,19 @@
 package tv.icntv.logsys.cdn;
 
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import tv.icntv.logsys.config.LogConfigurationFactory;
+import tv.icntv.logsys.utils.GenerateId;
 import tv.icntv.logsys.xmlObj.XmlLog;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,21 +40,31 @@ import java.util.regex.Pattern;
  * To change this template use File | Settings | File Templates.
  */
 public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
-
+    private static final String STB_PARSER_CLASSNAME="parser.log.config.className";
+    private static final String STB_PARSER_DEFAULT_CLASS="tv.icntv.logsys.config.LogConfiguration";
+    private static final String CDN_PARSER_CONFIGXML="cdn.parser.configXml";
+    private String className=null;
+    private String configXml=null;
+    private String regular = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
+    Pattern pattern=null;
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        super.setup(context);
+        Configuration configuration=context.getConfiguration();
+        className=configuration.get(STB_PARSER_CLASSNAME,STB_PARSER_DEFAULT_CLASS);
+        configXml=configuration.get(CDN_PARSER_CONFIGXML,"ysten_log_mapping.xml");
+        String reg=context.getConfiguration().get("cdn.log.regular",regular);
+         pattern = Pattern.compile(reg);
     }
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String reg = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
-        Pattern pattern = Pattern.compile(reg);
+
+
         Matcher matcher = pattern.matcher(value.toString());
         String g3[],g6[];
         String keyTemp="";
         String valueTemp="";
-        if(matcher.find()){
+        if(matcher.find()&& matcher.groupCount()==6){
             g3 = matcher.group(3).split(" ");
             g6 = matcher.group(6).split("#");
             if(null==g6[0]||g6[0].length()!=15){
@@ -62,25 +79,25 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
     }
 
     public XmlLog getConf() {
-       return  LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","cdn_log_mapping.xml").getConf();
+       return  LogConfigurationFactory.getLogConfigurableInstance(className,configXml).getConf();
     }
 
-//    public static void main(String[] args){
+    public static void main(String[] args){
 //
-//        String str = "122.143.12.29 - - [23/Jul/2013:00:00:00 +0800] \"GET /media/new/2012/02/02/hd_dy_mny2_20120202.ts HTTP/1.1\" 206 1049074 \"-\" \"010133501227729#00000032AmlogicMDZ-05-201302261821793###Mar  4 2013,11:11:54\"";
-//
-//        String reg = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
-//        Pattern pattern = Pattern.compile(reg);
-//        Matcher matcher = pattern.matcher(str);
-//        while(matcher.find()){
-//            System.out.println("Group 0:"+matcher.group(0));
-//            System.out.println("Group 1:"+matcher.group(1));
-//            System.out.println("Group 2:"+matcher.group(2));
-//            System.out.println("Group 3:"+matcher.group(3));
-//            System.out.println("Group 4:"+matcher.group(4));
-//            System.out.println("Group 5:"+matcher.group(5));
-//            System.out.println("Group 6:"+matcher.group(6));
-//        }
+        String str = "122.143.12.29 - - [23/Jul/2013:00:00:00 +0800] \"GET /media/new/2012/02/02/hd_dy_mny2_20120202.ts HTTP/1.1\" 206 1049074 \"-\" \"010133501227729#00000032AmlogicMDZ-05-201302261821793###Mar  4 2013,11:11:54\"";
+
+        String reg = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(str);
+        while(matcher.find()){
+            System.out.println("Group 0:"+matcher.group(0));
+            System.out.println("Group 1:"+matcher.group(1));
+            System.out.println("Group 2:"+matcher.group(2));
+            System.out.println("Group 3:"+matcher.group(3));
+            System.out.println("Group 4:"+matcher.group(4));
+            System.out.println("Group 5:"+matcher.group(5));
+            System.out.println("Group 6:"+matcher.group(6));
+        }
 //        String a = "010133501227729#00000032AmlogicMDZ-05-201302261821793###Mar  4 2013,11:11:54";
 //        String[] arrA = a.split("#");
 //        for(int i=0;i<arrA.length;i++){
@@ -89,7 +106,7 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
 //
 //
 //        DateFormat format = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.UK);
-//        DateFormat formatCN = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.CHINA);
+//        DateFormat formatCN = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.CHINA);
 //        String rawTime = "23/Jul/2013:00:00:29 +0800";
 //        try {
 //            Date date = format.parse(rawTime);
@@ -98,5 +115,5 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-//    }
+    }
 }

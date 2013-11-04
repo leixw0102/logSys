@@ -22,7 +22,7 @@
     </property>
     <property>
         <name>ftp.timeout</name>
-        <value>60000</value>
+        <value>120000</value>
         <describe></describe>
     </property>
     <property>

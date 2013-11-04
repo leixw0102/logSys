@@ -17,5 +17,65 @@
              <artifactId>hadoop-core</artifactId>
              <version>1.2.1</version>
          </dependency>
+         <dependency>
+             <groupId>commons-net</groupId>
+             <artifactId>commons-net</artifactId>
+             <version>3.3</version>
+         </dependency>
+         <dependency>
+             <groupId>com.google.guava</groupId>
+             <artifactId>guava</artifactId>
+             <version>15.0</version>
+         </dependency>
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <version>1.7.5</version>
+         </dependency>
+         <dependency>
+             <groupId>ch.qos.logback</groupId>
+             <artifactId>logback-core</artifactId>
+             <version>1.0.9</version>
+         </dependency>
+         <dependency>
+             <groupId>ch.qos.logback</groupId>
+             <artifactId>logback-classic</artifactId>
+             <version>1.0.9</version>
+         </dependency>
+         <dependency>
+             <groupId>org.apache.hadoop</groupId>
+             <artifactId>hadoop-core</artifactId>
+             <version>1.2.1</version>
+         </dependency>
      </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                          <mainClass>tv.icntv.log.crawl.Client</mainClass>
+                           <!-- <mainClass>tv.icntv.log.crawl.store.HdfsDefaultStore</mainClass> -->
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

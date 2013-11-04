@@ -46,4 +46,5 @@ public interface FileStoreData extends StoreData{
     public boolean rename(String srcName,String name);
 
     public void delete(String name);
+    public long getSize(String file);
 }

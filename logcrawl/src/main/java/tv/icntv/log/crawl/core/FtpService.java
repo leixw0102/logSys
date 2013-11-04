@@ -15,6 +15,8 @@
 
 package tv.icntv.log.crawl.core;
 
+import org.apache.commons.net.ftp.FTPFile;
+
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -28,7 +30,7 @@ public interface FtpService<T> {
     public void logOut();
 
     public  boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory) ;
-    public boolean downloadFile(String remoteFileName, String localDires,
+    public boolean downloadFile(FTPFile remoteFileName, String localDires,
                                 String remoteDownLoadPath);
     public void logic(String strIp, int intPort,IFtpCallBack<T> callBack);
 

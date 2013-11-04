@@ -33,6 +33,6 @@
 	</property>
 	<property>
 		<name>hbase.zookeeper.quorum</name>
-		<value>slave3,slave1,slave2</value>
+		<value>slave102,slave103,slave104,slave106,slave107</value>
 	</property>
 </configuration>

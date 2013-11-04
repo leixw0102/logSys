@@ -37,18 +37,20 @@ import java.util.zip.GZIPInputStream;
  */
 public class Client {
     public static void main(String[] args) throws IOException {
-        if(args.length!=1 && args.length!=3){
+        if(args.length!=2 && args.length!=4){
             System.out.println("ftp crawl to hdfs.example : ftp://192.168.30.35 user pwd or ftp://192.168.30.35");
             return;
         }
         URL url = new URL(args[0]);
         FtpLogic ftp=null;
-        if(args.length==1){
+        if(args.length==2){
              ftp=new FtpLogic(url.getAuthority(),url.getPort());
-        }  else if(args.length==3){
+            ftp.src2Dest(args[1]);
+        }  else if(args.length==4){
              ftp=new FtpLogic(url.getAuthority(),url.getPort(),args[1],args[2]);
+             ftp.src2Dest(args[3]);
         }
-        ftp.src2Dest();
+
 
 
     }

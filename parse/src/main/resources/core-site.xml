@@ -4,12 +4,101 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-	<property>
-		<name>fs.default.name</name>
-		<value>hdfs://slave1:8020/</value>
-	</property>
-	<property>
-		<name>hadoop.tmp.dir</name>
-		<value>/home/hadoop/tmp/hadoop-${user.name}</value>
-	</property>
+    <property>
+        <name>fs.hdfs.impl.disable.cache</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/data/bigData/hadoopData/tmp/hadoop-${user.name}</value>
+        <description>A base for other temporary directories.</description>
+    </property>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://slave102:8020/</value>
+    </property>
+    <property>
+        <name>fs.trash.interval</name>
+        <value>1440</value>
+        <description>Number of minutes between trash checkpoints.
+            If zero, the trash feature is disabled.
+        </description>
+    </property>
+    <property>
+        <name>parser.log.config.className</name>
+        <value>tv.icntv.logsys.config.LogConfiguration</value>
+    </property>
+    <property>
+        <name>stb.ysten.parser.configXml</name>
+        <value>ysten_log_mapping.xml</value>
+    </property>
+    <property>
+        <name>cdn.parser.configXml</name>
+        <value>cdn_log_mapping.xml</value>
+    </property>
+    <property>
+        <name>cdn.log.regular</name>
+        <value>([\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})\s\-\s\-\s\[([^]]+)\]\s"([^"]+)"\s(\d+)\s(\d+)\s"-"\s"([^]]+)"</value>
+    </property>
+    <!-- file table
+        file.keys =values split ,
+        values[0].table=hbase table
+        values[0].className={cdn,stb}
+    -->
+    <property>
+        <name>file.from.prefix</name>
+        <value>/icntv/log</value>
+    </property>
+    <property>
+        <name>file.to.prefix</name>
+        <value>/icntv/store/log</value>
+    </property>
+    <property>
+        <name>file.keys</name>     <!-- chinacache,hot.media.ysten.com ,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net-->
+        <value>chinacache</value> <!-- ,mibox.icntv.cctvcdn.net,tvsee.cctvcdn.net-->
+    </property>
+    <!-- chinacache config-->
+    <property>
+        <name>chinacache.table</name>
+        <value>chinacache_table_1</value>
+    </property>
+    <property>
+        <name>chinacache.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!--directory hot.media.ysten.com config -->
+    <property>
+        <name>hot.media.ysten.com.table</name>
+        <value>hot_medina_ysten_table_1</value>
+    </property>
+    <property>
+        <name>hot.media.ysten.com.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!-- hot.icntv.cctvcdn.net-->
+    <property>
+        <name>hot.icntv.cctvcdn.net.table</name>
+        <value>hot_icntv_cctvcdn_table_1</value>
+    </property>
+    <property>
+        <name>hot.icntv.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!-- mibox.icntv.cctvcdn.net.cn-->
+    <property>
+        <name>mibox.icntv.cctvcdn.net.table</name>
+        <value>mibox_icntv_cctvcdn_table_1</value>
+    </property>
+    <property>
+        <name>mibox.icntv.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+     <property>
+         <name>tvsee.cctvcdn.net.table</name>
+         <value>tvsee_cctvcdn_table_1</value>
+     </property>
+    <property>
+        <name>tvsee.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
 </configuration>

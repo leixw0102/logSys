@@ -15,8 +15,11 @@
 
 package tv.icntv.log.crawl.conf;
 
+import com.google.common.collect.Lists;
 import tv.icntv.log.crawl.store.FileStoreData;
 import tv.icntv.log.crawl.store.StoreData;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,11 +41,19 @@ public class FtpConfig {
     private static final String FTP_DIRECTORY_EXCLUDE="ftp.directory.exclude";
     private static Configuration configuration = Configuration.getInstanceConfig();
     private static final String FTP_DST_DIRECTORY="ftp.dst.directory";
-
+    private static final String FILE_SUFFIX="file.suffix";
     public static String getFtpDirectoryExclude(){
-
         return configuration.get(FTP_DIRECTORY_EXCLUDE,"");
     }
+
+    public static List<String> getFileSuffixs(){
+          String filesuffix=configuration.get(FILE_SUFFIX);
+        if(null == filesuffix|| filesuffix.equals("")){
+            return null;
+        }
+        return Lists.newArrayList(filesuffix.split(","));
+    }
+
     public static String getFtpDstDirectory(){
         return configuration.get(FTP_DST_DIRECTORY,"/");
     }
@@ -136,5 +147,10 @@ public class FtpConfig {
             }
             return null;
         }
+    }
+    public static void main(String[]args){
+        System.out.println(FtpConfig.getFtpDirectoryExclude());
+        System.out.println(FtpConfig.getFtpDirectoryExclude());
+        System.out.println(FtpConfig.getFtpDirectoryExclude());
     }
 }
