@@ -143,6 +143,7 @@ public class Main {
             try {
                 if (!store.isExist(storeLogFile + storeHbaseSuffix)) {
                     store.createFile(storeLogFile + storeHbaseing);
+                    logger.info("class name"+this.className +" \t" +this.lastDirectory);
                     ParserJob job = (ParserJob) ReflectionUtils.newInstance(this.className);
                     if (job.start(configuration, new String[]{parserFile, tableName})) {
                         store.rename(storeLogFile + storeHbaseing, storeLogFile + storeHbaseSuffix);
@@ -183,5 +184,9 @@ public class Main {
             }
         }
         return list;
+    }
+
+    public String get(String key){
+        return configuration.get(key);
     }
 }

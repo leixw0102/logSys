@@ -15,15 +15,79 @@
 
 package tv.icntv.logsys.utils;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.PageFilter;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
+
 /**
  * Created with IntelliJ IDEA.
  * User: xiaowu lei
- * Date: 13-10-29
- * Time: 下午3:31
+ * Date: 13-11-6
+ * Time: 下午5:46
  */
 public class HbaseUtils {
+//    private Configuration configuration = null;
+    private static HTablePool hTablePool = null;
+    private static int poolSize = 500;
 
-    public static boolean isExist(String table){
-        return false;
+    public synchronized static HbaseUtils getHbaseUtils(Configuration configuration) {
+        return new HbaseUtils(configuration);
+    }
+
+    private HbaseUtils(Configuration configuration) {
+//        this.configuration = configuration;
+        hTablePool = new HTablePool(configuration, poolSize);
+    }
+
+    public HTable getHtable(String table) {
+        HTable hTable = (HTable) hTablePool.getTable(Bytes.toBytes(table));
+        hTable.setAutoFlush(false);
+        hTable.setScannerCaching(1000);
+        return hTable;
+    }
+
+    public  void release(HTable hTable) {
+        if (null != hTable) {
+            try {
+                hTable.flushCommits();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } finally {
+                    hTablePool.putTable(hTable);
+            }
+        }
+    }
+
+
+    public static void main(String[]args) throws MalformedURLException {
+//        String url="http://movie.douban.com/subject/3094909/";
+        System.out.println(TableUtil.reverseUrl("http://so.letv.com/film/78222.html"));
+//       final HbaseUtils h=HbaseUtils.getHbaseUtils(HBaseConfiguration.create());
+//        HTable table= h.getHtable("leixw_youku_webpage");
+//        Scan scan=new Scan(Bytes.toBytes("http://www.youku.com/show_page"));
+//
+//        try {
+//            ResultScanner resultScanner=table.getScanner(scan);
+//            for (Result r : resultScanner) {
+//                System.out.println("获得到rowkey:" + new String(r.getRow()));
+//
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        } finally {
+//            h.release(table);
+//        }
+        Pattern p= Pattern.compile("http://so.letv.com/film/([0-9]*).html");
+        System.out.println(p.matcher("http://so.letv.com/film/78222.html").find());
     }
 }

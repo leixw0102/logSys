@@ -1,12 +1,15 @@
 package tv.icntv.logsys.cdn;
 
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
 import tv.icntv.logsys.config.LogConfigurationFactory;
 import tv.icntv.logsys.reducer.IcntvReducer;
 import tv.icntv.logsys.utils.GenerateId;
+import tv.icntv.logsys.utils.HbaseUtils;
 import tv.icntv.logsys.xmlObj.XmlLog;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -23,6 +26,32 @@ import java.util.Locale;
  * Time: 下午3:03
  */
 public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
+//    private static HbaseUtils hbaseUtils=null;
+//    private HTable htable=null;
+    @Override
+    protected void setup(Context context) throws IOException, InterruptedException {
+//        hbaseUtils= HbaseUtils.getHbaseUtils(context.getConfiguration());
+//
+//        String table=context.getJobName();
+//        System.out.println("....."+table.replace("icntv_",""));
+//        htable=hbaseUtils.getHtable(table.replace("icntv_",""));
+//        System.out.println(null == htable);
+                //super.setup(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+//        if(null != htable){
+//            try{
+//            htable.flushCommits();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }finally {
+//               hbaseUtils.release(htable);
+//            }
+//        }
+        //super.cleanup(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 
     @Override
     public void parser(Object key, Iterable values, XmlLog configuration, Context context) {
@@ -81,7 +110,7 @@ public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
         }
 
 
-        Put put = new Put(Bytes.toBytes(key1.toString())) ;
+        Put put = new Put(Bytes.toBytes((key1.toString()+ GenerateId.generateIdSuffix()))) ;
         for(int i=0;i<rowConf.length;i++){
             int index = Integer.parseInt(rowConf[i][0]);
             if(index>arrResultRow.length){
@@ -89,13 +118,14 @@ public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
             }
             put.add(rowConf[i][1].getBytes(),rowConf[i][2].getBytes(),arrResultRow[index-1].getBytes());
         }
-        try {
-            context.write(new ImmutableBytesWritable((key1.toString()+ GenerateId.generateIdSuffix()).getBytes()), put) ;
 
+        try {
+            context.write(new ImmutableBytesWritable(put.getRow()), put) ;
+//             htable.put(put);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

@@ -16,6 +16,7 @@
 package tv.icntv.logsys;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.Tool;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +24,7 @@ import org.apache.hadoop.conf.Configuration;
  * Date: 13-10-29
  * Time: 上午11:45
  */
-public interface ParserJob {
+public interface ParserJob  {
     public boolean start(Configuration configuration, String[] arrayArgs);
 
 }

@@ -134,8 +134,8 @@ public class HdfsStore {
                 return false;
             }
             in=codec.createInputStream(fileSystem.open(from),  compressor);
-            out= fileSystem.create(to);
-            IOUtils.copyBytes(in,out, (int) BUFFER_SIZE);
+//            out= fileSystem.create(to);
+            IOUtils.copyBytes(in,System.out, (int) BUFFER_SIZE);
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return false;
@@ -161,8 +161,8 @@ public class HdfsStore {
     }
 
     public static void main(String[] args){
-//        HdfsStore hdfsStore = new HdfsStore();
-//        hdfsStore.uncompress("/log/46294_20130723_w3c.gz", "/log/uncompress/46294_20130723_w3c");
+        HdfsStore hdfsStore = new HdfsStore();
+        hdfsStore.uncompress("/icntv/log/chinacache/46294_20130713_w3c.gz", "/log/uncompress/46294_20130723_w3c");
 //        FileStatus[] list= hdfsStore.getFiles("hdfs://slave102:8020/icntv/log/chinacache/", new PathFilter() {
 //            @Override
 //            public boolean accept(Path path) {
@@ -172,8 +172,8 @@ public class HdfsStore {
 //        for(FileStatus fileStatus:list){
 //            System.out.println(fileStatus.getPath());
 //        }
-        System.out.println(1024*1024);
-        System.out.println(2<<19);
+//        System.out.println(1024*1024);
+//        System.out.println(2<<19);
     }
 //     public static class ShutDownFileSystem extends Thread{
 //        @Override

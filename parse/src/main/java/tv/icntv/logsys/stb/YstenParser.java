@@ -16,10 +16,14 @@
 package tv.icntv.logsys.stb;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.util.Tool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.icntv.logsys.ParserJob;
 
 import java.io.IOException;
@@ -31,8 +35,8 @@ import java.io.IOException;
  * Time: 上午9:24
  * To change this template use File | Settings | File Templates.
  */
-public class YstenParser implements ParserJob{
-
+public class YstenParser extends Configured implements Tool {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     public static void main(String [] args) throws IOException, ClassNotFoundException, InterruptedException {
 
 //        Configuration  configuration=HBaseConfiguration.create();
@@ -79,5 +83,27 @@ public class YstenParser implements ParserJob{
         TableMapReduceUtil.initTableReducerJob(tableName,null,job);
         job.setNumReduceTasks(0);
         return job;
+    }
+
+    @Override
+    public int run(String[] arrayArgs) throws Exception {
+        Job job= null;
+        if(null == arrayArgs|| arrayArgs.length!=2){
+            System.out.println("please specify parameter < full_file_path>!");
+            return 1;
+        }
+        try {
+            logger.info("start mr parameter {},thread {}",arrayArgs,Thread.currentThread().getId());
+            job = configureJob(super.getConf(),arrayArgs);
+            return job.waitForCompletion(true)?0:1;
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return 1;
     }
 }
