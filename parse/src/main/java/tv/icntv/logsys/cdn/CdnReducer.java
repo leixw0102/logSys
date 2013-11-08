@@ -26,32 +26,8 @@ import java.util.Locale;
  * Time: 下午3:03
  */
 public class CdnReducer extends IcntvReducer<Text,Text,ImmutableBytesWritable>{
-//    private static HbaseUtils hbaseUtils=null;
-//    private HTable htable=null;
-    @Override
-    protected void setup(Context context) throws IOException, InterruptedException {
-//        hbaseUtils= HbaseUtils.getHbaseUtils(context.getConfiguration());
-//
-//        String table=context.getJobName();
-//        System.out.println("....."+table.replace("icntv_",""));
-//        htable=hbaseUtils.getHtable(table.replace("icntv_",""));
-//        System.out.println(null == htable);
-                //super.setup(context);    //To change body of overridden methods use File | Settings | File Templates.
-    }
 
-    @Override
-    protected void cleanup(Context context) throws IOException, InterruptedException {
-//        if(null != htable){
-//            try{
-//            htable.flushCommits();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }finally {
-//               hbaseUtils.release(htable);
-//            }
-//        }
-        //super.cleanup(context);    //To change body of overridden methods use File | Settings | File Templates.
-    }
+
 
     @Override
     public void parser(Object key, Iterable values, XmlLog configuration, Context context) {
