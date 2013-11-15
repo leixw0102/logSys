@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
+    <property>
+        <name>ftp.name</name>
+        <value>cdnlog</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.pwd</name>
+        <value>CdNLoG</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.dst.name.append.local</name>
+        <value>true</value>
+    </property>
      <property>
          <name>ftp.directory.exclude</name>
          <value>images.is.ysten.com,vod01.media.ysten.com,sns.is.ysten.com,poms.is.ysten.com,panel.is.ysten.com,cold.icntv.cctvcdn.net,epg.is.ysten.com</value>

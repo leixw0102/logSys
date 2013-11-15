@@ -117,6 +117,15 @@ public class HdfsDefaultStore implements FileStoreData {
 
     @Override
     public void uncompress(String from, String to) {
+       final HdfsDefaultStore store= new HdfsDefaultStore();
+        for(int i=0;i<=4;i++){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                   System.out.println(store.isExist("test"));
+                }
+            }).start();
+        }
 //        InputStream in = null;
 //        OutputStream out = null;
 //        try {
@@ -265,8 +274,7 @@ public class HdfsDefaultStore implements FileStoreData {
             @Override
             public Object call() throws Exception {
                 HdfsDefaultStore store=new HdfsDefaultStore();
-                store.createDirectory("/test/123");
-                store.createFile("/test/123/123.gz.writed") ;
+                System.out.println(store.isExist("test"));
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
         }) ;

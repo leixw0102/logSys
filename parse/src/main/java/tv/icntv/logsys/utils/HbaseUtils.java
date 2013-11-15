@@ -70,24 +70,24 @@ public class HbaseUtils {
 
     public static void main(String[]args) throws MalformedURLException {
 //        String url="http://movie.douban.com/subject/3094909/";
-        System.out.println(TableUtil.reverseUrl("http://so.letv.com/film/78222.html"));
-//       final HbaseUtils h=HbaseUtils.getHbaseUtils(HBaseConfiguration.create());
-//        HTable table= h.getHtable("leixw_youku_webpage");
-//        Scan scan=new Scan(Bytes.toBytes("http://www.youku.com/show_page"));
-//
-//        try {
-//            ResultScanner resultScanner=table.getScanner(scan);
-//            for (Result r : resultScanner) {
-//                System.out.println("获得到rowkey:" + new String(r.getRow()));
-//
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } finally {
-//            h.release(table);
-//        }
-        Pattern p= Pattern.compile("http://so.letv.com/film/([0-9]*).html");
-        System.out.println(p.matcher("http://so.letv.com/film/78222.html").find());
+//        System.out.println(TableUtil.reverseUrl("http://so.letv.com/film/78222.html"));
+       final HbaseUtils h=HbaseUtils.getHbaseUtils(HBaseConfiguration.create());
+        HTable table= h.getHtable("leixw_douban_webpage");
+        Scan scan=new Scan();
+
+        try {
+            ResultScanner resultScanner=table.getScanner(scan);
+            for (Result r : resultScanner) {
+                System.out.println("获得到rowkey:" + new String(r.getRow()));
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            h.release(table);
+        }
+        Pattern p= Pattern.compile("http://t.iqiyi.com/m/[0-9]+");
+        System.out.println(p.matcher("http://t.iqiyi.com/m/1013032").find());
     }
 }

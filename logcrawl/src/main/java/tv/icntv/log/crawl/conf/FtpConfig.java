@@ -29,93 +29,117 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class FtpConfig {
-    private static final String FTP_NAME_KEY="ftp.name";
-    private static final String FTP_PWD_KEY="ftp.pwd";
-    private static final String FTP_CONTENT_LIMIT="ftp.content.limit";
-    private static final String FTP_TIMEOUT="ftp.timeout";
-    private static final String FTP_SERVER_TIMEOUT="ftp.server.timeout";
-    private static final String FTP_KEEY_CONNECTION="ftp.keep.connection";
-    private static final String FTP_DATA_SORT_TYPE="ftp.data.sort.type";
-    private static final String FTP_ENCODING="ftp.encoding";
-    private static final String FTP_PROT="ftp.prot";
-    private static final String FTP_DIRECTORY_EXCLUDE="ftp.directory.exclude";
-    private static Configuration configuration = Configuration.getInstanceConfig();
-    private static final String FTP_DST_DIRECTORY="ftp.dst.directory";
-    private static final String FILE_SUFFIX="file.suffix";
-    public static String getFtpDirectoryExclude(){
-        return configuration.get(FTP_DIRECTORY_EXCLUDE,"");
+//    private static final String FTP_NAME_KEY="ftp.name";
+//    private static final String FTP_PWD_KEY="ftp.pwd";
+//    private static final String FTP_CONTENT_LIMIT="ftp.content.limit";
+//    private static final String FTP_TIMEOUT="ftp.timeout";
+//    private static final String FTP_SERVER_TIMEOUT="ftp.server.timeout";
+//    private static final String FTP_KEEY_CONNECTION="ftp.keep.connection";
+//    private static final String FTP_DATA_SORT_TYPE="ftp.data.sort.type";
+//    private static final String FTP_ENCODING="ftp.encoding";
+//    private static final String FTP_PROT="ftp.prot";
+//    private static final String FTP_DIRECTORY_EXCLUDE="ftp.directory.exclude";
+    private static Configuration configuration = null;
+//    private static final String FTP_DST_DIRECTORY="ftp.dst.directory";
+//    private static final String FILE_SUFFIX="file.suffix";
+
+    public FtpConfig init(String config){
+        configuration=Configuration.getInstanceConfig(config);
+        return this;
     }
 
-    public static List<String> getFileSuffixs(){
-          String filesuffix=configuration.get(FILE_SUFFIX);
+    public  String getFtpDirectoryExclude(){
+        return configuration.get(FtpConstant.FTP_DIRECTORY_EXCLUDE,"");
+    }
+
+    public  List<String> getFileSuffixs(){
+          String filesuffix=configuration.get(FtpConstant.FILE_SUFFIX);
         if(null == filesuffix|| filesuffix.equals("")){
             return null;
         }
         return Lists.newArrayList(filesuffix.split(","));
     }
+    static class FtpConstant{
+        private static final String FTP_NAME_KEY="ftp.name";
+        private static final String FTP_PWD_KEY="ftp.pwd";
+        private static final String FTP_CONTENT_LIMIT="ftp.content.limit";
+        private static final String FTP_TIMEOUT="ftp.timeout";
+        private static final String FTP_SERVER_TIMEOUT="ftp.server.timeout";
+        private static final String FTP_KEEY_CONNECTION="ftp.keep.connection";
+        private static final String FTP_DATA_SORT_TYPE="ftp.data.sort.type";
+        private static final String FTP_ENCODING="ftp.encoding";
+        private static final String FTP_PROT="ftp.prot";
+        private static final String FTP_DIRECTORY_EXCLUDE="ftp.directory.exclude";
+        private static final String FTP_DST_DIRECTORY="ftp.dst.directory";
+        private static final String FILE_SUFFIX="file.suffix";
+        private static final String FTP_DST_NAME_APPEND_LOCAL="ftp.dst.name.append.local"; //ftp.dst.name.append.local
+    }
+    public  String getFtpDstDirectory(){
+        return configuration.get(FtpConstant.FTP_DST_DIRECTORY,"/");
+    }
 
-    public static String getFtpDstDirectory(){
-        return configuration.get(FTP_DST_DIRECTORY,"/");
+    public boolean getFtpDstNameAppendLocal(){
+        return configuration.getBoolean(FtpConstant.FTP_DST_NAME_APPEND_LOCAL);
     }
     /**
      * get ftp.name
      * @return
      */
-    public static String getFtpName(){
-          return  configuration.get(FTP_NAME_KEY,"anonymous");
+    public  String getFtpName(){
+          return  configuration.get(FtpConstant.FTP_NAME_KEY,"anonymous");
     }
 
     /**
      * get ftp.pwd
      * @return
      */
-    public static String getFtpPwd(){
-        return configuration.get(FTP_PWD_KEY,"");
+    public  String getFtpPwd(){
+        return configuration.get(FtpConstant.FTP_PWD_KEY,"");
     }
 
-    public static String getFtpEncoding(){
-        return configuration.get(FTP_ENCODING,"utf-8");
+    public  String getFtpEncoding(){
+        return configuration.get(FtpConstant.FTP_ENCODING,"utf-8");
     }
     /**
      * get ftp.content.limit
      * @return
      */
-    public static long getFtpContentLimit(){
-        return configuration.getLong(FTP_CONTENT_LIMIT,-1L);
+    public  long getFtpContentLimit(){
+        return configuration.getLong(FtpConstant.FTP_CONTENT_LIMIT,-1L);
     }
 
-    public static int getFtpPort(){
-        return configuration.getInt(FTP_PROT,21);
+    public  int getFtpPort(){
+        return configuration.getInt(FtpConstant.FTP_PROT,21);
     }
     /**
      * get ftp.data.store.type
      * @return
      */
-    public static String getFtpStoreType(){
-        return configuration.get(FTP_DATA_SORT_TYPE, "HDFS");
+    public  String getFtpStoreType(){
+        return configuration.get(FtpConstant.FTP_DATA_SORT_TYPE, "HDFS");
     }
     /**
      * get ftp.timeout   ;default 6000s
      * @return
      */
-    public static int getFtpTimeOut(){
-        return  configuration.getInt(FTP_TIMEOUT,6000);
+    public  int getFtpTimeOut(){
+        return  configuration.getInt(FtpConstant.FTP_TIMEOUT,6000);
     }
 
     /**
      * get ftp.server.timeout ;default 100000s
      * @return
      */
-    public static int getFtpServerTimeOut(){
-        return configuration.getInt(FTP_SERVER_TIMEOUT,100000);
+    public  int getFtpServerTimeOut(){
+        return configuration.getInt(FtpConstant.FTP_SERVER_TIMEOUT,100000);
     }
 
     /**
      * get ftp.keep.connection ;default false;
      * @return
      */
-    public static boolean getFtpKeepConnection(){
-        return configuration.getBoolean(FTP_KEEY_CONNECTION, false);
+    public  boolean getFtpKeepConnection(){
+        return configuration.getBoolean(FtpConstant.FTP_KEEY_CONNECTION, false);
     }
     /**
      * store type
@@ -149,8 +173,8 @@ public class FtpConfig {
         }
     }
     public static void main(String[]args){
-        System.out.println(FtpConfig.getFtpDirectoryExclude());
-        System.out.println(FtpConfig.getFtpDirectoryExclude());
-        System.out.println(FtpConfig.getFtpDirectoryExclude());
+//        System.out.println(FtpConfig.getFtpDirectoryExclude());
+//        System.out.println(FtpConfig.getFtpDirectoryExclude());
+//        System.out.println(FtpConfig.getFtpDirectoryExclude());
     }
 }

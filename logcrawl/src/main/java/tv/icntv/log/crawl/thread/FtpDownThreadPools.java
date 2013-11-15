@@ -34,22 +34,14 @@ import java.util.concurrent.Executors;
  */
 public class FtpDownThreadPools {
 
-    private   static ExecutorService executorService=Executors.newCachedThreadPool();
-
-    public static ExecutorService getExecutorService(){
+    private static ExecutorService executorService = Executors.newFixedThreadPool(5);
+    public static ExecutorService getExecutorService() {
         return executorService;
     }
-    public static void main(String[]args) throws IOException {
-        URL url = new URL("http://www.baidu.com");
-        URLConnection urlConnection=url.openConnection();
-        BufferedReader
-        br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),"gbk"));
-        String line=null;
-        while ((line=br.readLine())!=null){
-//            System.out.println(line);
-//            String str=new String(line.getBytes("gbk"),"iso-8859-1");
-            System.out.println(new String(line.getBytes("gbk"),"utf-8"));
+
+    public static void shutDown() {
+        if (null != executorService && !executorService.isShutdown()) {
+            executorService.shutdownNow();
         }
-        br.close();
     }
 }

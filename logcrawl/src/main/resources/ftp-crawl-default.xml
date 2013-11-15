@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property>
-        <name>ftp.name</name>
-        <value>cdnlog</value>
-        <describe></describe>
-    </property>
-    <property>
-        <name>ftp.pwd</name>
-        <value>CdNLoG</value>
-        <describe></describe>
-    </property>
    <!-- <property>
         <name>ftp.port</name>
         <value>21</value>

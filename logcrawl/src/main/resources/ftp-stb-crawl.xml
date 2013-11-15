@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 172.16.2.60-->
+    <property>
+        <name>ftp.name</name>
+        <value>icntv_log</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.pwd</name>
+        <value>icntvlog!@#</value>
+        <describe></describe>
+    </property>
+    <property>
+        <name>ftp.directory.exclude</name>
+        <value></value>
+    </property>
+    <property>
+        <name>ftp.dst.directory</name>
+        <value>/icntv/stb/log</value>
+    </property>
+    <property>
+        <name>file.suffix</name>
+        <value>log</value>
+    </property>
+    <property>
+        <name>ftp.dst.name.append.local</name>
+        <value>false</value>
+        <describe>ftp下载后目录是不是需要带上ftp的文件夹</describe>
+    </property>
+</configuration>

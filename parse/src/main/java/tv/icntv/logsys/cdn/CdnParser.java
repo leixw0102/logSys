@@ -59,7 +59,7 @@ public class CdnParser extends Configured implements Tool{
        // XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","cdn_log_mapping.xml").getConf();
         Path inputPath=new Path(arrayArgs[0]);
         String tableName=arrayArgs[1];//xmlLog.getTable();
-        Job job = new Job(configuration,"icntv_"+tableName);
+        Job job = new Job(configuration,"icntv_"+tableName+"_"+inputPath);
         job.setJarByClass(tv.icntv.logsys.cdn.CdnParser.class);
         FileInputFormat.setInputPaths(job, inputPath);
         job.setMapperClass(tv.icntv.logsys.cdn.CdnMapper.class);

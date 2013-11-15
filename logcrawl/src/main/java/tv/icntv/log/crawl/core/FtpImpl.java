@@ -15,13 +15,17 @@
 
 package tv.icntv.log.crawl.core;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.icntv.log.crawl.conf.FtpConfig;
+import tv.icntv.log.crawl.filter.*;
+import tv.icntv.log.crawl.filter.FileFilter;
 import tv.icntv.log.crawl.store.FileStoreData;
+import tv.icntv.log.crawl.thread.FtpDownThreadPools;
 
 import java.io.*;
 import java.util.List;
@@ -34,40 +38,22 @@ import java.util.List;
  * Time: 上午11:17
  * To change this template use File | Settings | File Templates.
  */
-public class FtpImpl implements FtpService {
+public class FtpImpl implements FtpService<String> {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private FTPClient ftpClient;
-    private String directorySplit = ",";
+    private FtpConfig ftpConfig=null;
     private long BUFFER_SIZE = (2 << 20) * 10;
-    private String directory = FtpConfig.getFtpDirectoryExclude();
-    private List<String> suffixes=FtpConfig.getFileSuffixs();
-    private void check() {
-        //TODO
-        ;
+
+    public FtpImpl(FtpConfig configuration) {
+          this.ftpConfig=configuration;
+          this.ftpClient=new FTPClient();
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
-
-    /**
-     * ftp user login
-     *
-     * @return
-     */
-    public boolean login(String strIp, int intPort) {
-        return login(strIp, intPort, FtpConfig.getFtpName(), FtpConfig.getFtpPwd());
-    }
 
     @Override
     public boolean login(String strIp, int intPort, String user, String pwd) {
         boolean isLogin = false;
-        this.ftpClient.setControlEncoding(FtpConfig.getFtpEncoding());
+        this.ftpClient.setControlEncoding(ftpConfig.getFtpEncoding());
         try {
             if (intPort > 0) {
                 this.ftpClient.connect(strIp, intPort);
@@ -85,103 +71,35 @@ public class FtpImpl implements FtpService {
             // 设置传输协议
             this.ftpClient.enterLocalPassiveMode();
             this.ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-            logger.info("恭喜" + FtpConfig.getFtpName() + "成功登陆FTP服务器");
+            logger.info("恭喜" + ftpConfig.getFtpName() + "成功登陆FTP服务器");
             isLogin = true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(FtpConfig.getFtpName() + "登录FTP服务失败！" + e.getMessage());
+            logger.error(ftpConfig.getFtpName() + "登录FTP服务失败！" + e.getMessage());
         }
         this.ftpClient.setBufferSize((int) BUFFER_SIZE);
-        this.ftpClient.setDataTimeout(FtpConfig.getFtpTimeOut());
-        this.ftpClient.setConnectTimeout(FtpConfig.getFtpTimeOut());
+        this.ftpClient.setDataTimeout(this.ftpConfig.getFtpTimeOut());
+        this.ftpClient.setConnectTimeout(ftpConfig.getFtpTimeOut());
         return isLogin;
     }
 
 
-    /**
-     * 判断name是不是不包含
-     *
-     * @param name
-     * @return
-     */
-    private boolean excludeDirectory(String name) {
-//         logger.info("exclude directory parameter {},{}",name,directory);
-        if (null == directory || directory.equals("")) {
-            return true;
-        }
-        String[] dirs = directory.split(directorySplit);
-        for (String dir : dirs) {
 
-            if (matcher(name, dir)) {
-                logger.info("directory {} exclude", name);
-                return false;
-            }
-        }
-        return true;
-    }
 
-    /**
-     * @param localDirectoryPath
-     * @param remoteDirectory
-     * @return
-     */
-    public boolean downLoadDirectory(String localDirectoryPath, String remoteDirectory) {
-        try {
-            FTPFile[] allFile = this.ftpClient.listFiles(remoteDirectory);
-            for (int currentFile = 0; currentFile < allFile.length; currentFile++) {
-                FTPFile file = allFile[currentFile];
-                String name = file.getName();
-                if (!file.isDirectory() ) {
-                    downloadFile(file, localDirectoryPath + remoteDirectory, remoteDirectory);
-                    // System.out.println();
-                    //FtpDownThreadPools.getExecutorService().submit(new DownLoad(name, localDirectoryPath+remoteDirectory, remoteDirectory));
-                } else {
-                    //directory exclude logic
-                    if (!excludeDirectory(name)) {
-                        logger.info("directory exclude name=" + remoteDirectory + " \t regular=" + FtpConfig.getFtpDirectoryExclude());
-                        continue;
-                    }
-                    // create directory if necessary
-
-                    if (!localDirectoryPath.equals(File.separator)) {
-                        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(FtpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
-                        if (!store.createDirectory(localDirectoryPath)) {
-                            continue;
-                        }
-                    }
-                    downLoadDirectory(localDirectoryPath, (remoteDirectory.equals("/") ? remoteDirectory : (remoteDirectory + File.separator)) + name);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.info("下载文件夹失败");
-            return false;
-        }
-        return true;
-    }
-
-//    private boolean isContainFileSuffix(String name) {
-//        if(null==suffixes||suffixes.isEmpty()){
-//            return true;
-//        }
-//        suffixes.contains(name.substring(name.lastIndexOf()))
-//        return true;  //To change body of created methods use File | Settings | File Templates.
-//    }
-
-    /**
-     * 下载文件
-     *
-     * @param remoteFileName     待下载文件名称
-     * @param localDires         下载到当地那个路径下
-     * @param remoteDownLoadPath remoteFileName所在的路径
-     */
+//    /**
+//     * 下载文件
+//     *
+//     * @param remoteFileName     待下载文件名称
+//     * @param localDires         下载到当地那个路径下
+//     * @param remoteDownLoadPath remoteFileName所在的路径
+//     */
     public boolean downloadFile(FTPFile remoteFileName, String localDires,
                                 String remoteDownLoadPath) {
         String strFileSuffix = (localDires.equals(File.separator) ? localDires : (localDires + File.separator));
         OutputStream outStream = null;
         boolean success = false;
         //System.out.println(remoteDownLoadPath+ File.separator+remoteFileName);
-        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(FtpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
+        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(this.ftpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
         try {
             String file = strFileSuffix + remoteFileName.getName();
             if (store.isExist(file) && store.isExist(file + ".writed")) {
@@ -227,47 +145,83 @@ public class FtpImpl implements FtpService {
     }
 
     @Override
-    public void logic(String strIp, int intPort, IFtpCallBack callBack) {
+    public void logic(String strIp, int intPort,String user,String pwd, IFtpCallBack<String> callBack) {
         try {
-            if (!login(strIp, intPort)) {
+            if (!login(strIp, intPort,user,pwd)) {
                 return;
             }
-            callBack.call();
+           String downFile= callBack.call(this.ftpClient);
+            //启动线程下载
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("ftp error! ",e);
         } finally {
             this.logOut();
         }
     }
 
     @Override
-    public boolean matcher(String name, String regular) {
-        if (null == regular || regular.equals("") || null == name || name.equals("")) {
-            return true;
+    public boolean downLoadDirectory(String localDirectoryPath, String remoteDirectory, DirectoryFilter directoryFilter, FileFilter fileFilter) {
+        try {
+            FTPFile[] allFile = this.ftpClient.listFiles(remoteDirectory);
+            for (int currentFile = 0; currentFile < allFile.length; currentFile++) {
+                FTPFile file = allFile[currentFile];
+                String name = file.getName();
+                if (!file.isDirectory() ) {
+                    if(getFileFilter().accept(name) ){
+                        String prefix=null;
+                        if(ftpConfig.getFtpDstNameAppendLocal()){
+                            //downloadFile(file, localDirectoryPath + remoteDirectory, remoteDirectory);
+                            //FtpDownThreadPools.getExecutorService().submit(new DownLoad())
+                            prefix=localDirectoryPath+remoteDirectory;
+                        }else{
+                            prefix=localDirectoryPath;
+                        }
+                        downloadFile(file,prefix,remoteDirectory);
+//                        FtpDownThreadPools.getExecutorService().submit(new DownLoad(file,prefix,remoteDirectory));
+                    }else{
+                        logger.error("file suffix {},not include",ftpConfig.getFileSuffixs());
+                    }
+                } else {
+                    //directory exclude logic
+                    if (!getDirectoryFilter().accept(name)) {
+                        logger.info("directory exclude name=" + remoteDirectory + " \t regular=" + ftpConfig.getFtpDirectoryExclude());
+                        continue;
+                    }
+                    // create directory if necessary
+//                    if (!localDirectoryPath.equals(File.separator)) {
+//                        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(ftpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
+//                        if (!store.createDirectory(localDirectoryPath)) {
+//                            continue;
+//                        }
+//                    }
+                    downLoadDirectory(localDirectoryPath, (remoteDirectory.equals("/") ? remoteDirectory : (remoteDirectory + File.separator)) + name,directoryFilter,fileFilter);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("下载文件夹失败");
+            return false;
         }
-        return name.contains(regular);
+        return true;
+    }
+
+    protected DirectoryFilter getDirectoryFilter(){
+        return new DefaultDirectoryFilter(this.ftpConfig);
+    }
+    protected FileFilter getFileFilter(){
+        return new DefaultFileFilter(this.ftpConfig);
+    }
+    @Override
+    public boolean downLoadDirectory(String localDirectoryPath, String remoteDirectory) {
+        return downLoadDirectory(localDirectoryPath,remoteDirectory,new DefaultDirectoryFilter(this.ftpConfig),new DefaultFileFilter(this.ftpConfig));
     }
 
     public FtpImpl() {
         ftpClient = new FTPClient();
     }
 
-    /**
-     *
-     */
-//    public void src2Dest(){
-//        try{
-//       if(!login(String strIp, int intPort) ){
-//           return;
-//       }
-//        //TODO DIRECTORY
-//            downLoadDirectory("d:\\test","/");
-//        }catch(Exception e){
-//            logger.error("ftp error!",e);
-//        } finally {
-//            logOut();
-//        }
-//    }
+
 
     /**
      * ftp logout
@@ -275,10 +229,7 @@ public class FtpImpl implements FtpService {
     public void logOut() {
         if (null != this.ftpClient && this.ftpClient.isConnected()) {
             try {
-
-
                 boolean reuslt = this.ftpClient.logout();
-
                 if (reuslt) {
                     logger.info("成功退出服务器");
                 }
@@ -297,11 +248,11 @@ public class FtpImpl implements FtpService {
     }
 
     class DownLoad implements Runnable {
-        private String name;
+        private FTPFile name;
         private String srcPath;
         private String remoteDirectory;
 
-        public DownLoad(String name, String srcPath, String remoteDirectory) {
+        public DownLoad(FTPFile name, String srcPath, String remoteDirectory) {
             //To change body of created methods use File | Settings | File Templates.
             this.name = name;
             this.srcPath = srcPath;
@@ -310,46 +261,52 @@ public class FtpImpl implements FtpService {
 
         @Override
         public void run() {
-            //To change body of implemented methods use File | Settings | File Templates.
-//            String strFileSuffix = (srcPath.equals(File.separator)?srcPath:(srcPath +File.separator));
-//            OutputStream outStream = null;
-//            boolean success = false;
-//            FileStoreData store= (FileStoreData) FtpConfig.SortTypeClass.valueOf(FtpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
-//            try {
-//                if(store.isExist(strFileSuffix+name)&&store.isExist(strFileSuffix+name+".writed")){
-//                    logger.info("file {} is down load",strFileSuffix+name);
+//            String strFileSuffix = (srcPath.equals(File.separator) ? srcPath : (srcPath + File.separator));
+//        OutputStream outStream = null;
+//        boolean success = false;
+//        //System.out.println(remoteDownLoadPath+ File.separator+remoteFileName);
+//        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(ftpConfig.getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
+//        try {
+//            String file = strFileSuffix + name.getName();
+//            if (store.isExist(file) && store.isExist(file + ".writed")) {
+//                if (name.getSize() != store.getSize(file)) {
+//                    logger.info("file={} is problem,", file);
+//                    store.delete(file);
+//                    store.delete(file + ".writed");
+//                    logger.info("delete file {}, {}", file, file + ".writed");
+//                } else {
+//                    logger.info("file {} is down load", strFileSuffix + name.getName());
 //                    return ;
 //                }
-//                if(!store.isExist(strFileSuffix+name+".writing")) {
-//                    logger.info("create file writing....");
-//                    store.createFile(strFileSuffix+name+".writing");
-//                }
-////
-////                this.ftpClient.changeWorkingDirectory(remoteDownLoadPath);
-////                outStream = store.getOutputStream(strFileSuffix+remoteFileName);
-////                logger.info(remoteDownLoadPath+ File.separator+remoteFileName + "开始下载....");
-////                success = this.ftpClient.retrieveFile(remoteFileName, outStream);
-////                if (success == true) {
-////                    logger.info(remoteDownLoadPath+ File.separator+remoteFileName  + "成功下载到" + strFileSuffix+remoteFileName);
-////                    store.rename(strFileSuffix + remoteFileName + ".writing", strFileSuffix + remoteFileName + ".writed");
-////                    return success;
-////                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-////                store.delete(strFileSuffix+remoteDownLoadPath+".writing");
+//            }
+//            if (!store.isExist(strFileSuffix + name.getName() + ".writing")) {
+//                logger.info("create file writing....");
+//                store.createFile(strFileSuffix + name.getName() + ".writing");
+//            }
+//
+//            ftpClient.changeWorkingDirectory(remoteDirectory);
+//            outStream = store.getOutputStream(strFileSuffix + name.getName());
+//            logger.info(remoteDirectory + File.separator + name.getName() + "开始下载....");
+//            success = ftpClient.retrieveFile(name.getName(), outStream);
+//            if (success == true) {
+//                logger.info(remoteDirectory + File.separator + name.getName() + "成功下载到" + strFileSuffix + name.getName());
+//                store.rename(strFileSuffix + name.getName() + ".writing", strFileSuffix + name.getName() + ".writed");
+//            }
+//        } catch (Exception e) {
+//            store.delete(strFileSuffix + remoteDirectory + ".writing");
 ////            store.delete(strFileSuffix+remoteFileName);
-////                logger.error(remoteFileName + "下载失败");
-//            } finally {
-//                if (null != outStream) {
-//                    try {
-//                        outStream.flush();
-//                        outStream.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+//            logger.error(name.getName() + "下载失败", e);
+//        } finally {
+//            if (null != outStream) {
+//                try {
+//                    outStream.flush();
+//                    outStream.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
 //                }
 //            }
-//            return ;
+//        }
+//        return success;
         }
     }
 }

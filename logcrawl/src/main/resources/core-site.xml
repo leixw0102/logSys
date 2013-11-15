@@ -30,4 +30,8 @@
             If zero, the trash feature is disabled.
         </description>
     </property>
+    <property>
+        <name>fs.hdfs.impl.disable.cache</name>
+        <value>true</value>
+    </property>
 </configuration>

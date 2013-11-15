@@ -15,8 +15,18 @@
 
 package tv.icntv.log.crawl.core;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tv.icntv.log.crawl.conf.Configuration;
 import tv.icntv.log.crawl.conf.FtpConfig;
+import tv.icntv.log.crawl.store.FileStoreData;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,41 +36,42 @@ import tv.icntv.log.crawl.conf.FtpConfig;
  * To change this template use File | Settings | File Templates.
  */
 public class FtpLogic {
+
+
     private String strIp;
     private int intPort;
-    private static FtpService ftpService = new FtpImpl();
+    private FtpService ftpService = null;
     private String user;
     private String pwd;
+    private FtpConfig configuration = null;
+    private String directory = null;
+    private List<String> suffixes = null;
+    private String directorySplit = ",";
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public FtpLogic(String strIp, int intPort) {
+    public FtpLogic(String strIp, int intPort, String user, String pwd, String config) {
         this.strIp = strIp;
         this.intPort = intPort;
-
+        configuration = new FtpConfig().init(config);
+        this.user = Preconditions.checkNotNull(configuration.getFtpName());
+        this.pwd = Preconditions.checkNotNull(configuration.getFtpPwd());
+        ftpService = new FtpImpl(configuration);
+        this.directory = configuration.getFtpDirectoryExclude();
+        this.suffixes = configuration.getFileSuffixs();
     }
 
-    public FtpLogic(String strIp, int intPort, String user, String pwd) {
-        this.strIp = strIp;
-        this.intPort = intPort;
-        this.user = user;
-        this.pwd = pwd;
+    public FtpLogic(String authority, int port, String config) {
+        this(authority,port,null,null,config);
     }
 
-    public FtpLogic(String strIp) {
-        this.strIp = strIp;
-    }
-
-    public void src2Dest(String path) {
+    public void src2Dest(final String path) {
         try {
-            if (null == user || user.equals("") || null == pwd || pwd.equals("")) {
-                if (!ftpService.login(this.strIp, this.intPort)) {
-                    return;
-                }
-            } else {
-                if (!ftpService.login(this.strIp, this.intPort, this.user, this.pwd)) {
-                    return;
-                }
+
+            if (!ftpService.login(this.strIp, this.intPort, this.user, this.pwd)) {
+                return;
             }
-            ftpService.downLoadDirectory(FtpConfig.getFtpDstDirectory(), path);
+
+            ftpService.downLoadDirectory(configuration.getFtpDstDirectory(), path);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -68,28 +79,7 @@ public class FtpLogic {
         }
 
     }
-//    public static void main(String[] args){
-//        String directory=FtpConfig.getFtpDirectoryExclude();
-//        if(null == directory||directory.equals("")){
-//            System.out.println(true+";;");
-//            return;
-//        }
-//        String [] dirs=directory.split(",");
-//        for(String dir:dirs){
-//
-//            if(matcher("cold.icntv.cctvcdn.net",dir)){
-//               System.out.println(false);
-//                return;
-//            }
-//        }
-//        System.out.println(true+" .");
-//    }
-//    public static boolean matcher(String name, String regular) {
-//        if(null == regular || regular.equals("") || null ==name || name.equals("")){
-//            return true;
-//        }
-//        return name.contains(regular);
-//    }
+
 
 
 }

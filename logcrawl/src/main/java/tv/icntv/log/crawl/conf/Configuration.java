@@ -35,7 +35,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class Configuration {
-    private static WeakHashMap<String,String> weakRefer=new WeakHashMap<String, String>();
+    private static HashMap<String,String> weakRefer=new HashMap<String, String>();
     private static final Set<String> confs=new HashSet<String>();
     private static ClassLoader classLoader=null;
 
@@ -43,14 +43,15 @@ public class Configuration {
      * instance configurations
      * @return
      */
-    public static Configuration getInstanceConfig(){
-        return new Configuration();
+    public static Configuration getInstanceConfig(String configxml){
+        return new Configuration(configxml);
     }
 
     /**
      * constructor
      */
-    private Configuration() {
+    private Configuration(String xml) {
+        addDefaultResource(xml);
     }
 
     static {
@@ -59,7 +60,7 @@ public class Configuration {
             classLoader=Configuration.class.getClassLoader();
         }
         addDefaultResource("ftp-crawl-default.xml");
-        addDefaultResource("ftp-crawl.xml");
+//        addDefaultResource("ftp-crawl.xml");
     }
 
     /**
@@ -67,41 +68,41 @@ public class Configuration {
      * @param key
      * @return
      */
-    protected String get(String key){
+    public String get(String key){
         return get(key,null);
     }
-    protected String get(String key,String defaultValue) {
+    public String get(String key,String defaultValue) {
         String value=weakRefer.get(key);
         if(null == value || value.equals("")){
             return defaultValue;
         }
         return value;
     }
-    protected Integer getInt(String key){
+    public Integer getInt(String key){
         return getInt(key, 0);
     }
-    protected Integer getInt(String key,int defaultValue) {
+    public Integer getInt(String key,int defaultValue) {
 
         return Integer.parseInt(get(key,defaultValue+""));
     }
-    protected long getLong(String key){
+    public long getLong(String key){
         return getLong(key, 0);
     }
-    protected long getLong(String key,long defaultValue) {
+    public long getLong(String key,long defaultValue) {
 
         return Long.getLong(get(key,defaultValue+""));
     }
-    private synchronized static void addDefaultResource(String name) {
+    public synchronized static void addDefaultResource(String name) {
         if(!confs.contains(name)){
             confs.add(name);
             loadResource(name);
         }
     }
 
-    protected boolean getBoolean(String key){
+    public boolean getBoolean(String key){
         return getBoolean(key,false);
     }
-    protected boolean getBoolean(String key,boolean defaultBoolean){
+    public boolean getBoolean(String key,boolean defaultBoolean){
 
         return Boolean.parseBoolean(get(key,defaultBoolean+""));
     }
@@ -186,7 +187,7 @@ public class Configuration {
 
     }
     public  static  void main(String[] args){
-          Configuration config=new Configuration();
-          config.iterator();
+//          Configuration config=new Configuration();
+//          config.iterator();
     }
 }

@@ -12,18 +12,15 @@
  *      See the License for the specific language governing permissions and
  *      limitations under the License.
  */
-package tv.icntv.log.crawl.core;
 
-import org.apache.commons.net.ftp.FTPClient;
-import sun.net.ftp.FtpClient;
+package tv.icntv.log.crawl.filter;
 
 /**
  * Created with IntelliJ IDEA.
- * User: lei
- * Date: 13-10-21
- * Time: 上午10:48
- * To change this template use File | Settings | File Templates.
+ * User: xiaowu lei
+ * Date: 13-11-14
+ * Time: 下午2:43
  */
-public interface IFtpCallBack<T> {
-    public T call(FTPClient client);
+public interface Filter {
+    public boolean accept(String file);
 }

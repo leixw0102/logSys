@@ -16,6 +16,8 @@
 package tv.icntv.log.crawl.core;
 
 import org.apache.commons.net.ftp.FTPFile;
+import tv.icntv.log.crawl.filter.DirectoryFilter;
+import tv.icntv.log.crawl.filter.FileFilter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,16 +27,16 @@ import org.apache.commons.net.ftp.FTPFile;
  * To change this template use File | Settings | File Templates.
  */
 public interface FtpService<T> {
-    public boolean login(String strIp, int intPort);
+    //public boolean login(String strIp, int intPort);
     public boolean login(String strIp, int intPort, String user, String pwd);
     public void logOut();
 
     public  boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory) ;
-    public boolean downloadFile(FTPFile remoteFileName, String localDires,
-                                String remoteDownLoadPath);
-    public void logic(String strIp, int intPort,IFtpCallBack<T> callBack);
+//    public boolean downloadFile(FTPFile remoteFileName, String localDires,
+//                               String remoteDownLoadPath);
+    public void logic(String strIp, int intPort,String user,String pwd,IFtpCallBack<T> callBack);
 
-    public boolean matcher(String name,String regular);
+//    public boolean matcher(String name,String regular);
 
-
+    public boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory,DirectoryFilter directoryFilter,FileFilter fileFilter);
 }

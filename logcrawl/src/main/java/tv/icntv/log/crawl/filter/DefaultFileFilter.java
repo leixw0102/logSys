@@ -12,18 +12,26 @@
  *      See the License for the specific language governing permissions and
  *      limitations under the License.
  */
-package tv.icntv.log.crawl.core;
 
-import org.apache.commons.net.ftp.FTPClient;
-import sun.net.ftp.FtpClient;
+package tv.icntv.log.crawl.filter;
+
+import tv.icntv.log.crawl.conf.FtpConfig;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: lei
- * Date: 13-10-21
- * Time: 上午10:48
- * To change this template use File | Settings | File Templates.
+ * User: xiaowu lei
+ * Date: 13-11-14
+ * Time: 下午3:07
  */
-public interface IFtpCallBack<T> {
-    public T call(FTPClient client);
+public class DefaultFileFilter extends AbstractFileFilter{
+    public DefaultFileFilter(FtpConfig ftpConfig) {
+        super(ftpConfig);
+    }
+
+    @Override
+    public List<String> getFileRegular() {
+        return this.ftpConfig.getFileSuffixs();  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
