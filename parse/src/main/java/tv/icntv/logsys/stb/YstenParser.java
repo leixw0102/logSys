@@ -59,11 +59,11 @@ public class YstenParser extends Configured implements Tool {
             Job job=configureJob(configuration,arrayArgs);
             return job.waitForCompletion(true);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return false;
     }
@@ -71,11 +71,9 @@ public class YstenParser extends Configured implements Tool {
 
     private  Job configureJob(Configuration configuration,String[] arrayArgs) throws IOException {
 
-        //XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","ysten_log_mapping.xml").getConf();
-
         Path inputPath=new Path(arrayArgs[0]);
-        String tableName=arrayArgs[1];//xmlLog.getTable();
-        Job job = new Job(configuration,"icntv_"+tableName);
+        String tableName=arrayArgs[1];
+        Job job = new Job(configuration,"icntv_"+tableName+"_"+inputPath);
         job.setJarByClass(YstenMapper.class);
         FileInputFormat.setInputPaths(job,inputPath);
         job.setMapperClass(YstenMapper.class);
@@ -97,11 +95,11 @@ public class YstenParser extends Configured implements Tool {
             job = configureJob(super.getConf(),arrayArgs);
             return job.waitForCompletion(true)?0:1;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return 1;

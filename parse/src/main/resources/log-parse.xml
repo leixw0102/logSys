@@ -32,7 +32,7 @@
     </property>
     <property>
         <name>file.keys</name>
-        <value>chinacache,hot.media.ysten.com,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net</value>
+        <value>chinacache,hot.media.ysten.com,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net,stb</value>
     </property>
 
     <property>
@@ -77,5 +77,14 @@
     <property>
         <name>tvsee.cctvcdn.net.className</name>
         <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!--ysten stb log-->
+    <property>
+        <name>stb.table</name>
+        <value>stb_table_1</value>
+    </property>
+    <property>
+        <name>stb.className</name>
+        <value>tv.icntv.logsys.stb.YstenParser</value>
     </property>
 </configuration>

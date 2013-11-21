@@ -41,22 +41,12 @@ public class CdnParser extends Configured implements Tool{
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     public static void main(String [] args) throws IOException, ClassNotFoundException, InterruptedException {
         CdnParser     parser = new CdnParser();
-//        parser.start(HBaseConfiguration.create(),args);
-//        Configuration  configuration= HBaseConfiguration.create();
-//        String[] arrayArgs=new GenericOptionsParser(configuration,args).getRemainingArgs();
-//        if(null == arrayArgs|| arrayArgs.length!=1){
-//            System.out.println("please specify parameter < full_file_path>!");
-//            return;
-//        }
-//        Job job=configureJob(configuration,arrayArgs);
-//        System.exit(job.waitForCompletion(true)?0:1);
     }
 
 
 
     private  Job configureJob(Configuration configuration,String[] arrayArgs) throws IOException {
 
-       // XmlLog xmlLog = LogConfigurationFactory.getLogConfigurableInstance("tv.icntv.logsys.config.LogConfiguration","cdn_log_mapping.xml").getConf();
         Path inputPath=new Path(arrayArgs[0]);
         String tableName=arrayArgs[1];//xmlLog.getTable();
         Job job = new Job(configuration,"icntv_"+tableName+"_"+inputPath);
@@ -79,15 +69,14 @@ public class CdnParser extends Configured implements Tool{
         try {
             logger.info("start mr ,thread {}",Thread.currentThread().getId());
             Configuration configuration=super.getConf();
-//            configuration.addResource(arrayArgs[2]);
             job = configureJob(configuration,arrayArgs);
             return job.waitForCompletion(true)?0:1;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return 1;

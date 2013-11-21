@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
-<logfile name="ysten_stb" token="&lt;/&gt;" table="stb_log">
+<logfile name="ysten_stb" token="&lt;/&gt;">
     <column index="1" cf="base" qualifier="log_id">日志编号</column>
 	<column index="2" cf="base" qualifier="seq_id">请求编号</column>
     <column index="3" cf="base" qualifier="retry_seqid">重试请求编号</column>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
-<logfile name="cdn_log" table="cdn_log">
+<logfile name="cdn_log">
     <column index="1" cf="base" qualifier="host">host</column>
     <column index="2" cf="base" qualifier="begin_time">begin_time</column>
     <column index="3" cf="base" qualifier="end_time">end_time</column>

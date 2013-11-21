@@ -66,14 +66,16 @@ public class HadoopRunMain extends Configured implements Tool {
                 return path.getName().endsWith("writed");
             }
         });
+
         if (null == fileStatuses || fileStatuses.length == 0) {
+            logger.info("fileStatuses is null");
             return null;
         }
         List<Path> list = Lists.newArrayList();
         for (FileStatus fileStatus : fileStatuses) {
             String name = fileStatus.getPath().getName();
             name = name.replace(".writed", "");
-            if (name.endsWith(".gz") && store.isExist(fromPath + separator + name)) {
+            if ((name.endsWith(".gz")||name.endsWith(".log")) && store.isExist(fromPath + separator + name)) {
                 list.add(new Path(fromPath + separator + name));
             }
         }
@@ -97,6 +99,7 @@ public class HadoopRunMain extends Configured implements Tool {
         }
         String fileFromPrefix = getFileFromPrefix();
         String fileToPrefix = getFileToPrefix();
+
         for (String file : keys.split(SPLIT)) {
             String fromPath = fileFromPrefix + separator + file;
             String toPath = fileToPrefix + separator + file;
@@ -104,14 +107,18 @@ public class HadoopRunMain extends Configured implements Tool {
             String tableName = get(String.format(TABLE,file));  logger.info(file);
             String className=get(String.format(CLASS_NAME,file));
             List<Path> paths = getFileStatus(fromPath);
+
             if(null == paths||paths.isEmpty()){
+                logger.info("paths is empty");
                 continue;
             }
             for (Path path : paths) {
-//                //hadoop
+
                 String name = path.getName();
+
                 String storeLogFile = fileToPrefix+ separator + file + separator + name.substring(0, name.length() - 3);
                 String parserFile = fileFromPrefix + separator + file + separator + name;
+                logger.info("from file name ={},to file name={}", parserFile, storeLogFile);
                 if (!store.isExist(storeLogFile + storeHbaseSuffix)) {
                     store.createFile(storeLogFile + storeHbaseing);
                     Tool job = (Tool) ReflectionUtils.newInstance(className);
@@ -145,9 +152,7 @@ public class HadoopRunMain extends Configured implements Tool {
 
     public static void main(String[] args) {
         Configuration configuration= new Configuration();
-////        configuration.clear();
         configuration.addResource("log-parse.xml");
-//        logger.info(configuration.get("chinacache.className"));
         HadoopRunMain main = new HadoopRunMain(configuration);
         try {
             int i = ToolRunner.run( HBaseConfiguration.create(),main, args);
