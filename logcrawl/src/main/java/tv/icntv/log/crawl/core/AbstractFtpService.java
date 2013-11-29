@@ -49,6 +49,7 @@ public abstract class AbstractFtpService  implements FtpService<String>{
         this.ftpConfig = ftpConfig;
         this.user=ftpConfig.getFtpName();
         this.pwd=ftpConfig.getFtpPwd();
+        this.ftpClient=new FTPClient();
     }
 
     public FTPClient getFtpClient() {
