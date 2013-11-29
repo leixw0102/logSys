@@ -17,7 +17,7 @@
     </property>
     <property>
         <name>ftp.dst.directory</name>
-        <value>/icntv/stb/log</value>
+        <value>/icntv/log/stb</value>
     </property>
     <property>
         <name>file.suffix</name>

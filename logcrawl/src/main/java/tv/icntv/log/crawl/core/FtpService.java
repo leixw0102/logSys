@@ -19,6 +19,8 @@ import org.apache.commons.net.ftp.FTPFile;
 import tv.icntv.log.crawl.filter.DirectoryFilter;
 import tv.icntv.log.crawl.filter.FileFilter;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -32,11 +34,9 @@ public interface FtpService<T> {
     public void logOut();
 
     public  boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory) ;
-//    public boolean downloadFile(FTPFile remoteFileName, String localDires,
-//                               String remoteDownLoadPath);
+    public boolean downloadFile(FTPFile remoteFileName, String localDires,
+                               String remoteDownLoadPath);
     public void logic(String strIp, int intPort,String user,String pwd,IFtpCallBack<T> callBack);
 
-//    public boolean matcher(String name,String regular);
-
-    public boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory,DirectoryFilter directoryFilter,FileFilter fileFilter);
+    public boolean downLoadDirectory(String localDirectoryPath,String remoteDirectory,DirectoryFilter directoryFilter,FileFilter fileFilter) ;
 }

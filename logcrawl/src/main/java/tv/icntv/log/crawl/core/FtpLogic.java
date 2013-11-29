@@ -40,7 +40,7 @@ public class FtpLogic {
 
     private String strIp;
     private int intPort;
-    private FtpService ftpService = null;
+    private FtpImpl ftpService = null;
     private String user;
     private String pwd;
     private FtpConfig configuration = null;
@@ -55,7 +55,7 @@ public class FtpLogic {
         configuration = new FtpConfig().init(config);
         this.user = Preconditions.checkNotNull(configuration.getFtpName());
         this.pwd = Preconditions.checkNotNull(configuration.getFtpPwd());
-        ftpService = new FtpImpl(configuration);
+        ftpService = new FtpImpl(this.strIp,this.intPort,configuration);
         this.directory = configuration.getFtpDirectoryExclude();
         this.suffixes = configuration.getFileSuffixs();
     }
@@ -74,6 +74,7 @@ public class FtpLogic {
             ftpService.downLoadDirectory(configuration.getFtpDstDirectory(), path);
         } catch (Exception e) {
             e.printStackTrace();
+
         } finally {
             ftpService.logOut();
         }
