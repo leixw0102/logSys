@@ -28,7 +28,10 @@ import tv.icntv.log.crawl.store.FileStoreData;
 import tv.icntv.log.crawl.thread.FtpDownThreadPools;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+
 
 
 /**
@@ -43,6 +46,10 @@ public class FtpImpl implements FtpService<String> {
     private FTPClient ftpClient;
     private FtpConfig ftpConfig=null;
     private long BUFFER_SIZE = (2 << 20) * 10;
+    private String ip;
+    private int port;
+    private String user;
+    private String pwd;
 
     public FtpImpl(FtpConfig configuration) {
           this.ftpConfig=configuration;
@@ -52,6 +59,10 @@ public class FtpImpl implements FtpService<String> {
 
     @Override
     public boolean login(String strIp, int intPort, String user, String pwd) {
+        this.ip = strIp;
+        this.port = intPort;
+        this.user = user;
+        this.pwd = pwd;
         boolean isLogin = false;
         this.ftpClient.setControlEncoding(ftpConfig.getFtpEncoding());
         try {
@@ -128,6 +139,7 @@ public class FtpImpl implements FtpService<String> {
                 return success;
             }
         } catch (Exception e) {
+            success = false;
             store.delete(strFileSuffix + remoteDownLoadPath + ".writing");
 //            store.delete(strFileSuffix+remoteFileName);
             logger.error(remoteFileName.getName() + "下载失败", e);
@@ -165,6 +177,7 @@ public class FtpImpl implements FtpService<String> {
         try {
             FTPFile[] allFile = this.ftpClient.listFiles(remoteDirectory);
             for (int currentFile = 0; currentFile < allFile.length; currentFile++) {
+
                 FTPFile file = allFile[currentFile];
                 String name = file.getName();
                 if (!file.isDirectory() ) {
@@ -177,7 +190,31 @@ public class FtpImpl implements FtpService<String> {
                         }else{
                             prefix=localDirectoryPath;
                         }
-                        downloadFile(file,prefix,remoteDirectory);
+                        boolean success = false;
+                        success = downloadFile(file,prefix,remoteDirectory);
+                        int downloadCnt = 1;
+
+                        for(int i=0;i<5;i++ ){
+                            if(success == false){
+                                logger.warn("下载重试!");
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                login(this.ip,this.port,this.user,this.pwd);
+                                success = downloadFile(file,prefix,remoteDirectory);
+                                downloadCnt+= 1;
+                            }else{
+                                break;
+                            }
+                        }
+                        if(downloadCnt > 1 && success==true){
+                            logger.warn("文件下载不稳定,下载了 {} 次",downloadCnt);
+                        }else if(downloadCnt > 1 && success==false){
+                            logger.error("文件下载失败,下载了 {} 次",downloadCnt);
+                        }
+
 //                        FtpDownThreadPools.getExecutorService().submit(new DownLoad(file,prefix,remoteDirectory));
                     }else{
                         logger.error("file suffix {},not include",ftpConfig.getFileSuffixs());
@@ -309,4 +346,39 @@ public class FtpImpl implements FtpService<String> {
 //        return success;
         }
     }
+//    public static void main(String[] args){
+//        FtpConfig configuration = new FtpConfig().init("ftp-stb-crawl.xml");
+//        FtpService ftpService = new FtpImpl(configuration);
+//        try {
+//            //ftp://172.16.2.60 / ftp-stb-crawl.xml
+//            URL url = new URL("ftp://172.16.2.60");
+//            boolean loginFlag = ftpService.login("192.168.30.35",url.getPort(),"cdnlog","CdNLoG");
+//            int loginCnt=0;
+//            for(int i=0;i<5;i++){
+//
+//                if(loginFlag==false){
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    loginFlag = ftpService.login("172.16.2.60",url.getPort(),"icntv_log","icntvlog!@#");
+//                    loginCnt = i+1;
+//                }else{
+//                    System.out.println("登陆成功!");
+//                    break;
+//                }
+//            }
+//            if(loginFlag==true&&loginCnt>1){
+//                System.out.println("登陆尝试"+loginCnt+"次成功,网络可能不稳定!");
+//            }else if(loginFlag==false){
+//                System.out.println("登陆尝试"+loginCnt+"次失败,请检查网络连通性!");
+//            }
+//        } catch (MalformedURLException e) {
+//            //e.printStackTrace();
+//        }
+//        ftpService.downLoadDirectory(configuration.getFtpDstDirectory(), "/");
+//
+//    }
+
 }
