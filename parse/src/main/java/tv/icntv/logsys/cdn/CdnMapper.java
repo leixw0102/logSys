@@ -67,7 +67,7 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
         if(matcher.find()&& matcher.groupCount()==6){
             g3 = matcher.group(3).split(" ");
             g6 = matcher.group(6).split("#");
-            if(null==g6[0]||g6[0].length()!=15){
+            if(null==g6 || g6.length==0 || null == g3 || g3.length==0 || g3.length<2){
                 return;
             }
             keyTemp = g6[0]+g3[1];

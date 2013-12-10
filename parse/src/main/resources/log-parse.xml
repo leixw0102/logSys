@@ -32,7 +32,7 @@
     </property>
     <property>
         <name>file.keys</name>
-        <value>chinacache,hot.media.ysten.com,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net,stb</value>
+        <value>chinacache,hot.media.ysten.com,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net</value>
     </property>
 
     <property>

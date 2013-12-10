@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
-            <version>0.90.4</version>
+            <version>0.94.14</version>
             <exclusions>
                 <exclusion>
                     <artifactId>thrift</artifactId>
