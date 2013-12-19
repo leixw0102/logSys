@@ -55,6 +55,7 @@ public class CdnParser extends Configured implements Tool{
         job.setMapperClass(tv.icntv.logsys.cdn.CdnMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
+
         TableMapReduceUtil.initTableReducerJob(tableName,tv.icntv.logsys.cdn.CdnReducer.class,job);
         return job;
     }

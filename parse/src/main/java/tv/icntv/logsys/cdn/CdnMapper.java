@@ -70,6 +70,9 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
             if(null==g6 || g6.length==0 || null == g3 || g3.length==0 || g3.length<2){
                 return;
             }
+            if(!g6[0].matches("\\d*")){
+                return;
+            }
             keyTemp = g6[0]+g3[1];
 
             valueTemp = matcher.group(1)+"</>"+matcher.group(2)+"</>"+matcher.group(3)+"</>"+matcher.group(4)+"</>"+matcher.group(5)+"</>"+matcher.group(6);
