@@ -11,11 +11,6 @@
 
     <artifactId>parse</artifactId>
     <dependencies>
-      <!--<dependency>-->
-            <!--<groupId>org.apache.mahout</groupId>-->
-            <!--<artifactId>mahout-core</artifactId>-->
-            <!--<version>0.8</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -32,28 +27,38 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.9</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hadoop</groupId>-->
+            <!--<artifactId>hadoop-core</artifactId>-->
+            <!--<version>1.2.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hbase</groupId>-->
+            <!--<artifactId>hbase</artifactId>-->
+            <!--<version>0.94.14</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>thrift</artifactId>-->
+                    <!--<groupId>org.apache.thrift</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+
+        <!--</dependency>-->
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-core</artifactId>
-            <version>1.2.1</version>
+            <artifactId>hbase-common</artifactId>
+            <groupId>org.apache.hbase</groupId>
+            <version>0.96.1.1-hadoop2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase</artifactId>
-            <version>0.94.14</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>thrift</artifactId>
-                    <groupId>org.apache.thrift</groupId>
-                </exclusion>
-            </exclusions>
-
+            <artifactId>hbase-hadoop2-compat</artifactId>
+            <version>0.96.1.1-hadoop2</version>
         </dependency>
-      <!--  <dependency>
-            <groupId>org.apache.mahout</groupId>
-            <artifactId>mahout-examples</artifactId>
-            <version>0.8</version>
-        </dependency>-->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>0.96.1.1-hadoop2</version>
+        </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -88,38 +93,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-jar-plugin</artifactId>-->
-                <!--<version>2.4</version>-->
-                <!--<configuration>-->
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<addClasspath>true</addClasspath>-->
-                            <!--<classpathPrefix>lib/</classpathPrefix>-->
-                            <!--<mainClass>tv.icntv.logsys.HadoopRunMain</mainClass>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-dependency-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>copy</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>-->
-                                <!--${project.build.directory}/lib-->
-                            <!--</outputDirectory>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 </project>

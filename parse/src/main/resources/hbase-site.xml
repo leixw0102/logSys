@@ -22,19 +22,19 @@
  */
 -->
 <configuration>
-	<!--<property>-->
-		<!--<name>hbase.rootdir</name>-->
-		<!--<value>hdfs://slave102:8020/hbase</value>-->
+    <!--<property>-->
+    <!--<name>hbase.rootdir</name>-->
+    <!--<value>hdfs://slave102:8020/hbase</value>-->
 
-	<!--</property>-->
-	<property>
-		<name>hbase.cluster.distributed</name>
-		<value>true</value>
-	</property>
-	<property>
-		<name>hbase.zookeeper.quorum</name>
-		<value>slave102,slave103,slave104,slave106,slave107</value>
-	</property>
+    <!--</property>-->
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>master1,master2,node1,node2,node3,node4,node5</value>
+    </property>
     <!--<property>-->
         <!--<name>hbase.rootdir</name>-->
         <!--<value>hdfs://slave1:8020/hbase</value>-->

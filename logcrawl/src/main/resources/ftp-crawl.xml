@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
+     <!-- 192.168.30.35-->
     <property>
         <name>ftp.name</name>
         <value>cdnlog</value>

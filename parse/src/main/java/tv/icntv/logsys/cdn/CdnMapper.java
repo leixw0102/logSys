@@ -16,6 +16,7 @@
 package tv.icntv.logsys.cdn;
 
 
+import com.google.common.base.Strings;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -58,8 +59,6 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-
         Matcher matcher = pattern.matcher(value.toString());
         String g3[],g6[];
         String keyTemp="";
@@ -70,7 +69,7 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
             if(null==g6 || g6.length==0 || null == g3 || g3.length==0 || g3.length<2){
                 return;
             }
-            if(!g6[0].matches("\\d*")){
+            if(!g6[0].matches("\\d*")||Strings.isNullOrEmpty(g6[0])){
                 return;
             }
             keyTemp = g6[0]+g3[1];
@@ -86,22 +85,44 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
     }
 
     public static void main(String[] args){
+        System.out.println(Strings.isNullOrEmpty(""));
 //
-        String str = "122.143.12.29 - - [23/Jul/2013:00:00:00 +0800] \"GET /media/new/2012/02/02/hd_dy_mny2_20120202.ts HTTP/1.1\" 206 1049074 \"-\" \"010133501227729#00000032AmlogicMDZ-05-201302261821793###Mar  4 2013,11:11:54\"";
-
-        String reg = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(str);
-        while(matcher.find()){
-            System.out.println("Group 0:"+matcher.group(0));
-            System.out.println("Group 1:"+matcher.group(1));
-            System.out.println("Group 2:"+matcher.group(2));
-            System.out.println("Group 3:"+matcher.group(3));
-            System.out.println("Group 4:"+matcher.group(4));
-            System.out.println("Group 5:"+matcher.group(5));
-            System.out.println("Group 6:"+matcher.group(6));
-        }
-//        String a = "010133501227729#00000032AmlogicMDZ-05-201302261821793###Mar  4 2013,11:11:54";
+//        String str = "61.171.246.250 - - [18/Jan/2014:00:00:00 +0800] \"GET /media/new/2013/10/23/hd_dsj_jczm04_20131023.ts HTTP/1.1\" 206 1049126 \"-\" \"010233501205867#00000032AmlogicMDZ-05-201302261821793###Dec  6 2013,1\n" +
+//                "6:41:03\"";
+//
+//        String reg = "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s\\-\\s\\-\\s\\[([^]]+)\\]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s\"-\"\\s\"([^]]+)\"";
+//        Pattern pattern = Pattern.compile(reg);
+//        Matcher matcher = pattern.matcher(str);
+//        while(matcher.find()){
+//            System.out.println("Group 0:"+matcher.group(0));
+//            System.out.println("Group 1:"+matcher.group(1));
+//            System.out.println("Group 2:"+matcher.group(2));
+//            System.out.println("Group 3:"+matcher.group(3));
+//            System.out.println("Group 4:"+matcher.group(4));
+//            System.out.println("Group 5:"+matcher.group(5));
+//            System.out.println("Group 6:"+matcher.group(6));
+//        }
+//
+//        Matcher matcher = pattern.matcher(str.toString());
+//        String g3[],g6[];
+//        String keyTemp="";
+//        String valueTemp="";
+//        if(matcher.find()&& matcher.groupCount()==6){
+//            g3 = matcher.group(3).split(" ");
+//            g6 = matcher.group(6).split("#");
+//            if(null==g6 || g6.length==0 || null == g3 || g3.length==0 || g3.length<2){
+//                return;
+//            }
+//            if(!g6[0].matches("\\d*")){
+//                return;
+//            }
+//            keyTemp = g6[0]+g3[1];
+//
+//            valueTemp = matcher.group(1)+"</>"+matcher.group(2)+"</>"+matcher.group(3)+"</>"+matcher.group(4)+"</>"+matcher.group(5)+"</>"+matcher.group(6);
+////            context.write(new Text(keyTemp), new Text(valueTemp));
+//        }
+//        System.out.println(keyTemp);
+//        System.out.println(valueTemp);
 //        String[] arrA = a.split("#");
 //        for(int i=0;i<arrA.length;i++){
 //            System.out.println(arrA[i]);

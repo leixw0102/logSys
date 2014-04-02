@@ -111,6 +111,7 @@ public class FtpImpl extends AbstractFtpService{
     public boolean downLoadDirectory(String localDirectoryPath, String remoteDirectory, DirectoryFilter directoryFilter, FileFilter fileFilter) {
         try {
             FTPFile[] allFile = getFtpClient().listFiles(remoteDirectory);
+            logger.info("ftp src size={}",allFile.length);
             for (int currentFile = 0; currentFile < allFile.length; currentFile++) {
 
                 FTPFile file = allFile[currentFile];
@@ -150,6 +151,7 @@ public class FtpImpl extends AbstractFtpService{
 
                     }else{
                         logger.error("file suffix {},not include",getFtpConfig().getFileSuffixs());
+                        continue;
                     }
                 } else {
                     //directory exclude logic

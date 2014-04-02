@@ -18,12 +18,12 @@ package tv.icntv.logsys.cdn;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +39,6 @@ import java.io.IOException;
  */
 public class CdnParser extends Configured implements Tool{
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    public static void main(String [] args) throws IOException, ClassNotFoundException, InterruptedException {
-        CdnParser     parser = new CdnParser();
-    }
-
-
 
     private  Job configureJob(Configuration configuration,String[] arrayArgs) throws IOException {
 
@@ -56,7 +51,11 @@ public class CdnParser extends Configured implements Tool{
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
 
-        TableMapReduceUtil.initTableReducerJob(tableName,tv.icntv.logsys.cdn.CdnReducer.class,job);
+        TableMapReduceUtil.initTableReducerJob(tableName, tv.icntv.logsys.cdn.CdnReducer.class, job);
+//        job.setReducerClass(CdnHdfsReducer.class);
+//        job.setOutputKeyClass(Text.class);
+//        job.setOutputValueClass(Text.class);
+        FileOutputFormat.setOutputPath(job,new Path(tableName));
         return job;
     }
 

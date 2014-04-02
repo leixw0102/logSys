@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+    <property>
+        <name>parser.log.config.className</name>
+        <value>tv.icntv.logsys.config.LogConfiguration</value>
+    </property>
+    <property>
+        <name>cdn.log.regular</name>
+        <value>([\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})\s\-\s\-\s\[([^]]+)\]\s"([^"]+)"\s(\d+)\s(\d+)\s"-"\s"([^]]+)"</value>
+    </property>
+
+    <property>
+        <name>file.from.prefix</name>
+        <value>/icntv/log</value>
+    </property>
+    <property>
+        <name>file.to.prefix</name>
+        <value>/icntv/store/log</value>
+    </property>
+    <property>
+        <name>hdfs.to.directory</name>
+        <value>/icntv/parser</value>
+    </property>
+    <property>
+        <name>date.regular.default</name>
+        <value>yyyy-MM-dd</value>
+    </property>
+    <property>
+        <name>file.keys</name>
+        <value>chinacache,hot.media.ysten.com,hot.icntv.cctvcdn.net,mibox.icntv.cctvcdn.net</value>
+    </property>
+
+    <!-- parser to hdfs file-->
+    <property>
+        <name>parser.to.hdfs</name>
+        <value>%s/%tF</value>
+    </property>
+    <property>
+        <name>chinacache.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!-- 抓取中使用 -->
+    <!--<property>-->
+        <!--<name>chinache.date.regular</name>-->
+        <!--<value>46294_(\d{8})_w3c.gz</value>-->
+    <!--</property>-->
+    <!--<property>-->
+        <!--<name>chinacache.date.matcher.position</name>-->
+        <!--<value>1</value>-->
+    <!--</property>-->
+    <!--<property>-->
+        <!--<name>chinacache.date.from.regular</name>-->
+        <!--<value>yyyyMMdd</value>-->
+    <!--</property>-->
+
+    <property>
+        <name>hot.media.ysten.com.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+
+    <property>
+        <name>hot.icntv.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+
+    <property>
+        <name>mibox.icntv.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+
+    <property>
+        <name>tvsee.cctvcdn.net.className</name>
+        <value>tv.icntv.logsys.cdn.CdnParser</value>
+    </property>
+    <!--ysten stb log-->
+    <property>
+        <name>stb.className</name>
+        <value>tv.icntv.logsys.stb.YstenParser</value>
+    </property>
+</configuration>
