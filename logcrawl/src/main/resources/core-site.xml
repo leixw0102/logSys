@@ -21,7 +21,7 @@
     <!--</property>-->
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://master2:8020/</value>
+        <value>hdfs://master2:8020</value>
     </property>
     <property>
         <name>fs.trash.interval</name>

@@ -73,6 +73,7 @@ public class FtpConfig {
         private static final String FTP_DST_DIRECTORY="ftp.dst.directory";
         private static final String FILE_SUFFIX="file.suffix";
         private static final String FTP_DST_NAME_APPEND_LOCAL="ftp.dst.name.append.local"; //ftp.dst.name.append.local
+        private static final String FTP_DIRECTORY_INCLUDE="ftp.directory.include";
     }
     public  String getFtpDstDirectory(){
         return configuration.get(FtpConstant.FTP_DST_DIRECTORY,"/");
@@ -117,6 +118,10 @@ public class FtpConfig {
      */
     public  String getFtpStoreType(){
         return configuration.get(FtpConstant.FTP_DATA_SORT_TYPE, "HDFS");
+    }
+
+    public String getDirectoryInclude(){
+        return configuration.get(FtpConstant.FTP_DIRECTORY_INCLUDE);
     }
     /**
      * get ftp.timeout   ;default 6000s

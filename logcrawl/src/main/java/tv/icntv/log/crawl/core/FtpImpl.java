@@ -33,7 +33,6 @@ import java.net.URL;
 import java.util.List;
 
 
-
 /**
  * Created with IntelliJ IDEA.
  * User: lei
@@ -41,10 +40,10 @@ import java.util.List;
  * Time: 上午11:17
  * To change this template use File | Settings | File Templates.
  */
-public class FtpImpl extends AbstractFtpService{
+public class FtpImpl extends AbstractFtpService {
 
     public FtpImpl(String strIp, int intPort, FtpConfig configuration) {
-        super(strIp,intPort,configuration);
+        super(strIp, intPort, configuration);
     }
 
     /**
@@ -106,51 +105,50 @@ public class FtpImpl extends AbstractFtpService{
     }
 
 
-
     @Override
     public boolean downLoadDirectory(String localDirectoryPath, String remoteDirectory, DirectoryFilter directoryFilter, FileFilter fileFilter) {
         try {
             FTPFile[] allFile = getFtpClient().listFiles(remoteDirectory);
-            logger.info("ftp src size={}",allFile.length);
+            logger.info("ftp src size={}", allFile.length);
             for (int currentFile = 0; currentFile < allFile.length; currentFile++) {
 
                 FTPFile file = allFile[currentFile];
                 String name = file.getName();
-                if (!file.isDirectory() ) {
-                    if(getFileFilter().accept(name) ){
-                        String prefix=null;
-                        if(getFtpConfig().getFtpDstNameAppendLocal()){
-                            prefix=localDirectoryPath+remoteDirectory;
-                        }else{
-                            prefix=localDirectoryPath;
+                if (!file.isDirectory()) {
+                    if (getFileFilter().accept(name)) {
+                        String prefix = null;
+                        if (getFtpConfig().getFtpDstNameAppendLocal()) {
+                            prefix = localDirectoryPath + remoteDirectory;
+                        } else {
+                            prefix = localDirectoryPath;
                         }
                         boolean success = false;
-                        success = downloadFile(file,prefix,remoteDirectory);
+                        success = downloadFile(file, prefix, remoteDirectory);
                         int downloadCnt = 1;
 
-                        for(int i=0;i<5;i++ ){
-                            if(success == false){
+                        for (int i = 0; i < 5; i++) {
+                            if (success == false) {
                                 logger.warn("下载重试!");
                                 try {
                                     Thread.sleep(5000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                login(getIp(),getPort(),getUser(),getPwd());
-                                success = downloadFile(file,prefix,remoteDirectory);
-                                downloadCnt+= 1;
-                            }else{
+                                login(getIp(), getPort(), getUser(), getPwd());
+                                success = downloadFile(file, prefix, remoteDirectory);
+                                downloadCnt += 1;
+                            } else {
                                 break;
                             }
                         }
-                        if(downloadCnt > 1 && success==true){
-                            logger.warn("文件下载不稳定,下载了 {} 次",downloadCnt);
-                        }else if(downloadCnt > 1 && success==false){
-                            logger.error("文件下载失败,下载了 {} 次",downloadCnt);
+                        if (downloadCnt > 1 && success == true) {
+                            logger.warn("文件下载不稳定,下载了 {} 次", downloadCnt);
+                        } else if (downloadCnt > 1 && success == false) {
+                            logger.error("文件下载失败,下载了 {} 次", downloadCnt);
                         }
 
-                    }else{
-                        logger.error("file suffix {},not include",getFtpConfig().getFileSuffixs());
+                    } else {
+                        logger.error("file suffix {},not include", getFtpConfig().getFileSuffixs());
                         continue;
                     }
                 } else {
@@ -159,14 +157,18 @@ public class FtpImpl extends AbstractFtpService{
                         logger.info("directory exclude name=" + remoteDirectory + " \t regular=" + getFtpConfig().getFtpDirectoryExclude());
                         continue;
                     }
-                    // create directory if necessary
-                    if (!localDirectoryPath.equals(File.separator)) {
-                        FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(getFtpConfig().getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
-                        if (!store.createDirectory(localDirectoryPath)) {
-                            continue;
+                    if (getDirectoryInclude().accept(name)) {
+
+                        // create directory if necessary
+                        if (!localDirectoryPath.equals(File.separator)) {
+                            FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(getFtpConfig().getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
+                            if (!store.createDirectory(localDirectoryPath)) {
+                                continue;
+                            }
                         }
+                        downLoadDirectory(localDirectoryPath, (remoteDirectory.equals("/") ? remoteDirectory : (remoteDirectory + File.separator)) + name, directoryFilter, fileFilter);
+
                     }
-                    downLoadDirectory(localDirectoryPath, (remoteDirectory.equals("/") ? remoteDirectory : (remoteDirectory + File.separator)) + name,directoryFilter,fileFilter);
                 }
             }
         } catch (IOException e) {
@@ -177,13 +179,22 @@ public class FtpImpl extends AbstractFtpService{
         return true;
     }
 
-    protected DirectoryFilter getDirectoryFilter(){
+    protected DirectoryFilter getDirectoryFilter() {
         return new DefaultDirectoryFilter(getFtpConfig());
     }
-    protected FileFilter getFileFilter(){
-        return new DefaultFileFilter(getFtpConfig());
+
+    protected DirectoryFilter getDirectoryInclude() {
+        return new AbstractDirectoryFilter(getFtpConfig()) {
+            @Override
+            public String[] getFilterRegular() {
+                return super.ftpConfig.getFtpDirectoryExclude().split(","); //To change body of implemented methods use File | Settings | File Templates.
+            }
+        };
     }
 
+    protected FileFilter getFileFilter() {
+        return new DefaultFileFilter(getFtpConfig());
+    }
 
 
 }

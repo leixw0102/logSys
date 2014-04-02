@@ -3,12 +3,12 @@
      <!-- 192.168.30.35-->
     <property>
         <name>ftp.name</name>
-        <value>cdnlog</value>
+        <value>ysten</value>
         <describe></describe>
     </property>
     <property>
         <name>ftp.pwd</name>
-        <value>CdNLoG</value>
+        <value>Vqb1L2zPMcer</value>
         <describe></describe>
     </property>
     <property>
@@ -16,8 +16,8 @@
         <value>true</value>
     </property>
      <property>
-         <name>ftp.directory.exclude</name>
-         <value>images.is.ysten.com,vod01.media.ysten.com,sns.is.ysten.com,poms.is.ysten.com,panel.is.ysten.com,cold.icntv.cctvcdn.net,epg.is.ysten.com</value>
+         <name>ftp.directory.include</name>
+         <value>hot.icntv.cctvcdn.net,hot.media.ysten.com,mibox.icntv.cctvcdn.net,tvsee.cctvcdn.net</value>
      </property>
      <property>
          <name>ftp.dst.directory</name>
