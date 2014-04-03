@@ -157,8 +157,8 @@ public class FtpImpl extends AbstractFtpService {
                         logger.info("directory exclude name=" + remoteDirectory + " \t regular=" + getFtpConfig().getFtpDirectoryExclude());
                         continue;
                     }
-                    if (getDirectoryInclude().accept(name)) {
-
+                    if (!getDirectoryInclude().accept(name)) {
+                        logger.info("ftp directory {}",name);
                         // create directory if necessary
                         if (!localDirectoryPath.equals(File.separator)) {
                             FileStoreData store = (FileStoreData) FtpConfig.SortTypeClass.valueOf(getFtpConfig().getFtpStoreType().toUpperCase()).getFileStoreTypeClass();
@@ -187,7 +187,7 @@ public class FtpImpl extends AbstractFtpService {
         return new AbstractDirectoryFilter(getFtpConfig()) {
             @Override
             public String[] getFilterRegular() {
-                return super.ftpConfig.getFtpDirectoryExclude().split(","); //To change body of implemented methods use File | Settings | File Templates.
+                return super.ftpConfig.getDirectoryInclude().split(","); //To change body of implemented methods use File | Settings | File Templates.
             }
         };
     }
