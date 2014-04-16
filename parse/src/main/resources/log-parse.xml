@@ -87,4 +87,9 @@
         <name>stb.className</name>
         <value>tv.icntv.logsys.stb.YstenParser</value>
     </property>
+    <!-- 没用到 parser.file.suffixs-->
+    <property>
+        <name>parser.file.suffixs</name>
+        <value>gz</value>
+    </property>
 </configuration>

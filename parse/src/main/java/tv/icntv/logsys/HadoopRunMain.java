@@ -75,7 +75,7 @@ public class HadoopRunMain extends Configured implements Tool {
         for (FileStatus fileStatus : fileStatuses) {
             String name = fileStatus.getPath().getName();
             name = name.replace(".writed", "");
-            if ((name.endsWith(".gz")||name.endsWith(".log")) && store.isExist(fromPath + separator + name)) {
+            if ( store.isExist(fromPath + separator + name)) {   //(name.endsWith()||name.endsWith(".log")) &&
                 list.add(new Path(fromPath + separator + name));
             }
         }

@@ -123,7 +123,7 @@ public class Main {
 //            boolean unCompressSuccess = true;
 //            String to = this.toPath + separator + unCompressedName;
 //            if (!store.isExist(to + unCompressSuffix)) {
-//                //un compress
+//                //un compression
 //                store.createFile(to + unCompressing);
 //                unCompressSuccess = store.uncompress(this.fromPath + separator + name, to);
 //            }

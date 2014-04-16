@@ -39,7 +39,7 @@ public class TestWriterHdfs {
         test1();
     }
     public static void test1() throws ClassNotFoundException, IOException {
-        String codecClassName="org.apache.hadoop.io.compress.GzipCodec";
+        String codecClassName="org.apache.hadoop.io.compression.GzipCodec";
         Class<?> codecClass=Class.forName(codecClassName);
         Configuration config = new Configuration();
         CompressionCodec codec= (CompressionCodec) ReflectionUtils.newInstance(codecClass, config);
@@ -48,7 +48,7 @@ public class TestWriterHdfs {
         out.close();
     }
     public static void test2() throws ClassNotFoundException, IOException {
-        String codecClassName="org.apache.hadoop.io.compress.GzipCodec";
+        String codecClassName="org.apache.hadoop.io.compression.GzipCodec";
         Class<?> codecClass=Class.forName(codecClassName);
         Configuration config = new Configuration();
         CompressionCodec codec= (CompressionCodec) ReflectionUtils.newInstance(codecClass, config);
