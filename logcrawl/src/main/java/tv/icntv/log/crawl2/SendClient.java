@@ -88,7 +88,7 @@ public class SendClient {
             return;
         }
 
-        logger.info("source = "+source+"\r\n lzo="+lzoFile+"\r\n target = "+hdfsUrl);
+//        logger.info("source = "+source+"\r\n lzo="+lzoFile+"\r\n target = "+hdfsUrl);
 
         File file = new File(source);
         if (!file.exists()) {

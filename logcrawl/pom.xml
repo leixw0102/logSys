@@ -58,25 +58,21 @@
              <version>3.3</version>
          </dependency>
          <dependency>
+             <groupId>org.apache.httpcomponents</groupId>
+             <artifactId>httpcore</artifactId>
+             <version>4.3</version>
+         </dependency>
+         <dependency>
+             <groupId>org.apache.httpcomponents</groupId>
+             <artifactId>httpclient</artifactId>
+             <version>4.3</version>
+         </dependency>
+         <dependency>
              <groupId>com.google.guava</groupId>
              <artifactId>guava</artifactId>
              <version>15.0</version>
          </dependency>
-         <dependency>
-             <groupId>org.slf4j</groupId>
-             <artifactId>slf4j-api</artifactId>
-             <version>1.7.5</version>
-         </dependency>
-         <dependency>
-             <groupId>ch.qos.logback</groupId>
-             <artifactId>logback-core</artifactId>
-             <version>1.0.9</version>
-         </dependency>
-         <dependency>
-             <groupId>ch.qos.logback</groupId>
-             <artifactId>logback-classic</artifactId>
-             <version>1.0.9</version>
-         </dependency>
+
          <!--<dependency>-->
              <!--<groupId>org.apache.hadoop</groupId>-->
              <!--<artifactId>hadoop-core</artifactId>-->
@@ -91,6 +87,11 @@
              <groupId>org.apache.commons</groupId>
              <artifactId>commons-compress</artifactId>
              <version>1.5</version>
+         </dependency>
+         <dependency>
+             <groupId>net.sourceforge.htmlunit</groupId>
+             <artifactId>htmlunit</artifactId>
+             <version>2.14</version>
          </dependency>
      </dependencies>
     <build>
@@ -124,4 +125,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

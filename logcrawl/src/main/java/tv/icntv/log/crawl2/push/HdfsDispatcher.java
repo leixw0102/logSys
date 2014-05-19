@@ -19,11 +19,14 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.resources.Messages_fr;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  * Created by leixw
@@ -34,7 +37,7 @@ import java.io.IOException;
  */
 public class HdfsDispatcher implements Dispather {
     Configuration configuration = new Configuration();
-    FileSystem fileSystem = null;
+    DistributedFileSystem fileSystem = null;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static final String WRITING = ".writing", WRITED = ".writed";
 
@@ -43,7 +46,10 @@ public class HdfsDispatcher implements Dispather {
 
     public HdfsDispatcher(String source, String url) {
         this.source = source;
-        this.url = url;
+
+            this.url = url;//MessageFormat.format(url,ActiveName.activeMasterNameNode("http://{0}:50070/jmx?qry=Hadoop:service=NameNode,name=FSNamesystem",new String[]{"10.232.48.154","10.232.44.165"}));
+            logger.info("source {} \r\n url {}",source,this.getUrl());
+
     }
 
     public String getSource() {
@@ -69,7 +75,7 @@ public class HdfsDispatcher implements Dispather {
         try {
             Path source = new Path(getSource());
             Path target = new Path(getUrl());
-            fileSystem = FileSystem.get(configuration);
+            fileSystem = (DistributedFileSystem) FileSystem.get(configuration);
             Path writedPath = new Path(getUrl() + WRITED);
             if (fileSystem.exists(writedPath) && fileSystem.exists(target)) {
                 if (new File(getSource()).length() == fileSystem.getFileStatus(target).getLen()) {
