@@ -14,8 +14,10 @@ package tv.icntv.log.stb.commons;/*
  *      limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -42,4 +44,21 @@ public class LoadProperties {
         return  LoadProperties.class.getClassLoader().getResourceAsStream(file);
     }
 
+    public static Properties loadProperitesByFileAbsolute(String file){
+        try {
+            Reader inputStream= Files.newReader(new File(file), Charsets.UTF_8);
+            properties.load(inputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return properties;
+    }
+    public static void main(String[]args){
+        Properties pro=loadProperitesByFileAbsolute("d:\\t.txt");
+        for(Object key : pro.keySet()){
+              System.out.print(key.toString()+"\r\n");
+        }
+    }
 }

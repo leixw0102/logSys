@@ -23,9 +23,24 @@ package tv.icntv.log.stb.core;/*
  */
 public interface ParserConstant {
 
-    public String INPUT="-input";
-    public String BACK="-back";
-    public String OUTPUT="-output";
-    public String RULE_FILE="-ruleFile";
+
+    public String RULE_FILE="ruleFile";
+    //rule key
+    public String INPUT="stb.input.path";
+    public String BACK="stb.back.path";
+    public String OUTPUT_PREFIX="stb.filter.result.path";
+    public String OUTPUT_SUFFIX="stb.filter.file.keys";
+    public String FILTER_JOB_PATHS="stb.filter.job.paths";
+//    public String FILTER_KEYS="stb.filter.rule.keys";
+    public String FILTER_SPILTER=";";
+    public String FILTER_TIME="time_long";
+    public String OTHER_PATH="stb.filter.file.other";
+
+    public String STB_SPLITER="/";
+    public String DAY_YYYY_MM_DD="yyyy-MM-dd";
+
+    public String file_success_suffix=".writed";
+    public String parseing_suffix=".parsing";
+    public String parsed_suffix=".parsed";
 
 }
