@@ -23,6 +23,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by leixw
@@ -31,7 +32,7 @@ import java.io.IOException;
  * Date: 2014/05/22
  * Time: 15:56
  */
-public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
+public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements Player{
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         if(null == value|| Strings.isNullOrEmpty(value.toString())){
@@ -42,6 +43,16 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
             return;
         }
         String content=values[15];
+        if(Strings.isNullOrEmpty(content)){
+            return;
+        }
+        if(content.startsWith(CONTENT_PREFIX)){
+            content=content.replace(CONTENT_PREFIX,"");
+        }
+        StringBuffer stringBuffer=new StringBuffer();
+        stringBuffer.append(EMPTY).append(SPLIT);
+
+        content.split(COMMA_SIGN);
 
     }
 
@@ -53,5 +64,10 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
         super.cleanup(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<String> getKeys() {
+        return Lists.newArrayList(KEY_PLAYER_TIMELINE,KEY_PLAYER_OPERTYPE,KEY_PLAYER_PROGATHERID,KEY_PLAYER_PROGRAMID);
     }
 }
