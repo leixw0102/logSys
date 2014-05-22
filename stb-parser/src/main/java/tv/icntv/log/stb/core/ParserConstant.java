@@ -26,6 +26,7 @@ public interface ParserConstant {
 
     public String RULE_FILE="ruleFile";
     //rule key
+
     public String INPUT="stb.input.path";
     public String BACK="stb.back.path";
     public String OUTPUT_PREFIX="stb.filter.result.path";
@@ -35,6 +36,8 @@ public interface ParserConstant {
     public String FILTER_SPILTER=";";
     public String FILTER_TIME="time_long";
     public String OTHER_PATH="stb.filter.file.other";
+    public String DAY_CONSTANT="current_day";
+
 
     public String STB_SPLITER="/";
     public String DAY_YYYY_MM_DD="yyyy-MM-dd";

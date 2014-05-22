@@ -14,11 +14,14 @@ package tv.icntv.log.stb;/*
  *      limitations under the License.
  */
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import tv.icntv.log.stb.core.AbstractJob;
+import tv.icntv.log.stb.filter.FilterJob;
 
 import java.util.Map;
 
@@ -30,10 +33,7 @@ import java.util.Map;
  * Time: 13:55
  */
 public class StbParserJob extends AbstractJob {
-    @Override
-    public int run(String[] args) throws Exception {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 
     private void runTool(Class<? extends AbstractJob> toolClass,Map<String,String> args) throws Exception {
         AbstractJob tool = ReflectionUtils.newInstance(toolClass,getConf());
@@ -42,7 +42,24 @@ public class StbParserJob extends AbstractJob {
 
     @Override
     public void run(Map<String, String> maps) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if(null ==maps || maps.isEmpty()){
+            logger.error("read file content,but null");
+        }
+        //execute filter job
+        try{
+            runTool(FilterJob.class,maps);
+        }catch (Exception e){
+            logger.error("error filter job ");
+            return;
+        }
+        //
+        try{
+            runTool(GenerateStbLogJob.class,maps);
+        }catch (Exception e){
+            logger.error("error filter job ");
+            return;
+        }
+
     }
     public static void main(String[]args) throws Exception {
         Configuration conriguration=new Configuration();

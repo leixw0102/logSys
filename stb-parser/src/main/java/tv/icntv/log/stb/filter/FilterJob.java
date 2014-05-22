@@ -50,44 +50,21 @@ import java.util.Properties;
  * Time: 13:54
  */
 public class FilterJob extends AbstractJob{
+
     @Override
-    public int run(String[] args) throws Exception {
-        if(null == args || args.length<1){
-            logger.error("usage :-ruleFile <rule_file>");
-            return -1;
-        }
-        if (args.length % 2 != 0) {
-            throw new RuntimeException("expected pairs of argName argValue");
-        }
-        Map<String,String> maps = Maps.newHashMap();
-        for(int i=0;i<args.length;i++){
-           String key = args[i];
-            if(Strings.isNullOrEmpty(key)){
-                continue;
-            };
-            key = key.trim().substring(1);
-            try {
-//                if(key.equals("-ruleFile")){
-                FilterJobParameterEnum temp=FilterJobParameterEnum.valueOf(key.toUpperCase());
-                maps.put(temp.toString().trim().toLowerCase(),args[i+1]);
-//                }
-            } catch (IllegalArgumentException e){
-                i++;
-                continue;
-            }
-            i++;
-        }
-        run(maps);
-        return 0;
+    public void setConf(Configuration conf){
+        super.setConf(conf);
+        conf.setBoolean("mapreduce.reduce.speculative",false);
+        conf.setBoolean("mapreduce.map.speculative",false);
     }
+
 
     @Override
     public void run(Map<String, String> maps) throws Exception {
         Configuration configuration=getConf();
        //setting conf
         Properties properties= LoadProperties.loadProperitesByFileAbsolute(maps.get(RULE_FILE.toLowerCase()));
-        DateTime dateTime=new DateTime(new Date());
-        String day=  "2014-05-01";//dateTime.toString(DAY_YYYY_MM_DD);
+        String day=configuration.get(DAY_CONSTANT);
         Path input = new Path(MessageFormat.format(properties.getProperty(INPUT),day));
         Path back = new Path(MessageFormat.format(properties.getProperty(BACK),day));
         Path output = new Path(MessageFormat.format(properties.getProperty(OUTPUT_PREFIX),day));
@@ -98,7 +75,7 @@ public class FilterJob extends AbstractJob{
         configuration.set(OUTPUT_SUFFIX,properties.getProperty(OUTPUT_SUFFIX));
         configuration.set(OUTPUT_PREFIX,output.toString());
         configuration.set(OTHER_PATH,properties.getProperty(OTHER_PATH));
-        configuration.setLong(FILTER_TIME,dateTime.getMillis());
+
 //        configuration
 //        Path input=new Path("/icntv/log/stb/2014-05-19/stb-2014-05-18-23.lzo_deflate");
 //        Path back=new Path("/icntv/parser/stb/filter/status/2014-05-18/");
@@ -124,11 +101,6 @@ public class FilterJob extends AbstractJob{
         FileOutputFormat.setOutputPath(stbFilterJob, output);
         LazyOutputFormat.setOutputFormatClass(stbFilterJob, TextOutputFormat.class);
 
-//        for(String str:paths.split(";")){
-//            MultipleOutputs.addNamedOutput(stbFilterJob,str,TextOutputFormat.class, NullWritable.class,Text.class);
-//        }
-
-//        stbFilterJob.setOutputFormatClass(TextOutputFormat.class);
         stbFilterJob.setNumReduceTasks(0);
 
        if(stbFilterJob.waitForCompletion(true)){;
@@ -145,17 +117,11 @@ public class FilterJob extends AbstractJob{
      */
     public static void main(String[]args) throws Exception {
         Configuration configuration = new Configuration();
-        configuration.set("mapreduce.output.fileoutputformat.compress","true");
-        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
-        configuration.set("mapreduce.map.output.compress","true");
-        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
-        configuration.setBoolean("mapreduce.reduce.speculative",false);
-        configuration.setBoolean("mapreduce.map.speculative",false);
+
+
         int result = ToolRunner.run(configuration,new FilterJob(),args);
         System.exit(result);
     }
 
-    enum FilterJobParameterEnum{
-        RULEFILE;
-    }
+
 }
