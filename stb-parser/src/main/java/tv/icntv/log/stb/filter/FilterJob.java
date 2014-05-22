@@ -146,12 +146,11 @@ public class FilterJob extends AbstractJob{
     public static void main(String[]args) throws Exception {
         Configuration configuration = new Configuration();
         configuration.set("mapreduce.output.fileoutputformat.compress","true");
-        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzoCodec");
+        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
         configuration.set("mapreduce.map.output.compress","true");
-        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzoCodec");
+        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
         configuration.setBoolean("mapreduce.reduce.speculative",false);
         configuration.setBoolean("mapreduce.map.speculative",false);
-        System.out.println(configuration.get("mapreduce.map.output.compress")+"\t");
         int result = ToolRunner.run(configuration,new FilterJob(),args);
         System.exit(result);
     }

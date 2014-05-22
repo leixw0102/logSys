@@ -47,7 +47,7 @@
     </property>
     <property>
         <name>mapreduce.output.fileoutputformat.compress.codec</name>
-        <value>com.hadoop.compression.lzo.LzoCodec</value>
+        <value>com.hadoop.compression.lzo.LzopCodec</value>
     </property>
     <property>
         <name>mapreduce.map.output.compress</name>
@@ -59,7 +59,7 @@
 
     <property>
         <name>mapreduce.map.output.compress.codec</name>
-        <value>com.hadoop.compression.lzo.LzoCodec</value>
+        <value>com.hadoop.compression.lzo.LzopCodec</value>
         <description>If the map outputs are compressed, how should they be
             compressed?
         </description>
