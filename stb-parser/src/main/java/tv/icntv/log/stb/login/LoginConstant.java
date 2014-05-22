@@ -13,7 +13,7 @@
  *      See the License for the specific language governing permissions and
  *      limitations under the License.
  */
-package tv.icntv.log.stb.util;
+package tv.icntv.log.stb.login;
 
 /**
  * Created by wang.yong
@@ -21,7 +21,7 @@ package tv.icntv.log.stb.util;
  * Date: 2014/05/20
  * Time: 17:31
  */
-public interface ConstantDefine {
+public interface LoginConstant {
 
 	String COMMON_DATE_FORMAT = "yyyyMMddHHmmss";
 	String COMMA_SIGN = ",";

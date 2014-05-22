@@ -16,19 +16,14 @@
 package tv.icntv.log.stb.login;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import tv.icntv.log.stb.util.ConstantDefine;
 import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Created by wang.yong
@@ -59,7 +54,7 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 			System.out.println("logContent为空");
 			return ;
 		}
-		String[] logContentArr = logContent.split(ConstantDefine.COMMA_SIGN);
+		String[] logContentArr = logContent.split(LoginConstant.COMMA_SIGN);
 
 		if(logContentArr==null || logContentArr.length<=0){
 			System.out.println("logContentArr为空");
@@ -72,13 +67,13 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 				return ;
 			}
 			str = str.trim();
-			String key = StringUtils.substringBefore(str, ConstantDefine.EQUAL_SIGN);
-			String value = StringUtils.substringAfter(str, ConstantDefine.EQUAL_SIGN);
+			String key = StringUtils.substringBefore(str, LoginConstant.EQUAL_SIGN);
+			String value = StringUtils.substringAfter(str, LoginConstant.EQUAL_SIGN);
 
-			if(ConstantDefine.KEY_CONSUM_DEVICE_CODE.equalsIgnoreCase(key)){
+			if(LoginConstant.KEY_CONSUM_DEVICE_CODE.equalsIgnoreCase(key)){
 				//icntv编号
 				out.append(value).append("|");
-			}else if(ConstantDefine.KEY_EPG_OPERTYPE.equalsIgnoreCase(key)){
+			}else if(LoginConstant.KEY_EPG_OPERTYPE.equalsIgnoreCase(key)){
 				//操作类型
 				if("STARTUP".equalsIgnoreCase(value)){
 					out.append("1").append("|");
@@ -87,12 +82,12 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 				}else if("ACTIVATE".equalsIgnoreCase(value)){
 					out.append("3").append("|");
 				}
-			}else if(ConstantDefine.KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
+			}else if(LoginConstant.KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
 				//操作时间
-				Date date = DateUtil.convertStringToDate(ConstantDefine.COMMON_DATE_FORMAT, value);
-				value = DateUtil.convertDateToString(ConstantDefine.COMMON_DATE_FORMAT, date);
+				Date date = DateUtil.convertStringToDate(LoginConstant.COMMON_DATE_FORMAT, value);
+				value = DateUtil.convertDateToString(LoginConstant.COMMON_DATE_FORMAT, date);
 				out.append(value).append("|");
-			}else if(ConstantDefine.KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
+			}else if(LoginConstant.KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
 				//IP地址
 				out.append(value).append("|");
 			}else{

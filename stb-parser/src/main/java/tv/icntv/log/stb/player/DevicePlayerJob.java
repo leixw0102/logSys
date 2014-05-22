@@ -31,8 +31,4 @@ public class DevicePlayerJob extends AbstractJob {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public int run(String[] args) throws Exception {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }
