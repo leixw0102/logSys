@@ -17,10 +17,12 @@ package tv.icntv.log.stb.player;/*
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
+import tv.icntv.log.stb.login.LoginConstant;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,11 +51,45 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         if(content.startsWith(CONTENT_PREFIX)){
             content=content.replace(CONTENT_PREFIX,"");
         }
-        StringBuffer stringBuffer=new StringBuffer();
-        stringBuffer.append(EMPTY).append(SPLIT);
 
-        content.split(COMMA_SIGN);
+        String[] contentArr = content.split(COMMA_SIGN);
 
+	    if(contentArr==null || contentArr.length<=0){
+		    System.out.println("contentArr为空");
+		    return ;
+	    }
+
+	    StringBuffer stringBuffer=new StringBuffer();
+	    //playId播放id：每一次播放（从开始到结束）的唯一识别编号
+	    stringBuffer.append(EMPTY).append(SPLIT);
+	    //CNTVID用户序列号
+	    stringBuffer.append(values[3].replace("%", "%25")).append(SPLIT);
+		//Timeline操作时间轴
+	    stringBuffer.append(StringUtils.substringAfter(contentArr[3].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    //OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
+	    stringBuffer.append(StringUtils.substringAfter(contentArr[0].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    //OpTime操作时间。格式是：YYYYMMDDHH24MISS
+	    stringBuffer.append(values[11].replace("%", "%25")).append(SPLIT);
+		//DataSource系统来源1：易视腾2：云立方
+	    stringBuffer.append("1").append(SPLIT);
+	    //EPGCodeEPG版本编号,见EPGCode版本编号表
+	    stringBuffer.append("06").append(SPLIT);
+	    //Fsource数据来源，见数据来源表
+	    stringBuffer.append("1").append(SPLIT);
+	    //ProGatherID节目集ID
+	    stringBuffer.append(StringUtils.substringAfter(contentArr[1].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    //ProgramID节目ID
+	    stringBuffer.append(StringUtils.substringAfter(contentArr[2].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+		//RemoteControl遥控设备类型
+	    stringBuffer.append(EMPTY).append(SPLIT);
+	    //resolution 视频码率：1.高清2.标清
+	    stringBuffer.append(EMPTY).append(SPLIT);
+	    //Reserved1保留字段1
+	    stringBuffer.append(EMPTY).append(SPLIT);
+	    //Reserved2保留字段2
+	    stringBuffer.append(EMPTY).append(SPLIT);
+
+	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
 
     @Override
@@ -63,6 +99,8 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
+	    String s = "014444000014031201405010501059180038    3188    0       014444000014031 :       2720130807163420732     24:69:A5:7B:CE:99       183.12.65.153   2014-05-01 05:01:05 996 2014-05-0\n" +
+			    "1 04:58:40 056  2014-05-01 04:58:39 978 2014-05-01 05:01:05 918 1       100     PlayLog content=OperType=05,ProGatherID=942407,ProgramID=6890867,TimeLine=1926120";
         super.cleanup(context);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
@@ -70,4 +108,5 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
     public List<String> getKeys() {
         return Lists.newArrayList(KEY_PLAYER_TIMELINE,KEY_PLAYER_OPERTYPE,KEY_PLAYER_PROGATHERID,KEY_PLAYER_PROGRAMID);
     }
+
 }

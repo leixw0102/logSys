@@ -20,10 +20,12 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import tv.icntv.log.stb.player.Player;
 import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wang.yong
@@ -31,7 +33,7 @@ import java.util.Date;
  * Date: 2014/05/20
  * Time: 17:18
  */
-public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
+public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, Text> implements Player {
 
 	public void map(LongWritable key1, Text value1, Context context)
 			throws IOException, InterruptedException {
@@ -47,7 +49,7 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 			System.out.println("logArr为空");
 			return ;
 		}
-		//logArr的第15个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
+		//logArr的第16个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
 		String logContent = logArr[15];
 
 		if(logContent==null || logContent.trim().length()<=0){
@@ -68,41 +70,44 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 			}
 			str = str.trim();
 			String key = StringUtils.substringBefore(str, LoginConstant.EQUAL_SIGN);
-			String value = StringUtils.substringAfter(str, LoginConstant.EQUAL_SIGN);
+			String value = StringUtils.substringAfter(str, LoginConstant.EQUAL_SIGN).replace("%", "%25");
 
 			if(LoginConstant.KEY_CONSUM_DEVICE_CODE.equalsIgnoreCase(key)){
 				//icntv编号
-				out.append(value).append("|");
+				out.append(value).append("%7C");
 			}else if(LoginConstant.KEY_EPG_OPERTYPE.equalsIgnoreCase(key)){
 				//操作类型
 				if("STARTUP".equalsIgnoreCase(value)){
-					out.append("1").append("|");
+					out.append("1").append("%7C");
 				}else if("SHUTDOWN".equalsIgnoreCase(value)){
-					out.append("2").append("|");
+					out.append("2").append("%7C");
 				}else if("ACTIVATE".equalsIgnoreCase(value)){
-					out.append("3").append("|");
+					out.append("3").append("%7C");
 				}
 			}else if(LoginConstant.KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
 				//操作时间
 				Date date = DateUtil.convertStringToDate(LoginConstant.COMMON_DATE_FORMAT, value);
 				value = DateUtil.convertDateToString(LoginConstant.COMMON_DATE_FORMAT, date);
-				out.append(value).append("|");
+				out.append(value).append("%7C");
 			}else if(LoginConstant.KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
 				//IP地址
-				out.append(value).append("|");
+				out.append(value).append("%7C");
 			}else{
-				out.append("|");
+				out.append("%7C");
 			}
 		}
 		//系统来源
-		out.append("1").append("|");
+		out.append("1").append("%7C");
 		//Fsource
-		out.append("1");
+		out.append("1").append("%7C");
+		//遥控设备类型
+		out.append(EMPTY);
 		context.write(NullWritable.get(),new Text(out.toString()));
 	}
 
 
-
-
-
+	@Override
+	public List<String> getKeys() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
+	}
 }
