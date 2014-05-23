@@ -45,18 +45,18 @@ public class ParserLoginJob extends AbstractJob {
 
 		Job stbParserLoginJob = Job.getInstance(configuration,"stb parser login.");
 		//setting job configuration .....
-		stbParserLoginJob.setMapperClass(ParserLoginMapper.class);
-		stbParserLoginJob.setOutputKeyClass(NullWritable.class);
-		stbParserLoginJob.setOutputValueClass(Text.class);
-		FileInputFormat.setInputPaths(stbParserLoginJob, null);
-		stbParserLoginJob.setJarByClass(getClass());
-
-		FileOutputFormat.setOutputPath(stbParserLoginJob, null);
-		LazyOutputFormat.setOutputFormatClass(stbParserLoginJob, TextOutputFormat.class);
-
-		stbParserLoginJob.setNumReduceTasks(0);
-
-		stbParserLoginJob.waitForCompletion(true);
+//		stbParserLoginJob.setMapperClass(ParserLoginMapper.class);
+//		stbParserLoginJob.setOutputKeyClass(NullWritable.class);
+//		stbParserLoginJob.setOutputValueClass(Text.class);
+//		FileInputFormat.setInputPaths(stbParserLoginJob, null);
+//		stbParserLoginJob.setJarByClass(getClass());
+//
+//		FileOutputFormat.setOutputPath(stbParserLoginJob, null);
+//		LazyOutputFormat.setOutputFormatClass(stbParserLoginJob, TextOutputFormat.class);
+//
+//		stbParserLoginJob.setNumReduceTasks(0);
+//
+//		stbParserLoginJob.waitForCompletion(true);
 	}
 
 	public static void main(String[]args) throws Exception {
