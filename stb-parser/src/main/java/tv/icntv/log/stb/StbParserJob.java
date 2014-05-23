@@ -49,16 +49,17 @@ public class StbParserJob extends AbstractJob {
         try{
             runTool(FilterJob.class,maps);
         }catch (Exception e){
-            logger.error("error filter job ");
+            logger.error("error filter job ",e);
             return;
         }
         //
         try{
             runTool(GenerateStbLogJob.class,maps);
         }catch (Exception e){
-            logger.error("error filter job ");
+            logger.error("error parser jobs ",e);
             return;
         }
+
 
     }
     public static void main(String[]args) throws Exception {

@@ -46,4 +46,14 @@ public interface ParserConstant {
     public String parseing_suffix=".parsing";
     public String parsed_suffix=".parsed";
 
+
+
+    //userlogin
+    public String USER_LOGIN_JOB_INPUT="stb.parser.user.login.relative.input";
+    public String USER_LOGIN_JOB_OUTPUT="stb.parser.user.login.hadoop.output";
+    public String USER_LOGIN_DAT_OUTPUT="stb.parser.user.login.dat.output";
+
+    public String PLAYER_JOB_INPUT="stb.parser.device.player.relative.input";
+    public String PLAYER_JOB_OUTPUT="stb.parser.device.player.hadoop.output";
+    public String PLAYER_DAT_OUTPUT="stb.parser.device.player.dat.result";
 }

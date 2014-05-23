@@ -54,27 +54,28 @@ public class FilterJob extends AbstractJob{
     @Override
     public void setConf(Configuration conf){
         super.setConf(conf);
-        conf.setBoolean("mapreduce.reduce.speculative",false);
-        conf.setBoolean("mapreduce.map.speculative",false);
+
     }
 
 
     @Override
     public void run(Map<String, String> maps) throws Exception {
         Configuration configuration=getConf();
+        configuration.setBoolean("mapreduce.reduce.speculative",false);
+        configuration.setBoolean("mapreduce.map.speculative",false);
        //setting conf
-        Properties properties= LoadProperties.loadProperitesByFileAbsolute(maps.get(RULE_FILE.toLowerCase()));
+
         String day=configuration.get(DAY_CONSTANT);
-        Path input = new Path(MessageFormat.format(properties.getProperty(INPUT),day));
-        Path back = new Path(MessageFormat.format(properties.getProperty(BACK),day));
-        Path output = new Path(MessageFormat.format(properties.getProperty(OUTPUT_PREFIX),day));
-        String paths=properties.getProperty(FILTER_JOB_PATHS);
+        Path input = new Path(MessageFormat.format(maps.get(INPUT),day));
+        Path back = new Path(MessageFormat.format(maps.get(BACK),day));
+        Path output = new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX),day));
+        String paths=maps.get(FILTER_JOB_PATHS);
         if(Strings.isNullOrEmpty(paths)){
             return;
         }
-        configuration.set(OUTPUT_SUFFIX,properties.getProperty(OUTPUT_SUFFIX));
+        configuration.set(OUTPUT_SUFFIX,maps.get(OUTPUT_SUFFIX));
         configuration.set(OUTPUT_PREFIX,output.toString());
-        configuration.set(OTHER_PATH,properties.getProperty(OTHER_PATH));
+        configuration.set(OTHER_PATH,maps.get(OTHER_PATH));
 
 //        configuration
 //        Path input=new Path("/icntv/log/stb/2014-05-19/stb-2014-05-18-23.lzo_deflate");

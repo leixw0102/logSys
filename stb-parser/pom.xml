@@ -95,7 +95,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>tv.icntv.log.stb.filter.FilterJob</mainClass>
+                            <mainClass>tv.icntv.log.stb.ParserDriver</mainClass>
                             <!-- <mainClass>tv.icntv.log.crawl.store.HdfsDefaultStore</mainClass> -->
                         </manifest>
                     </archive>

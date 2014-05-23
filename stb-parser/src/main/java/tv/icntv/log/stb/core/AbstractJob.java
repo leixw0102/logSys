@@ -25,11 +25,10 @@ import org.apache.hadoop.util.Tool;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.icntv.log.stb.commons.LoadProperties;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by leixw ,base hadoop mapreduce ,unit job to run.
@@ -42,18 +41,19 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
     protected Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public void setConf(Configuration conf) {
-        conf.set("mapreduce.output.fileoutputformat.compress","true");
-        conf.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
-        conf.set("mapreduce.map.output.compress","true");
-        conf.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
-        DateTime dateTime=new DateTime(new Date());
-        conf.set(DAY_CONSTANT,"2014-05-01");
-        conf.setLong(FILTER_TIME,dateTime.getMillis());
-//        String day=  "2014-05-01";//dateTime.toString(DAY_YYYY_MM_DD);
         super.setConf(conf);
+
+//        String day=  "2014-05-01";//dateTime.toString(DAY_YYYY_MM_DD);
+
     }
     @Override
     public int run(String[] args) throws Exception {
+//        System.out.println(args);
+//        for(String str : args){
+//            System.out.println(str);
+//        }
+//
+//        System.out.println(args.length);
         if(null == args || args.length<1){
             logger.error("usage :-ruleFile <rule_file>");
             return -1;
@@ -79,6 +79,22 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
             }
             i++;
         }
+        Configuration conf=super.getConf();
+
+        conf.set("mapreduce.output.fileoutputformat.compress","true");
+        conf.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        conf.set("mapreduce.map.output.compress","true");
+        conf.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        Properties properties= LoadProperties.loadProperitesByFileAbsolute(maps.get(RULE_FILE.toLowerCase()));
+        Set<Object> keys =properties.keySet();
+        for(Object obj:keys){
+            maps.put(obj.toString(),properties.get(obj).toString());
+           // System.out.println(obj.toString()+"\t"+properties.get(obj.toString()));
+        }
+
+        DateTime dateTime=new DateTime(new Date());
+        conf.set(DAY_CONSTANT,"2014-05-01");
+        conf.setLong(FILTER_TIME, 1400823883967L);
         run(maps);
         return 0;
     }
