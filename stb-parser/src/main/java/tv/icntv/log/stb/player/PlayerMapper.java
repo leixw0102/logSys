@@ -14,7 +14,6 @@ package tv.icntv.log.stb.player;/*
  *      limitations under the License.
  */
 
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +21,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
-import tv.icntv.log.stb.login.LoginConstant;
+import tv.icntv.log.stb.commons.StringsUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +39,7 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         if(null == value|| Strings.isNullOrEmpty(value.toString())){
             return;
         }
-        String[] values= value.toString().split("\t");
+        String[] values= value.toString().split(SPLIT_T);
         if(null == values || values.length!=16){
             return;
         }
@@ -63,23 +62,23 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 	    //playId播放id：每一次播放（从开始到结束）的唯一识别编号
 	    stringBuffer.append(EMPTY).append(SPLIT);
 	    //CNTVID用户序列号
-	    stringBuffer.append(values[3].replace("%", "%25")).append(SPLIT);
+	    stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
 		//Timeline操作时间轴
-	    stringBuffer.append(StringUtils.substringAfter(contentArr[3].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN))).append(SPLIT);
 	    //OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
-	    stringBuffer.append(StringUtils.substringAfter(contentArr[0].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
 	    //OpTime操作时间。格式是：YYYYMMDDHH24MISS
-	    stringBuffer.append(values[11].replace("%", "%25")).append(SPLIT);
+	    stringBuffer.append(StringsUtils.getEncodeingStr(values[11])).append(SPLIT);
 		//DataSource系统来源1：易视腾2：云立方
-	    stringBuffer.append("1").append(SPLIT);
+	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
 	    //EPGCodeEPG版本编号,见EPGCode版本编号表
-	    stringBuffer.append("06").append(SPLIT);
+	    stringBuffer.append(EPG_CODE).append(SPLIT);
 	    //Fsource数据来源，见数据来源表
-	    stringBuffer.append("1").append(SPLIT);
+	    stringBuffer.append(F_SOURCE).append(SPLIT);
 	    //ProGatherID节目集ID
-	    stringBuffer.append(StringUtils.substringAfter(contentArr[1].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN))).append(SPLIT);
 	    //ProgramID节目ID
-	    stringBuffer.append(StringUtils.substringAfter(contentArr[2].trim(), LoginConstant.EQUAL_SIGN).replace("%", "%25")).append("%7C");
+	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN))).append(SPLIT);
 		//RemoteControl遥控设备类型
 	    stringBuffer.append(EMPTY).append(SPLIT);
 	    //resolution 视频码率：1.高清2.标清

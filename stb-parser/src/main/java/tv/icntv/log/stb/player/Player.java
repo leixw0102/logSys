@@ -34,8 +34,15 @@ public interface Player {
     String KEY_PLAYER_PROGRAMID = "ProgramID";
     String SPLIT="|";
     String EMPTY="";
+	String SPLIT_T = "\t";
     String CONTENT_PREFIX="content=";
     String COMMA_SIGN = ",";
     String EQUAL_SIGN = "=";
+	//DataSource系统来源1：易视腾2：云立方
+	String DATA_SOURCE = "1";
+	//EPGCodeEPG版本编号,见EPGCode版本编号表
+	String EPG_CODE = "06";
+	//Fsource数据来源，见数据来源表
+	String F_SOURCE = "1";
     public List<String> getKeys();
 }
