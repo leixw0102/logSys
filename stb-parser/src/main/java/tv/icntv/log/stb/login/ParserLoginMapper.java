@@ -15,6 +15,7 @@
  */
 package tv.icntv.log.stb.login;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
@@ -63,11 +64,7 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 		}
 		StringBuffer out = new StringBuffer();
 		for(String str : logContentArr){
-			if(str==null || str.trim().length()<=0){
-				System.out.println("str为空，str=" +str);
-				return ;
-			}
-			str = str.trim();
+
 			String key = StringUtils.substringBefore(str, EQUAL_SIGN);
 			String value = StringUtils.substringAfter(str, EQUAL_SIGN);
 			value = StringsUtils.getEncodeingStr(value);
@@ -83,6 +80,8 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 					out.append(OP_TYPE_SHUTDOWN).append(SPLIT);
 				}else if("ACTIVATE".equalsIgnoreCase(value)){
 					out.append(OP_TYPE_ACTIVATE).append(SPLIT);
+				}else{
+					out.append(-1).append(SPLIT);
 				}
 			}else if(KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
 				//操作时间
@@ -91,9 +90,10 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 				out.append(value).append(SPLIT);
 			}else if(KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
 				//IP地址
-				out.append(value).append(SPLIT);
+				out.append(value.replace("}", "")).append(SPLIT);
 			}else{
-				out.append(SPLIT);
+				System.out.println(value1.toString());
+				return;	//out.append(SPLIT);
 			}
 		}
 		//系统来源
