@@ -148,7 +148,7 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
         //20.Remark2 保留字段
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
 	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
