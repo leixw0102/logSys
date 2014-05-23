@@ -41,10 +41,17 @@ public class ParserLoginJob extends AbstractJob {
 
 	@Override
 	public void run(Map<String, String> maps) throws Exception {
+<<<<<<< HEAD
 //		Configuration configuration=getConf();
 //
 //		Job stbParserLoginJob = Job.getInstance(configuration,"stb parser login.");
 //		//setting job configuration .....
+=======
+		Configuration configuration=getConf();
+
+		Job stbParserLoginJob = Job.getInstance(configuration,"stb parser login.");
+		//setting job configuration .....
+>>>>>>> 4f538319156266b17484bf42d6daa5a426a39b0c
 //		stbParserLoginJob.setMapperClass(ParserLoginMapper.class);
 //		stbParserLoginJob.setOutputKeyClass(NullWritable.class);
 //		stbParserLoginJob.setOutputValueClass(Text.class);

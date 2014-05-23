@@ -17,11 +17,11 @@
              <artifactId>fastjson</artifactId>
              <version>1.1.36</version>
          </dependency>
-          <dependency>
+          <!--dependency>
               <groupId>com.hadoop.gplcompression</groupId>
               <artifactId>hadoop-lzo</artifactId>
               <version>0.4.20</version>
-          </dependency>
+          </dependency-->
          <!--<dependency>-->
              <!--<groupId>org.apache.hadoop</groupId>-->
              <!--<artifactId>hadoop-core</artifactId>-->
