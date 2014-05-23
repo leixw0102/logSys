@@ -86,7 +86,7 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 	    //Reserved1保留字段1
 	    stringBuffer.append(EMPTY).append(SPLIT);
 	    //Reserved2保留字段2
-	    stringBuffer.append(EMPTY).append(SPLIT);
+	    stringBuffer.append(EMPTY);
 
 	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
