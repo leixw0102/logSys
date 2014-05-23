@@ -25,7 +25,7 @@ import com.google.common.base.Strings;
  */
 public class StringsUtils {
     public static String getEncodeingStr(String str){
-        if (! Strings.isNullOrEmpty(str)){
+        if (!Strings.isNullOrEmpty(str)){
             str = str.replace("%", "%25");
             str = str.replace("|", "%7C");
         }
