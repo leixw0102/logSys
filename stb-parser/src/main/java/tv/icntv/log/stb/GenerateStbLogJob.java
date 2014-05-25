@@ -23,6 +23,7 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
+import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
 import org.apache.hadoop.io.Text;
 import tv.icntv.log.stb.login.ParserLoginMapper;
@@ -65,18 +66,29 @@ public class GenerateStbLogJob extends AbstractJob {
         player.setMapperClass(PlayerMapper.class);
         player.setOutputValueClass(Text.class);
         player.setOutputKeyClass(NullWritable.class);
-        FileInputFormat.addInputPath(player,new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX),day)+MessageFormat.format(PLAYER_JOB_INPUT,configuration.getLong(FILTER_TIME,0L))));
-        FileOutputFormat.setOutputPath(player,new Path(MessageFormat.format(maps.get(PLAYER_JOB_OUTPUT),day)));
+        FileInputFormat.addInputPath(player, new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX), day) + MessageFormat.format(maps.get(PLAYER_JOB_INPUT), configuration.getLong(FILTER_TIME, 0L))));
+        FileOutputFormat.setOutputPath(player, new Path(MessageFormat.format(maps.get(PLAYER_JOB_OUTPUT), day)));
         player.setNumReduceTasks(0);
         ControlledJob playControlledJob=new ControlledJob(configuration);
         playControlledJob.setJob(player);
-        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
-        jobControl.addJob(userControlledJob);
-        jobControl.addJob(playControlledJob);
-        new Thread(jobControl).start();
-        while (!jobControl.allFinished()) {
-            Thread.sleep(5000);
-        }
+
+
+        Job contentView = Job.getInstance(configuration,"content view job");
+        contentView.setJarByClass(getClass());
+        contentView.setMapperClass(ContentViewMapper.class);
+        contentView.setOutputKeyClass(NullWritable.class);
+        contentView.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(contentView,new Path(""));
+        contentView.setNumReduceTasks(0);
+        userLogin.waitForCompletion(true);
+        player.waitForCompletion(true);
+//        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
+//        jobControl.addJob(userControlledJob);
+//        jobControl.addJob(playControlledJob);
+//        new Thread(jobControl).start();
+//        while (!jobControl.allFinished()) {
+//            Thread.sleep(5000);
+//        }
 //        userLogin.waitForCompletion(true);
     }
     public static void main(String[]args) throws Exception {
