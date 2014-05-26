@@ -53,7 +53,7 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 
         String[] contentArr = content.split(COMMA_SIGN);
 
-	    if(contentArr==null || contentArr.length<=0 || contentArr.length!=3){
+	    if(contentArr==null || contentArr.length<=0 || contentArr.length!=4){
 		    System.out.println("contentArr为空");
 		    return ;
 	    }
