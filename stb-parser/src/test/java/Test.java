@@ -28,7 +28,7 @@ import org.apache.hadoop.io.Text;
 import tv.icntv.log.stb.commons.StringsUtils;
 import tv.icntv.log.stb.core.ParserConstant;
 import tv.icntv.log.stb.login.LoginConstant;
-import tv.icntv.log.stb.player.PlayerLogDomain;
+import tv.icntv.log.stb.login.UserLoginDomain;
 import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.File;
@@ -125,70 +125,69 @@ public class Test implements LoginConstant{
 //
 //        }
 
-	public static void main(String[] args) {
 
-	}
+    public static void main(String[]args) throws IOException {
 
-//	public void testPlayMapper(Test value){
-//		if(null == value|| Strings.isNullOrEmpty(value.toString())){
-//			return;
-//		}
-//		String[] values= value.toString().split(SPLIT_T);
-//		if(null == values || values.length!=16){
-//			return;
-//		}
-//		String content=values[15];
-//		if(Strings.isNullOrEmpty(content)){
-//			return;
-//		}
-//		if(content.startsWith(CONTENT_PREFIX)){
-//			content=content.replace(CONTENT_PREFIX,"");
-//		}
-//
-//		String[] contentArr = content.split(COMMA_SIGN);
-//
-//		if(contentArr==null || contentArr.length<=0){
-//			System.out.println("contentArr为空");
-//			return ;
-//		}
-//		PlayerLogDomain playerLogDomain=new PlayerLogDomain();
-////	    StringBuffer stringBuffer=new StringBuffer();
-//		//playId播放id：每一次播放（从开始到结束）的唯一识别编号
-//		//CNTVID用户序列号
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
-//		playerLogDomain.setIcntvId(values[3]);
-//		//Timeline操作时间轴
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN))).append(SPLIT);
-//		playerLogDomain.setTimeLine(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN));
-//		//OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
-//		playerLogDomain.setOperType(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN));
-//		//OpTime操作时间。格式是：YYYYMMDDHH24MISS
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(values[11])).append(SPLIT);
-//		playerLogDomain.setOpTime(values[11]);
-//		//DataSource系统来源1：易视腾2：云立方
-////	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
-//		//EPGCodeEPG版本编号,见EPGCode版本编号表
-////	    stringBuffer.append(EPG_CODE).append(SPLIT);
-//		//Fsource数据来源，见数据来源表
-////	    stringBuffer.append(F_SOURCE).append(SPLIT);
-//		//ProGatherID节目集ID
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN))).append(SPLIT);
-//		playerLogDomain.setProGatherId(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN));
-//		//ProgramID节目ID
-////	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN))).append(SPLIT);
-//		playerLogDomain.setProgramId(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN));
-//		//RemoteControl遥控设备类型
-////	    stringBuffer.append(EMPTY).append(SPLIT);
-//		//resolution 视频码率：1.高清2.标清
-////	    stringBuffer.append(EMPTY).append(SPLIT);
-//		//Reserved1保留字段1
-////	    stringBuffer.append(EMPTY).append(SPLIT);
-//		//Reserved2保留字段2
-////	    stringBuffer.append(EMPTY);
-//
-//		context.write(NullWritable.get(),new Text(playerLogDomain.toString()));
-//	}
+
+        List<String> lines=Files.readLines(new File("d:\\userLogin-m-00023"), Charsets.UTF_8);
+        System.out.println(lines.size());
+        for(String value1 : lines){
+//            System.out.println(".");
+            String commonLoggerStr=value1.toString();
+
+            String[] logArr = commonLoggerStr.split(SPLIT_T);
+
+        //logArr的第16个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
+            String logContent = logArr[15];
+
+            if(logContent==null || logContent.trim().length()<=0){
+                System.out.println("logContent为空");
+                return ;
+            }
+            String[] logContentArr = logContent.split(COMMA_SIGN);
+
+            if(logContentArr==null || logContentArr.length<=0){
+                System.out.println("logContentArr为空");
+
+                return ;
+            }
+        UserLoginDomain userLogin=new UserLoginDomain();
+        for(String str : logContentArr){
+
+            String key = StringUtils.substringBefore(str, EQUAL_SIGN);
+            String value = StringUtils.substringAfter(str, EQUAL_SIGN);
+//            value = StringsUtils.getEncodeingStr(value);
+            if(!Strings.isNullOrEmpty(key)){
+                key=key.trim().replace("{","");
+            }
+            if(!Strings.isNullOrEmpty(value)){
+                value=value.trim().replace("}","");
+            }
+            if(KEY_CONSUM_DEVICE_CODE.equalsIgnoreCase(key)){
+                //icntv编号
+                userLogin.setIcntvId(value);
+            }else if(KEY_EPG_OPERTYPE.equalsIgnoreCase(key)){
+                //操作类型
+                userLogin.setOperateType(value);
+            }else if(KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
+                //操作时间
+//				Date date = DateUtil.convertStringToDate(COMMON_DATE_FORMAT, value);
+//				value = DateUtil.convertDateToString(COMMON_DATE_FORMAT, date);
+                userLogin.setOperateTime(value);
+            }else if(KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
+                //IP地址
+                if(!value.matches("[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}")){
+//                    System.out.println(logContent);
+                    break;
+                }
+                userLogin.setIpAddress(value);
+            }
+
+        }
+            System.out.println(userLogin.toString());
+        }
+
+        }
 
     enum FilterJobParameterEnum{
         RULEFILE;

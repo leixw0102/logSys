@@ -26,20 +26,11 @@ public interface LoginConstant {
 	String COMMON_DATE_FORMAT = "yyyyMMddHHmmss";
 	String COMMA_SIGN = ",";
 	String EQUAL_SIGN = "=";
-	String KEY_EPG_OPERTYPE = "OperType";
+	String KEY_EPG_OPERTYPE = "operateType";
 	String KEY_CONSUM_DEVICE_CODE = "deviceCode";
 	String KEY_DEVICE_OPERATE_DATE = "operateDate";
 	String KEY_DEVICE_IPADDRESS = "ipAddress";
-	String SPLIT="|";
-	String EMPTY="";
 	String SPLIT_T = "\t";
-	String OP_TYPE_STARTUP = "1";
-	String OP_TYPE_SHUTDOWN = "2";
-	String OP_TYPE_ACTIVATE = "3";
-	//系统来源
-	String SYS_SOURCE = "1";
-	//Fsource
-	String F_SOURCE = "1";
 
 
 }
