@@ -29,10 +29,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by leixw
- * <p/>
- * Author: leixw
- * Date: 2014/05/22
+ * Author: wangliang
+ * Date: 2014/05/26
  * Time: 15:56
  */
 public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements ContentView {
