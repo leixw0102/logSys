@@ -65,7 +65,7 @@ public class UserLoginDomain {
 
     public void setIpAddress(String ipAddress) {
 
-        this.ipAddress = ipAddress.replace("}","");
+        this.ipAddress = ipAddress;
     }
 
     public String getOperateTime() {

@@ -69,12 +69,11 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 
 			String key = StringUtils.substringBefore(str, EQUAL_SIGN);
 			String value = StringUtils.substringAfter(str, EQUAL_SIGN);
-			value = StringsUtils.getEncodeingStr(value);
-            if(Strings.isNullOrEmpty(key)){
-                key=key.trim();
+            if(!Strings.isNullOrEmpty(key)){
+                key=key.trim().replace("{","");
             }
-            if(Strings.isNullOrEmpty(value)){
-                value=value.trim();
+            if(!Strings.isNullOrEmpty(value)){
+                value=value.trim().replace("}","");
             }
 			if(KEY_CONSUM_DEVICE_CODE.equalsIgnoreCase(key)){
 				//icntv编号
@@ -84,8 +83,6 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
                 userLogin.setOperateType(value);
 			}else if(KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
 				//操作时间
-//				Date date = DateUtil.convertStringToDate(COMMON_DATE_FORMAT, value);
-//				value = DateUtil.convertDateToString(COMMON_DATE_FORMAT, date);
                 userLogin.setOperateTime(value);
 			}else if(KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
 				//IP地址
