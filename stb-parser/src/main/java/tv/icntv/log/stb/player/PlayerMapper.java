@@ -65,7 +65,10 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         playerLogDomain.setIcntvId(values[3]);
 		//Timeline操作时间轴
 //	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN))).append(SPLIT);
-	    playerLogDomain.setTimeLine(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN));
+	   String timeline = StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN);
+	    if(timeline.matches("\\d*")){
+		    playerLogDomain.setTimeLine(timeline);
+	    }
 	    //OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
 //	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
         playerLogDomain.setOperType(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN));

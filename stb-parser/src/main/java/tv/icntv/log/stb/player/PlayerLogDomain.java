@@ -31,8 +31,8 @@ public class PlayerLogDomain {
     private String operType="";
     private String opTime="";
     private String dataSource="1";
-    private String epgCode="";
-    private String fSource="";
+    private String epgCode="06";
+    private String fSource="1";
     private String proGatherId="";
     private String programId;
     private String remoteControl="1";
@@ -46,7 +46,7 @@ public class PlayerLogDomain {
         StringBuffer sb=new StringBuffer();
         return sb.append(StringsUtils.getEncodeingStr(this.getPlayId())).append("|")
                 .append(StringsUtils.getEncodeingStr(this.getIcntvId())).append("|")
-                .append(StringsUtils.getEncodeingStr(DateUtils.getFormatDate(this.getTimeLine()))).append("|")
+                .append(StringsUtils.getEncodeingStr(this.getTimeLine())).append("|")
                 .append(StringsUtils.getEncodeingStr(this.getOperType())).append("|")
                 .append(StringsUtils.getEncodeingStr(DateUtils.getFormatDate(this.getOpTime()))).append("|")
                 .append(StringsUtils.getEncodeingStr(this.getDataSource())).append("|")
