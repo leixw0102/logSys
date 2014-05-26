@@ -154,6 +154,9 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
         //20.Remark2 保留字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
+        values = null;
+        content = null;
+        contentArr = null;
         strEndTime = null;
         strStartTime = null;
         operateTime = null;
