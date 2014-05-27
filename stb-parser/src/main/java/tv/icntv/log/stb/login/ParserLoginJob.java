@@ -40,7 +40,8 @@ import java.util.Map;
 public class ParserLoginJob extends AbstractJob {
 
 	@Override
-	public void run(Map<String, String> maps) throws Exception {
+	public boolean run(Map<String, String> maps) throws Exception {
+        return true;
 //		Configuration configuration=getConf();
 //
 //		Job stbParserLoginJob = Job.getInstance(configuration,"stb parser login.");

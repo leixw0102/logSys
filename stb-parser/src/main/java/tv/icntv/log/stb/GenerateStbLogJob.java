@@ -23,6 +23,7 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
+import tv.icntv.log.stb.commons.HadoopUtils;
 import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
 import org.apache.hadoop.io.Text;
@@ -41,21 +42,19 @@ import java.util.Map;
  */
 public class GenerateStbLogJob extends AbstractJob {
     @Override
-    public void run(Map<String, String> maps) throws Exception {
+    public boolean run(Map<String, String> maps) throws Exception {
         //To change body of implemented methods use File | Settings | File Templates.
 
         Configuration configuration=getConf();
-        String day=configuration.get(DAY_CONSTANT);
-        System.out.println();
-        System.out.println(MessageFormat.format(maps.get(USER_LOGIN_JOB_INPUT), configuration.getLong(FILTER_TIME,0L))+"\t"+MessageFormat.format(maps.get(USER_LOGIN_JOB_OUTPUT),day));
         //user login
         Job userLogin= Job.getInstance(configuration, "user login job");
         userLogin.setMapperClass(ParserLoginMapper.class);
         userLogin.setJarByClass(this.getClass());
         userLogin.setOutputKeyClass(NullWritable.class);
         userLogin.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(userLogin, new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX),day)+MessageFormat.format(maps.get(USER_LOGIN_JOB_INPUT), configuration.getLong(FILTER_TIME, 0L))));
-        FileOutputFormat.setOutputPath(userLogin,new Path(MessageFormat.format(maps.get(USER_LOGIN_JOB_OUTPUT),day)));
+        Path userLoginOutput=new Path(maps.get(USER_LOGIN_JOB_OUTPUT));
+        FileInputFormat.addInputPath(userLogin, new Path(maps.get(USER_LOGIN_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(userLogin,userLoginOutput);
         userLogin.setNumReduceTasks(0);
         ControlledJob userControlledJob=new ControlledJob(configuration);
         userControlledJob.setJob(userLogin);
@@ -66,8 +65,8 @@ public class GenerateStbLogJob extends AbstractJob {
         player.setMapperClass(PlayerMapper.class);
         player.setOutputValueClass(Text.class);
         player.setOutputKeyClass(NullWritable.class);
-        FileInputFormat.addInputPath(player, new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX), day) + MessageFormat.format(maps.get(PLAYER_JOB_INPUT), configuration.getLong(FILTER_TIME, 0L))));
-        FileOutputFormat.setOutputPath(player, new Path(MessageFormat.format(maps.get(PLAYER_JOB_OUTPUT), day)));
+        FileInputFormat.addInputPath(player, new Path(maps.get(PLAYER_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(player, new Path(maps.get(PLAYER_JOB_OUTPUT)));
         player.setNumReduceTasks(0);
         ControlledJob playControlledJob=new ControlledJob(configuration);
         playControlledJob.setJob(player);
@@ -78,18 +77,24 @@ public class GenerateStbLogJob extends AbstractJob {
         contentView.setMapperClass(ContentViewMapper.class);
         contentView.setOutputKeyClass(NullWritable.class);
         contentView.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(contentView,new Path(""));
+        //System.out.println(MessageFormat.format(maps.get(OUTPUT_PREFIX),day)+MessageFormat.format(maps.get(CONTENT_VIEW_JOB_INPUT),configuration.getLong(FILTER_TIME,0L)));
+        FileInputFormat.addInputPath(contentView, new Path(maps.get(CONTENT_VIEW_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(contentView,new Path(maps.get(CONTENT_VIEW_JOB_OUTPUT)));
         contentView.setNumReduceTasks(0);
-        userLogin.waitForCompletion(true);
-        player.waitForCompletion(true);
-//        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
-//        jobControl.addJob(userControlledJob);
-//        jobControl.addJob(playControlledJob);
-//        new Thread(jobControl).start();
-//        while (!jobControl.allFinished()) {
-//            Thread.sleep(5000);
-//        }
-//        userLogin.waitForCompletion(true);
+        ControlledJob contentViewControlledJob = new ControlledJob(configuration);
+        contentViewControlledJob.setJob(contentView);
+        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
+        jobControl.addJob(userControlledJob);
+        jobControl.addJob(playControlledJob);
+        jobControl.addJob(contentViewControlledJob);
+        new Thread(jobControl).start();
+        while (!jobControl.allFinished()) {
+            Thread.sleep(5000);
+        }
+        if(jobControl.getFailedJobList().size()>0){
+            return false;
+        }
+        return true;
     }
     public static void main(String[]args) throws Exception {
         Configuration configuration=new Configuration();

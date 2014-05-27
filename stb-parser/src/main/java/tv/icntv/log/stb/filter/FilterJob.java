@@ -59,20 +59,20 @@ public class FilterJob extends AbstractJob{
 
 
     @Override
-    public void run(Map<String, String> maps) throws Exception {
+    public boolean run(Map<String, String> maps) throws Exception {
         Configuration configuration=getConf();
         configuration.setBoolean("mapreduce.reduce.speculative",false);
         configuration.setBoolean("mapreduce.map.speculative",false);
        //setting conf
 
-        String day=configuration.get(DAY_CONSTANT);
-        Path input = new Path(MessageFormat.format(maps.get(INPUT),day));
-        Path back = new Path(MessageFormat.format(maps.get(BACK),day));
-        Path output = new Path(MessageFormat.format(maps.get(OUTPUT_PREFIX),day));
-        String paths=maps.get(FILTER_JOB_PATHS);
-        if(Strings.isNullOrEmpty(paths)){
-            return;
-        }
+        //String day=configuration.get(DAY_CONSTANT);
+        Path input = new Path(maps.get(INPUT));
+        Path back = new Path(maps.get(BACK));
+        Path output = new Path(maps.get(OUTPUT_PREFIX));
+//        String paths=maps.get(FILTER_JOB_PATHS);
+//        if(Strings.isNullOrEmpty(paths)){
+//            return;
+//        }
         configuration.set(OUTPUT_SUFFIX,maps.get(OUTPUT_SUFFIX));
         configuration.set(OUTPUT_PREFIX,output.toString());
         configuration.set(OTHER_PATH,maps.get(OTHER_PATH));
@@ -88,8 +88,8 @@ public class FilterJob extends AbstractJob{
             }
         },file_success_suffix,parseing_suffix,parsed_suffix);
         if(null == in || in.length==0){
-            logger.info("input not exist;day={}",day);
-            return;
+            logger.info("input not exist;");
+            return false;
         }
         Job stbFilterJob = Job.getInstance(configuration,"stb parser first:filter by rule file");
         //setting job configuration .....
@@ -108,7 +108,10 @@ public class FilterJob extends AbstractJob{
             for(Path path:in){
                 HadoopUtils.rename(new Path(path,parseing_suffix),new Path(path,parsed_suffix));
             }
+           return true;
        }
+        return false;
+
     }
 
     /**

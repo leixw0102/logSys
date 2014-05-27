@@ -16,18 +16,14 @@ package tv.icntv.log.stb.commons;/*
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-//import com.hadoop.compression.lzo.LzopCodec;
-//import com.hadoop.compression.lzo.LzopInputStream;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -165,11 +161,11 @@ public class HadoopUtils {
 //        BufferedReader reader=null;
 //        FSDataOutputStream outputStream=null;
 //        try{
-//             fileSystem=FileSystem.get(configuration);
+//            fileSystem=FileSystem.get(configuration);
 //            FileStatus[] fileStatuses=fileSystem.listStatus(input,new PathFilter() {
 //                @Override
 //                public boolean accept(Path path) {
-//                    return path.toString().startsWith(inputRegular);  //To change body of implemented methods use File | Settings | File Templates.
+//                    return path.toString().matches(inputRegular);  //To change body of implemented methods use File | Settings | File Templates.
 //                }
 //            });
 //            if(null == fileStatuses||fileStatuses.length==0){

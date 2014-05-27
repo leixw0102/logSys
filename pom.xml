@@ -11,6 +11,7 @@
         <module>logcrawl</module>
         <module>parse</module>
         <module>stb-parser</module>
+        <module>tools</module>
     </modules>
     <packaging>pom</packaging>
    <properties>

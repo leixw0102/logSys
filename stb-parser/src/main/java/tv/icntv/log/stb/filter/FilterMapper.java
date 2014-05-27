@@ -52,19 +52,18 @@ public class FilterMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
-        final long time=context.getConfiguration().getLong(ParserConstant.FILTER_TIME, System.currentTimeMillis());
         String path_prefix=context.getConfiguration().get(ParserConstant.OUTPUT_PREFIX);
         if(!path_prefix.endsWith(File.separator)){
             path_prefix+=File.separator;
         }
-        fileKeys=context.getConfiguration().get(ParserConstant.OUTPUT_SUFFIX,"800-userLogin/{0,number,#0000000000000}/userLogin;900-contentview/{0,number,#0000000000000}/contentview;100-deviceplayer/{0,number,#0000000000000}/deviceplayer;101,102,103,104,105,106,107-logEpg/{0,number,#0000000000000}/logEpg");
-        List<String>files= Lists.transform(Lists.newArrayList(Splitter.on(ParserConstant.FILTER_SPILTER).split(fileKeys)),new Function<String,String>(){
-            @Override
-            public String apply( java.lang.String input) {
-                return MessageFormat.format(input,time);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        for(String str:files){
+        fileKeys=context.getConfiguration().get(ParserConstant.OUTPUT_SUFFIX);
+//        List<String>files= Lists.transform(Lists.newArrayList(Splitter.on(ParserConstant.FILTER_SPILTER).split(fileKeys)),new Function<String,String>(){
+//            @Override
+//            public String apply( java.lang.String input) {
+//                return MessageFormat.format(input,time);  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//        });
+        for(String str:fileKeys.split(ParserConstant.FILTER_SPILTER)){
             String[]kv=str.split("-");
             String[] keys=kv[0].split(",");
             for(String key:keys){
@@ -76,7 +75,7 @@ public class FilterMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
         if(Strings.isNullOrEmpty(other)){
             isOutOther=false;
         }else{
-            otherPath=path_prefix+MessageFormat.format(other,time);
+            otherPath=path_prefix+other;
         }
         mos= new MultipleOutputs(context);
        // super.setup(context);    //To change body of overridden methods use File | Settings | File Templates.
@@ -106,7 +105,6 @@ public class FilterMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
         if(maps.containsKey(module)){
             String v=maps.get(module);
             mos.write(NullWritable.get(),out,v);
-//            mos.write(out,NullWritable.get(),v);
             return;
         }
         if(isOutOther){

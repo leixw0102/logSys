@@ -27,7 +27,8 @@ import java.util.Map;
  */
 public class DevicePlayerJob extends AbstractJob {
     @Override
-    public void run(Map<String, String> maps) throws Exception {
+    public boolean run(Map<String, String> maps) throws Exception {
+        return true;
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

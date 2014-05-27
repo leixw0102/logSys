@@ -35,31 +35,37 @@ import java.util.Map;
 public class StbParserJob extends AbstractJob {
 
 
-    private void runTool(Class<? extends AbstractJob> toolClass,Map<String,String> args) throws Exception {
+    private boolean runTool(Class<? extends AbstractJob> toolClass,Map<String,String> args) throws Exception {
         AbstractJob tool = ReflectionUtils.newInstance(toolClass,getConf());
-        tool.run(args);
+       return  tool.run(args);
     }
 
     @Override
-    public void run(Map<String, String> maps) throws Exception {
+    public boolean run(Map<String, String> maps) throws Exception {
         if(null ==maps || maps.isEmpty()){
             logger.error("read file content,but null");
         }
         //execute filter job
+
         try{
-            runTool(FilterJob.class,maps);
+            if(!runTool(FilterJob.class,maps)){
+                return false;
+            };
         }catch (Exception e){
             logger.error("error filter job ",e);
-            return;
+            return false;
         }
         //
         try{
-            runTool(GenerateStbLogJob.class,maps);
+            if(runTool(GenerateStbLogJob.class,maps)){
+                return false;
+            };
         }catch (Exception e){
             logger.error("error parser jobs ",e);
-            return;
+            return false;
         }
 
+        return true;
 
     }
     public static void main(String[]args) throws Exception {

@@ -1,4 +1,4 @@
-package tv.icntv.log.stb.contentview;/*
+/*
  * Copyright 2014 Future TV, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,17 @@ package tv.icntv.log.stb.contentview;/*
  *      limitations under the License.
  */
 
-import tv.icntv.log.stb.core.AbstractJob;
-
-import java.util.Map;
+import java.util.Date;
 
 /**
  * Created by leixw
  * <p/>
  * Author: leixw
- * Date: 2014/05/22
- * Time: 13:56
+ * Date: 2014/05/26
+ * Time: 15:18
  */
-public class ContentViewJob extends AbstractJob {
-    @Override
-    public boolean run(Map<String, String> maps) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-        return true;
+public class DateTest {
+    public static void main(String[]args){
+        System.out.println(new Date(1401088704L).toLocaleString());
     }
-
 }

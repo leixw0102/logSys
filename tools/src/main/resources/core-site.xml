@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+	<!--<property>-->
+		<!--<name>fs.default.name</name>-->
+		<!--<value>hdfs://slave102:8020/</value>-->
+	<!--</property>-->
+	<!--<property>-->
+		<!--<name>hadoop.tmp.dir</name>-->
+		<!--<value>/home/hadoop/tmp/hadoop-${user.name}</value>-->
+	<!--</property>-->
+
+    <!--<property>-->
+        <!--<name>hadoop.tmp.dir</name>-->
+        <!--<value>/data/bigData/hadoopData/tmp/hadoop-${user.name}</value>-->
+        <!--<description>A base for other temporary directories.</description>-->
+    <!--</property>-->
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://icntv</value>
+    </property>
+    <property>
+        <name>fs.trash.interval</name>
+        <value>1440</value>
+        <description>Number of minutes between trash checkpoints.
+            If zero, the trash feature is disabled.
+        </description>
+    </property>
+    <property>
+        <name>fs.hdfs.impl.disable.cache</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>fs.hdfs.impl</name>
+        <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+        <description>The FileSystem for hdfs: uris.</description>
+    </property>
+    <property>
+        <name>mapreduce.output.fileoutputformat.compress</name>
+        <value>true</value>
+        <description>Should the job outputs be compressed?
+        </description>
+    </property>
+    <property>
+        <name>mapreduce.output.fileoutputformat.compress.codec</name>
+        <value>com.hadoop.compression.lzo.LzopCodec</value>
+    </property>
+    <property>
+        <name>mapreduce.map.output.compress</name>
+        <value>true</value>
+        <description>Should the outputs of the maps be compressed before being
+            sent across the network. Uses SequenceFile compression.
+        </description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.output.compress.codec</name>
+        <value>com.hadoop.compression.lzo.LzopCodec</value>
+        <description>If the map outputs are compressed, how should they be
+            compressed?
+        </description>
+    </property>
+    <property>
+        <name>mapreduce.map.speculative</name>
+        <value>true</value>
+    </property>
+
+</configuration>
