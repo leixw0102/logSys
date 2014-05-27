@@ -61,7 +61,7 @@ public class FileApi implements Api {
                 return false;
             }
             System.out.println(fileStatuses.length);
-            outputStream=fileSystem.create(output);
+            outputStream=fileSystem.create(output,true,40960);
             for(FileStatus status:fileStatuses){
                 reader=new BufferedReader(new InputStreamReader(lzopInputStream.createInputStream(fileSystem.open(status.getPath())),"utf-8"));
                 String line=null;
