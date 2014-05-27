@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by wangliang
  * Author: wangliang
  * Date: 2014/05/26
  * Time: 10:16
@@ -35,7 +34,6 @@ public class ContentViewTest implements ContentView {
     public static void main(String[]args) throws IOException {
 
         int cnt = 0;
-
         String strEndTime="";
         String strStartTime="";
         String operateTime = "";
