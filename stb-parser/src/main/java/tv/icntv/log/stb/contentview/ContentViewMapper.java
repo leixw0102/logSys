@@ -111,8 +111,12 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
             stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[7].trim(), EQUAL_SIGN))).append(SPLIT);
         }
 
-        //TODO 9.CategoryID	栏目ID
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        //TODO 9.CategoryID	栏目ID,如果日志中值为空的情况，需要讨论解决方案
+        if (null == contentArr[0].trim() || EMPTY.equals(contentArr[0].trim())) {
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        } else {
+            stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
+        }
 
         //10.ProgatherID	节目集ID唯一
         stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[14].trim(), EQUAL_SIGN)+EMPTY)).append(SPLIT);
