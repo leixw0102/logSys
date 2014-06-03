@@ -112,7 +112,7 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
         }
 
         //TODO 9.CategoryID	栏目ID
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(),EQUAL_SIGN))).append(SPLIT);
 
         //10.ProgatherID	节目集ID唯一
         stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[14].trim(), EQUAL_SIGN)+EMPTY)).append(SPLIT);
