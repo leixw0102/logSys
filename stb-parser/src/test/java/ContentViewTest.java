@@ -42,6 +42,9 @@ public class ContentViewTest implements ContentView {
         for(String value1 : lines){
             String[] logArr = value1.split(SPLIT_T);
             //logArr的第16个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
+            if(logArr.length != 16){
+                continue;
+            }
             String logContent = logArr[15];
 
             if(logContent==null || logContent.trim().length()<=0){

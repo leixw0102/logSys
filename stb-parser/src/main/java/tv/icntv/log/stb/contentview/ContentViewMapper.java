@@ -53,7 +53,7 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
 
         String[] contentArr = content.split(COMMA_SIGN);
 
-	    if(contentArr==null || contentArr.length<=0){
+	    if(contentArr == null || contentArr.length != 17){
 		    System.out.println("contentArr为空");
 		    return ;
 	    }
