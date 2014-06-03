@@ -53,7 +53,7 @@ public class ContentViewTest implements ContentView {
             }
             String[] contentArr = logContent.split(COMMA_SIGN);//得到一行content
 
-            if(contentArr==null || contentArr.length<=0){
+            if(contentArr==null || contentArr.length!=17){
                 System.out.println("logContentArr为空");
                 return ;
             }
