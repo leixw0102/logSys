@@ -46,19 +46,21 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
     }
     static Map<String,String> maps = Maps.newHashMap();
     static {
-        maps.put("I","stb.input.path");
-        maps.put("Back","stb.back.path");
-        maps.put("FOut","stb.filter.result.path");
-        maps.put("FKeys","stb.filter.file.keys");
-        maps.put("FOther","stb.filter.file.other");
-        maps.put("PMInput","stb.parser.device.player.relative.input");
-        maps.put("PMOut","stb.parser.device.player.hadoop.output");
+        maps.put("I",INPUT);
+        maps.put("Back",BACK);
+        maps.put("FOut",OUTPUT_PREFIX);
+        maps.put("FKeys",OUTPUT_SUFFIX);
+        maps.put("FOther",OTHER_PATH);
+        maps.put("PMInput",PLAYER_JOB_INPUT);
+        maps.put("PMOut",PLAYER_JOB_OUTPUT);
 //        maps.put("-POut","stb.parser.device.player.dat.result");
-        maps.put("UMInput","stb.parser.user.login.relative.input");
-        maps.put("UMOut","stb.parser.user.login.hadoop.output");
+        maps.put("UMInput",USER_LOGIN_JOB_INPUT);
+        maps.put("UMOut",USER_LOGIN_JOB_OUTPUT);
 //        maps.put("-UOut","stb.parser.user.login.dat.output");
-        maps.put("CMInput","stb.parser.content.view.relative.input");
-        maps.put("CMOut","stb.parser.content.view.hadoop.output");
+        maps.put("CMInput",CONTENT_VIEW_JOB_INPUT);
+        maps.put("CMOut",CONTENT_VIEW_JOB_OUTPUT);
+        maps.put("LBMInput",LOOK_BACK_JOB_INPUT);
+        maps.put("LBMOut",LOOK_BACK_JOB_OUTPUT);
 //        maps.put("-COut","stb.parser.content.view.dat.output");
     }
     @Override
@@ -75,44 +77,13 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
             System.out.println(maps.get(option.getOpt())+"\t"+option.getValue());
             temp.put(maps.get(option.getOpt()),option.getValue());
         };
-//        if (args.length % 2 != 0) {
-//            throw new RuntimeException("expected pairs of argName argValue");
-//        }
-//        Map<String,String> maps = Maps.newHashMap();
-//        for(int i=0;i<args.length;i++){
-//            String key = args[i];
-//            if(Strings.isNullOrEmpty(key)){
-//                continue;
-//            };
-//            key = key.trim().substring(1);
-//            try {
-////                if(key.equals("-ruleFile")){
-////                FilterJobParameterEnum temp=FilterJobParameterEnum.valueOf(key.toUpperCase());
-//                maps.put(key.toString().trim().toLowerCase(),args[i+1]);
-////                }
-//            } catch (IllegalArgumentException e){
-//                i++;
-//                continue;
-//            }
-//            i++;
-//        }
+
         Configuration conf=super.getConf();
 
         conf.set("mapreduce.output.fileoutputformat.compress","true");
         conf.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
         conf.set("mapreduce.map.output.compress","true");
         conf.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
-//        Properties properties= LoadProperties.loadProperitesByFileAbsolute(maps.get(RULE_FILE.toLowerCase()));
-//        Set<Object> keys =properties.keySet();
-//        for(Object obj:keys){
-//            maps.put(obj.toString(),properties.get(obj).toString());
-//           // System.out.println(obj.toString()+"\t"+properties.get(obj.toString()));
-//        }
-
-//        DateTime dateTime=new DateTime(new Date());
-//        conf.set(DAY_CONSTANT,"2014-05-01");
-//        conf.setLong(FILTER_TIME, 1400823883967L);
-        ;
         return run(temp)?0:1;
     }
 
@@ -133,6 +104,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         options.addOption("CMInput",true,"contentView mapreduce input");
         options.addOption("CMOut",true,"contentView mapreduce output");
         options.addOption("COut",true,"dat output file");
+        options.addOption("LBMInput",true,"look back input");
+        options.addOption("LBMOut",true,"look back output");
         return options;
     }
 

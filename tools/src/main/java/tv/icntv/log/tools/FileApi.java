@@ -88,8 +88,5 @@ public class FileApi implements Api {
         //To change body of implemented methods use File | Settings | File Templates.
         return writeDat(intput,"part-m-\\d*.lzo",output);
     }
-    public static void main(String args[]){
-        String str="part-r-\\d*";
-        System.out.println("part-r-00000".matches(str));
-    }
+
 }

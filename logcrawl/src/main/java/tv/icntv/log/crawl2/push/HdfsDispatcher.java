@@ -15,18 +15,15 @@ package tv.icntv.log.crawl2.push;/*
  */
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.resources.Messages_fr;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 
 /**
  * Created by leixw

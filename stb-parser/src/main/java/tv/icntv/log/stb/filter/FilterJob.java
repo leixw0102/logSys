@@ -64,15 +64,9 @@ public class FilterJob extends AbstractJob{
         configuration.setBoolean("mapreduce.reduce.speculative",false);
         configuration.setBoolean("mapreduce.map.speculative",false);
        //setting conf
-
-        //String day=configuration.get(DAY_CONSTANT);
         Path input = new Path(maps.get(INPUT));
         Path back = new Path(maps.get(BACK));
         Path output = new Path(maps.get(OUTPUT_PREFIX));
-//        String paths=maps.get(FILTER_JOB_PATHS);
-//        if(Strings.isNullOrEmpty(paths)){
-//            return;
-//        }
         configuration.set(OUTPUT_SUFFIX,maps.get(OUTPUT_SUFFIX));
         configuration.set(OUTPUT_PREFIX,output.toString());
         configuration.set(OTHER_PATH,maps.get(OTHER_PATH));

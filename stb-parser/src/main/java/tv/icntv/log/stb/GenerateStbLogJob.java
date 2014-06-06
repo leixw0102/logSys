@@ -59,7 +59,7 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob userControlledJob=new ControlledJob(configuration);
         userControlledJob.setJob(userLogin);
         //
-//
+        //player
         Job player=Job.getInstance(configuration,"player job");
         player.setJarByClass(getClass());
         player.setMapperClass(PlayerMapper.class);
@@ -71,7 +71,7 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob playControlledJob=new ControlledJob(configuration);
         playControlledJob.setJob(player);
 
-
+        //contentView
         Job contentView = Job.getInstance(configuration,"content view job");
         contentView.setJarByClass(getClass());
         contentView.setMapperClass(ContentViewMapper.class);
@@ -83,6 +83,10 @@ public class GenerateStbLogJob extends AbstractJob {
         contentView.setNumReduceTasks(0);
         ControlledJob contentViewControlledJob = new ControlledJob(configuration);
         contentViewControlledJob.setJob(contentView);
+
+
+        //lookback
+
         JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
         jobControl.addJob(userControlledJob);
         jobControl.addJob(playControlledJob);

@@ -23,20 +23,13 @@ package tv.icntv.log.stb.core;/*
  */
 public interface ParserConstant {
 
-
-    public String RULE_FILE="ruleFile";
-    //rule key
-
     public String INPUT="stb.input.path";
     public String BACK="stb.back.path";
     public String OUTPUT_PREFIX="stb.filter.result.path";
     public String OUTPUT_SUFFIX="stb.filter.file.keys";
-    public String FILTER_JOB_PATHS="stb.filter.job.paths";
 //    public String FILTER_KEYS="stb.filter.rule.keys";
     public String FILTER_SPILTER=";";
-    public String FILTER_TIME="time_long";
     public String OTHER_PATH="stb.filter.file.other";
-    public String DAY_CONSTANT="current_day";
 
 
     public String STB_SPLITER="/";
@@ -51,14 +44,17 @@ public interface ParserConstant {
     //userlogin
     public String USER_LOGIN_JOB_INPUT="stb.parser.user.login.relative.input";
     public String USER_LOGIN_JOB_OUTPUT="stb.parser.user.login.hadoop.output";
-    public String USER_LOGIN_DAT_OUTPUT="stb.parser.user.login.dat.output";
+//    public String USER_LOGIN_DAT_OUTPUT="stb.parser.user.login.dat.output";
     //play
     public String PLAYER_JOB_INPUT="stb.parser.device.player.relative.input";
     public String PLAYER_JOB_OUTPUT="stb.parser.device.player.hadoop.output";
-    public String PLAYER_DAT_OUTPUT="stb.parser.device.player.dat.result";
+//    public String PLAYER_DAT_OUTPUT="stb.parser.device.player.dat.result";
     //content view
     public String CONTENT_VIEW_JOB_INPUT="stb.parser.content.view.relative.input";
     public String CONTENT_VIEW_JOB_OUTPUT="stb.parser.content.view.hadoop.output";
-    public String CONTENT_VIEW_DAT_OUTPUT="stb.parser.content.view.dat.output";
+//    public String CONTENT_VIEW_DAT_OUTPUT="stb.parser.content.view.dat.output";
+
+    public String LOOK_BACK_JOB_INPUT="stb.parser.look.back.relative.input";
+    public String LOOK_BACK_JOB_OUTPUT="stb.parser.look.back.hadoop.output";
 
 }
