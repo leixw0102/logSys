@@ -64,7 +64,7 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         String programId = "";
 
 
-        //1.日期
+        //TODO 待需求确认，暂时取格式1.日期
         operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",values[11].trim()));
         if (operateTime == null || EMPTY.equals(operateTime)) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
