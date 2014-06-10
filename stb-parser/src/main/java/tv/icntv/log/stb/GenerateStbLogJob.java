@@ -29,6 +29,7 @@ import tv.icntv.log.stb.core.AbstractJob;
 import org.apache.hadoop.io.Text;
 import tv.icntv.log.stb.login.ParserLoginMapper;
 import tv.icntv.log.stb.player.PlayerMapper;
+import tv.icntv.log.stb.replay.ReplayMapper;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -85,12 +86,23 @@ public class GenerateStbLogJob extends AbstractJob {
         contentViewControlledJob.setJob(contentView);
 
 
-        //lookback
+        //reply
+        Job replay = Job.getInstance(configuration,"reply job");
+        replay.setJarByClass(getClass());
+        replay.setMapperClass(ReplayMapper.class);
+        replay.setOutputKeyClass(NullWritable.class);
+        replay.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(replay,new Path(maps.get(LOOK_BACK_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(replay,new Path(maps.get(LOOK_BACK_JOB_OUTPUT)));
+        replay.setNumReduceTasks(0);
+        ControlledJob replayControlledJob = new ControlledJob(configuration);
+        replayControlledJob.setJob(replay);
 
         JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
         jobControl.addJob(userControlledJob);
         jobControl.addJob(playControlledJob);
         jobControl.addJob(contentViewControlledJob);
+        jobControl.addJob(replayControlledJob);
         new Thread(jobControl).start();
         while (!jobControl.allFinished()) {
             Thread.sleep(5000);
