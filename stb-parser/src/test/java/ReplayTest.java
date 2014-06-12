@@ -64,7 +64,7 @@ public class ReplayTest implements ContentView {
             StringBuffer stringBuffer=new StringBuffer();
             System.out.println(logArr[11].trim());
             //1.日期
-            operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",logArr[11].trim()));
+            operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",logArr[11].trim()));
             if (operateTime == null || EMPTY.equals(operateTime)) {
                 stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
             } else {

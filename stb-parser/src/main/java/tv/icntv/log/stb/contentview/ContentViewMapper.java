@@ -70,14 +70,14 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
         strEndTime = StringUtils.substringAfter(contentArr[4].trim(), EQUAL_SIGN);
         if (strEndTime != null && !EMPTY.equals(strEndTime)) {
             stringBuffer.append(StringsUtils.getEncodeingStr("2")).append(SPLIT);
-            operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",
+            operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",
                     DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",strEndTime));
 
         }
         strStartTime = StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
         if (strStartTime != null && !EMPTY.equals(strStartTime)) {
             stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
-            operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",
+            operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",
                     DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",strStartTime));
         }
 

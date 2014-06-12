@@ -37,7 +37,7 @@ public class ContentViewTest implements ContentView {
         String strEndTime="";
         String strStartTime="";
         String operateTime = "";
-        List<String> lines=Files.readLines(new File("e:\\test\\sample4.txt"), Charsets.UTF_8);
+        List<String> lines=Files.readLines(new File("e:\\test\\sample5.txt"), Charsets.UTF_8);
         System.out.println(lines.size());
         for(String value1 : lines){
             String[] logArr = value1.split(SPLIT_T);
@@ -68,14 +68,14 @@ public class ContentViewTest implements ContentView {
                 strEndTime = StringUtils.substringAfter(contentArr[4].trim(), EQUAL_SIGN);
                 if (strEndTime != null && !EMPTY.equals(strEndTime)) {
                     stringBuffer.append(StringsUtils.getEncodeingStr("2")).append(SPLIT);
-                    operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",
+                    operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",
                             DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",strEndTime));
 
                 }
                 strStartTime = StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
                 if (strStartTime != null && !EMPTY.equals(strStartTime)) {
                     stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
-                    operateTime = DateUtil.convertDateToString( "yyyyMMddHHmmss",
+                    operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",
                             DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",strStartTime));
                 }
 
