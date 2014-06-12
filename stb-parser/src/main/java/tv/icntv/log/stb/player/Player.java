@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public interface Player {
 
+	String COMMON_DATE_FORMAT1 = "yyyyMMdd HHmmss";
+	String COMMON_DATE_FORMAT2 = "yyyy-MM-dd HH:mm:ss";
     String KEY_PLAYER_TIMELINE = "TimeLine";
     String KEY_PLAYER_OPERTYPE = "OperType";
     String KEY_PLAYER_PROGATHERID = "ProGatherID";

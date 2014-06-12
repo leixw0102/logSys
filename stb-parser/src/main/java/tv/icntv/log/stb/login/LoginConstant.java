@@ -23,7 +23,8 @@ package tv.icntv.log.stb.login;
  */
 public interface LoginConstant {
 
-	String COMMON_DATE_FORMAT = "yyyyMMddHHmmss";
+	String COMMON_DATE_FORMAT1 = "yyyyMMdd HHmmss";
+	String COMMON_DATE_FORMAT2 = "yyyy-MM-dd HH:mm:ss";
 	String COMMA_SIGN = ",";
 	String EQUAL_SIGN = "=";
 	String KEY_EPG_OPERTYPE = "operateType";

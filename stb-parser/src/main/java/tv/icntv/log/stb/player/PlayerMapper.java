@@ -22,8 +22,10 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
 import tv.icntv.log.stb.commons.StringsUtils;
+import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,7 +78,10 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         playerLogDomain.setOperType(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN));
 	    //OpTime操作时间。格式是：YYYYMMDDHH24MISS
 //	    stringBuffer.append(StringsUtils.getEncodeingStr(values[11])).append(SPLIT);
-        playerLogDomain.setOpTime(values[11]);
+	    //操作时间
+	    Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, values[11]);
+	    String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
+        playerLogDomain.setOpTime(opTime);
 		//DataSource系统来源1：易视腾2：云立方
 //	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
 	    //EPGCodeEPG版本编号,见EPGCode版本编号表
