@@ -26,18 +26,31 @@ import tv.icntv.log.stb.commons.StringsUtils;
  */
 public class PlayerLogDomain {
     private String playId="";
+	//CNTVID用户序列号
     private String icntvId="";
+	//Timeline操作时间轴
     private String timeLine="";
+	//OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
     private String operType="";
+	//操作时间
     private String opTime="";
+	//DataSource系统来源1：易视腾2：云立方
     private String dataSource="1";
+	//EPGCodeEPG版本编号,见EPGCode版本编号表
     private String epgCode="06";
+	//Fsource数据来源，见数据来源表
     private String fSource="1";
+	//ProGatherID节目集ID
     private String proGatherId="";
+	//ProgramID节目ID
     private String programId;
+	//RemoteControl遥控设备类型
     private String remoteControl="1";
+	//resolution 视频码率：1.高清2.标清
     private String resolution="";
+	//Reserved1保留字段1
     private String reserved1="";
+	//Reserved2保留字段2
     private String reserved2="";
 
     @Override

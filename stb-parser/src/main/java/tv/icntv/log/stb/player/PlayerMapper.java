@@ -36,6 +36,30 @@ import java.util.List;
  * Time: 15:56
  */
 public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements Player{
+	/**
+	 *
+	 * @param key
+	 * @param value 字符串例子及对应的字段描述如下（括号中为字段名称及描述）：
+	 *      014444000014031201405010501059180038（log_id	日志编号）
+	 *		3188（seq_id	请求编号）
+	 *		0（retry_seqid	重试请求编号）
+	 *		014444000014031（device_id	设备编号）
+	 *   	:（version_id	终端版本号）
+	 *		2720130807163420732（platform_id	平台号）
+	 *		24:69:A5:7B:CE:99（mac	终端mac）
+	 *		183.12.65.153（ip	终端ip）
+	 *		2014-05-01 05:01:05 996（req_time	终端发送日志请求的时间）
+	 *		2014-05-01 04:58:40 056（cur_time	日志产生时的终端时间）
+	 *		2014-05-01 04:58:39 978（client_time	日志产生时的服务器时间）
+	 *		2014-05-01 05:01:05 918（server_time	接收到日志时的服务器时间）
+	 *		1（level	日志等级）
+	 *		100（module	模块）
+	 *		PlayLog（action	操作）
+	 *   	content=OperType=05,ProGatherID=942407,ProgramID=6890867,TimeLine=1926120（content	日志内容）
+	 * @param context
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         if(null == value|| Strings.isNullOrEmpty(value.toString())){
@@ -45,6 +69,7 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         if(null == values || values.length!=16){
             return;
         }
+	    //日志内容，例：content=OperType=05,ProGatherID=942407,ProgramID=6890867,TimeLine=1926120
         String content=values[15];
         if(Strings.isNullOrEmpty(content)){
             return;
@@ -60,13 +85,10 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 		    return ;
 	    }
         PlayerLogDomain playerLogDomain=new PlayerLogDomain();
-//	    StringBuffer stringBuffer=new StringBuffer();
 	    //playId播放id：每一次播放（从开始到结束）的唯一识别编号
 	    //CNTVID用户序列号
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
         playerLogDomain.setIcntvId(values[3]);
-		//Timeline操作时间轴
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN))).append(SPLIT);
+		//Timeline操作时间轴(相对时间)
 	   String timeline = StringUtils.substringAfter(contentArr[3].trim(), EQUAL_SIGN);
 	    if(timeline.matches("\\d*")){
 		    playerLogDomain.setTimeLine(timeline);
@@ -74,34 +96,13 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 		    return;
 	    }
 	    //OperType操作类型标识：11-播放开始21-播放结束12-快进开始22-快进结束13-后退开始23-后退结束14-暂停开始24-暂停结束15-缓冲开始25-缓冲结束16-拖动开始26-拖动结束99-播放错误
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
         playerLogDomain.setOperType(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN));
-	    //OpTime操作时间。格式是：YYYYMMDDHH24MISS
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(values[11])).append(SPLIT);
 	    //操作时间
-//	    Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, values[11]);
-//	    String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
         playerLogDomain.setOpTime( values[11]);
-		//DataSource系统来源1：易视腾2：云立方
-//	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
-	    //EPGCodeEPG版本编号,见EPGCode版本编号表
-//	    stringBuffer.append(EPG_CODE).append(SPLIT);
-	    //Fsource数据来源，见数据来源表
-//	    stringBuffer.append(F_SOURCE).append(SPLIT);
 	    //ProGatherID节目集ID
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN))).append(SPLIT);
         playerLogDomain.setProGatherId(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN));
 	    //ProgramID节目ID
-//	    stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN))).append(SPLIT);
         playerLogDomain.setProgramId(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN));
-		//RemoteControl遥控设备类型
-//	    stringBuffer.append(EMPTY).append(SPLIT);
-	    //resolution 视频码率：1.高清2.标清
-//	    stringBuffer.append(EMPTY).append(SPLIT);
-	    //Reserved1保留字段1
-//	    stringBuffer.append(EMPTY).append(SPLIT);
-	    //Reserved2保留字段2
-//	    stringBuffer.append(EMPTY);
 
 	    context.write(NullWritable.get(),new Text(playerLogDomain.toString()));
     }

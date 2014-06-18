@@ -37,6 +37,31 @@ import java.util.Date;
  */
 public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, Text> implements LoginConstant {
      private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 *
+	 * @param key1
+	 * @param value1 字符串例子及对应的字段描述如下（括号中为字段名称及描述）：
+	 *      010121009271802201406150827055880000（log_id	日志编号）
+	 *		2014-06-15 08:27:05 970（seq_id	请求编号）
+	 *		0（retry_seqid	重试请求编号）
+	 *		010121009271802（device_id	设备编号）
+	 *   	4（version_id	终端版本号）
+	 *		2120131022154440312（platform_id	平台号）
+	 *		0c:c6:55:17:c7:46（mac	终端mac）
+	 *		112.25.7.28（ip	终端ip）
+	 *		2014-06-15 08:27:05 970（req_time	终端发送日志请求的时间）
+	 *		2014-06-15 08:27:05 970（cur_time	日志产生时的终端时间）
+	 *		2014-06-15 08:27:05 588（client_time	日志产生时的服务器时间）
+	 *		2014-06-15 08:27:05 588（server_time	接收到日志时的服务器时间）
+	 *		1（level	日志等级）
+	 *		800（module	模块）
+	 *		Device（action	操作）
+	 *   	operateDate=2014-06-15 08:27:05 970, operateType=STARTUP, deviceCode=010121009271802, versionId=4, mac=0c:c6:55:17:c7:46, platformId=2120131022154440312, ipAddress=112.25.7.5（content	日志内容）
+	 * @param context
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void map(LongWritable key1, Text value1, Context context)
 			throws IOException, InterruptedException {
 

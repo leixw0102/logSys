@@ -27,12 +27,19 @@ import tv.icntv.log.stb.commons.StringsUtils;
  * Time: 17:47
  */
 public class UserLoginDomain {
+	//icntv编号
     private String icntvId="";
+	//操作类型
     private String operateType="";
+	//操作时间
     private String operateTime="";
+	//IP地址
     private String ipAddress="";
+	//DataSource系统来源1：易视腾2：云立方
     private String dataSource="1";
+	//Fsource数据来源，见数据来源表
     private String fsource="1";
+	//RemoteControl遥控设备类型
     private String remoteControl="";
 
     public String getDataSource() {
