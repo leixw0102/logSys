@@ -79,9 +79,9 @@ public class PlayerMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 	    //OpTime操作时间。格式是：YYYYMMDDHH24MISS
 //	    stringBuffer.append(StringsUtils.getEncodeingStr(values[11])).append(SPLIT);
 	    //操作时间
-	    Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, values[11]);
-	    String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
-        playerLogDomain.setOpTime(opTime);
+//	    Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, values[11]);
+//	    String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
+        playerLogDomain.setOpTime( values[11]);
 		//DataSource系统来源1：易视腾2：云立方
 //	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
 	    //EPGCodeEPG版本编号,见EPGCode版本编号表

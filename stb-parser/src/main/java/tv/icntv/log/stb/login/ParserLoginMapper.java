@@ -83,9 +83,9 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
                 userLogin.setOperateType(value);
 			}else if(KEY_DEVICE_OPERATE_DATE.equalsIgnoreCase(key)){
 				//操作时间
-				Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, value);
-				String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
-                userLogin.setOperateTime(opTime);
+//				Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, value);
+//				String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
+                userLogin.setOperateTime(value);
 			}else if(KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
 				//IP地址
                 if(!value.matches(ipRegular)){

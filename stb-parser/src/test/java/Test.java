@@ -173,6 +173,9 @@ public class Test implements LoginConstant{
                 //操作时间
 //				Date date = DateUtil.convertStringToDate(COMMON_DATE_FORMAT, value);
 //				value = DateUtil.convertDateToString(COMMON_DATE_FORMAT, date);
+//                Date d = DateUtil.convertStringToDate(COMMON_DATE_FORMAT2, value);
+//                String opTime = DateUtil.convertDateToString(COMMON_DATE_FORMAT1, d);
+//                System.out.println(d.toLocaleString()+"\t"+opTime);
                 userLogin.setOperateTime(value);
             }else if(KEY_DEVICE_IPADDRESS.equalsIgnoreCase(key)){
                 //IP地址

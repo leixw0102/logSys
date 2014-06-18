@@ -32,7 +32,7 @@ public class DateUtils {
 
     private static String formatFull="yyyy-MM-dd HH:mm:ss SSS";
     private static DateTimeFormatter dateTimeFormatter= DateTimeFormat.forPattern(formatFull);
-    private static String defaultFormat="yyyy-MM-dd HH:mm:ss";
+    private static String defaultFormat="yyyyMMdd HHmmss";
     public static String getFormatDate( Date date){
         try {
             DateTime dateTime=new DateTime(date);
