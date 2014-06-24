@@ -32,6 +32,7 @@ import java.util.List;
  * Author: wangliang
  * Date: 2014/05/26
  * Time: 15:56
+ * current version: 统分二期需求文档1.5
  */
 public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements ContentView {
     @Override
@@ -94,66 +95,58 @@ public class ContentViewMapper extends Mapper<LongWritable,Text,NullWritable,Tex
         //5.VideoType	视频类型1：普通视频 2.: 微视频
         stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[6].trim(), EQUAL_SIGN))).append(SPLIT);
 
-        //6.Flux	网络流量  单位（KB）
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //7.EndReason 流媒体服务中断原因
+        //6.EndReason 流媒体服务中断原因
         if (null == contentArr[2].trim() || EMPTY.equals(contentArr[2].trim())) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
         } else {
             stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN))).append(SPLIT);
         }
 
-        //8.ChargeType 计费类型  1：免费；2：收费
+        //7.ChargeType 计费类型  1：免费；2：收费
         if (null == contentArr[7].trim() || EMPTY.equals(contentArr[7].trim())) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
         } else {
             stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[7].trim(), EQUAL_SIGN))).append(SPLIT);
         }
 
-        //TODO 9.CategoryID	栏目ID,如果日志中值为空的情况，需要讨论解决方案
+        //8.CategoryID	栏目ID,如果日志中值为空的情况，需要讨论解决方案
         if (null == contentArr[0].trim() || EMPTY.equals(contentArr[0].trim())) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
         } else {
             stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))).append(SPLIT);
         }
 
-        //10.ProgatherID	节目集ID唯一
+        //9.ProgatherID	节目集ID唯一
         stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[14].trim(), EQUAL_SIGN)+EMPTY)).append(SPLIT);
 
-        //11.ProgramID	节目ID唯一
+        //10.ProgramID	节目ID唯一
         stringBuffer.append(StringsUtils.getEncodeingStr(StringUtils.substringAfter(contentArr[8].trim(), EQUAL_SIGN)+EMPTY)).append(SPLIT);
 
-        //12.subjectID 专题id 目前为空
+        //11.subjectID 专题id 目前为空
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        //13.EPGCode EPG版本编号,见EPGCode版本编号表
-        if (contentArr[13].trim().equals("FOUR")){
-            stringBuffer.append(StringsUtils.getEncodeingStr("04")).append(SPLIT);
-        }else if (contentArr[13].trim().equals("FIVE")) {
-            stringBuffer.append(StringsUtils.getEncodeingStr("05")).append(SPLIT);
-        }else {
-            stringBuffer.append(StringsUtils.getEncodeingStr("06")).append(SPLIT);
-        }
+        //12.EPGCode EPG版本编号,见EPGCode版本编号表
+        stringBuffer.append(StringsUtils.getEncodeingStr("06")).append(SPLIT);
 
-        //14.std_path 目前没有
+        //13.std_path 目前没有
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        //15.VODPathType 收视来源实际路径
+        //14.VODPathType 收视来源实际路径
         stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
 
-		//16.DataSource系统来源1：易视腾2：云立方
+		//15.DataSource系统来源1：易视腾2：云立方
 	    stringBuffer.append(DATA_SOURCE).append(SPLIT);
-        //17.Fsource数据来源，见数据来源表
+
+        //16.Fsource数据来源，见数据来源表
         stringBuffer.append(F_SOURCE).append(SPLIT);
 
-        //18.resolution 视频码率
+        //17.resolution 视频码率
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        //19.Remark1 保留字段
+        //18.Remark1 保留字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        //20.Remark2 保留字段
+        //19.Remark2 保留字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
         values = null;

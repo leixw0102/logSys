@@ -31,6 +31,7 @@ import java.util.List;
  * Author: wangliang
  * Date: 2014/06/04
  * Time: 10:56
+ * current version:统分二期需求文档1.5
  */
 public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements Replay {
     @Override
@@ -61,35 +62,37 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         String operateType = "";
         String operateTime = "";
         String uuid = "";
-        String programId = "";
 
 
-        //TODO 待需求确认，暂时取格式1.日期
-        operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",values[11].trim()));
-        if (operateTime == null || EMPTY.equals(operateTime)) {
-            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-        } else {
-            stringBuffer.append(StringsUtils.getEncodeingStr(operateTime)).append(SPLIT);
-        }
-        //2.CNTVID用户序列号
+        //1.CNTVID用户序列号
         stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
 
-        //3.ip地址
-        if (values[7] == null || EMPTY.equals(values[7])) {
+        //2.（回看终端的）IP地址
+        if (null == values[7] || EMPTY.equals(values[7])) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
         } else {
             stringBuffer.append(StringsUtils.getEncodeingStr(values[7].trim())).append(SPLIT);
         }
 
-        //4.OperateTtype	操作类型 1:开始 2:结束
+        //3.OperateTtype	操作类型 1:开始 2:结束
         operateType = StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN);
-        if (operateType == null || EMPTY.equals(operateType)) {
+        if (null == operateType || EMPTY.equals(operateType)) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-        } else {
-            stringBuffer.append(StringsUtils.getEncodeingStr(operateType)).append(SPLIT);
+        }else if("on".equals(operateType)){
+            stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
+        }else if("out".equals(operateType)){
+            stringBuffer.append(StringsUtils.getEncodeingStr("2")).append(SPLIT);
         }
 
-        //5.uuid频道
+        // 4.operateTime  操作时间
+        operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",values[10].trim()));
+        if (operateTime == null || EMPTY.equals(operateTime)) {
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        } else {
+            stringBuffer.append(StringsUtils.getEncodeingStr(operateTime)).append(SPLIT);
+        }
+
+        //5.channel频道
         uuid =  StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
         if (uuid == null || EMPTY.equals(uuid)) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
@@ -97,17 +100,32 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
             stringBuffer.append(StringsUtils.getEncodeingStr(uuid)).append(SPLIT);
         }
 
-        //6.programId 节目id
-        programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
-        if(!programId.matches("\\d+")){ //节目id只能包含数字否则启用本条日志
-            return;
-        }
+        //6.programName节目名称 目前日志中无此字段
+        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        if (programId == null || EMPTY.equals(programId)) {
-            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
-        } else {
-            stringBuffer.append(StringsUtils.getEncodeingStr(programId));
-        }
+        //programId 节目id
+//        programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
+//        if(!programId.matches("\\d+")){ //节目id只能包含数字否则启用本条日志
+//            return;
+//        }
+//
+//        if (programId == null || EMPTY.equals(programId)) {
+//            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
+//        } else {
+//            stringBuffer.append(StringsUtils.getEncodeingStr(programId));
+//        }
+
+        //7.EPGCode EPG版本编号,见EPGCode版本编号表
+        stringBuffer.append(StringsUtils.getEncodeingStr("06")).append(SPLIT);
+
+        //8.DataSource系统来源1：易视腾2：云立方
+        stringBuffer.append(DATA_SOURCE).append(SPLIT);
+
+        //9.Fsource数据来源，见数据来源表
+        stringBuffer.append(F_SOURCE).append(SPLIT);
+
+        //10.resolution 视频码率,目前无此字段
+        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
         values = null;
         content = null;
@@ -115,8 +133,7 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         operateTime = null;
         operateType = null;
         uuid = null;
-        programId = null;
-        //最终格式：日期|cntvid|ip|操作类型|频道|节目id
+
 	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
 
