@@ -43,12 +43,12 @@ public class ReplayTest implements ContentView {
         List<String> lines=Files.readLines(new File("e:\\test\\sample4.txt"), Charsets.UTF_8);
         System.out.println(lines.size());
         for(String value1 : lines){
-            String[] logArr = value1.split(SPLIT_T);
+            String[] values = value1.split(SPLIT_T);
             //logArr的第16个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
-            if(logArr.length != 16){
+            if(values.length != 16){
                 continue;
             }
-            String logContent = logArr[15];
+            String logContent = values[15];
 
             if(logContent==null || logContent.trim().length()<=0){
                 System.out.println("logContent为空");
@@ -62,33 +62,36 @@ public class ReplayTest implements ContentView {
             }
 
             StringBuffer stringBuffer=new StringBuffer();
-            System.out.println(logArr[11].trim());
-            //1.日期
-            operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",logArr[11].trim()));
+
+            //1.CNTVID用户序列号
+            stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
+
+            //2.（回看终端的）IP地址
+            if (null == values[7] || EMPTY.equals(values[7])) {
+                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            } else {
+                stringBuffer.append(StringsUtils.getEncodeingStr(values[7].trim())).append(SPLIT);
+            }
+
+            //3.OperateTtype	操作类型 1:开始 2:结束
+            operateType = StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN);
+            if (null == operateType || EMPTY.equals(operateType)) {
+                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            }else if("on".equals(operateType)){
+                stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
+            }else if("out".equals(operateType)){
+                stringBuffer.append(StringsUtils.getEncodeingStr("2")).append(SPLIT);
+            }
+
+            // 4.operateTime  操作时间
+            operateTime = DateUtil.convertDateToString( "yyyyMMdd HHmmss",DateUtil.convertStringToDate("yyyy-MM-dd HH:mm:ss SSS",values[10].trim()));
             if (operateTime == null || EMPTY.equals(operateTime)) {
                 stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
             } else {
                 stringBuffer.append(StringsUtils.getEncodeingStr(operateTime)).append(SPLIT);
             }
-            //2.CNTVID用户序列号
-            stringBuffer.append(StringsUtils.getEncodeingStr(logArr[3])).append(SPLIT);
 
-            //3.ip地址
-            if (logArr[7] == null || EMPTY.equals(logArr[7])) {
-                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-            } else {
-                stringBuffer.append(StringsUtils.getEncodeingStr(logArr[7].trim())).append(SPLIT);
-            }
-
-            //4.OperateTtype	操作类型 1:开始 2:结束
-            operateType = StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN);
-            if (operateType == null || EMPTY.equals(operateType)) {
-                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-            } else {
-                stringBuffer.append(StringsUtils.getEncodeingStr(operateType)).append(SPLIT);
-            }
-
-            //5.uuid频道
+            //5.channel频道
             uuid =  StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
             if (uuid == null || EMPTY.equals(uuid)) {
                 stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
@@ -96,17 +99,32 @@ public class ReplayTest implements ContentView {
                 stringBuffer.append(StringsUtils.getEncodeingStr(uuid)).append(SPLIT);
             }
 
-            //6.programId 节目id
-            programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
-            if(!programId.matches("\\d+")){
-                continue;
-            }
+            //6.programName节目名称 目前日志中无此字段
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-            if (programId == null || EMPTY.equals(programId)) {
-                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
-            } else {
-                stringBuffer.append(StringsUtils.getEncodeingStr(programId));
-            }
+            //programId 节目id
+//        programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
+//        if(!programId.matches("\\d+")){ //节目id只能包含数字否则启用本条日志
+//            return;
+//        }
+//
+//        if (programId == null || EMPTY.equals(programId)) {
+//            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
+//        } else {
+//            stringBuffer.append(StringsUtils.getEncodeingStr(programId));
+//        }
+
+            //7.EPGCode EPG版本编号,见EPGCode版本编号表
+            stringBuffer.append(StringsUtils.getEncodeingStr("06")).append(SPLIT);
+
+            //8.DataSource系统来源1：易视腾2：云立方
+            stringBuffer.append(DATA_SOURCE).append(SPLIT);
+
+            //9.Fsource数据来源，见数据来源表
+            stringBuffer.append(F_SOURCE).append(SPLIT);
+
+            //10.resolution 视频码率,目前无此字段
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
             System.out.println(stringBuffer.toString());
             cnt++;
