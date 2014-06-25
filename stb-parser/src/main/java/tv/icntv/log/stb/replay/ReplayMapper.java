@@ -99,7 +99,7 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 
         //6.programId 节目id
         programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
-        if(!programId.matches("\\d+")){ //节目id只能包含数字否则启用本条日志
+        if(!programId.matches("\\d+")){ //节目id只能包含数字否则弃用本条日志
             return;
         }
 
