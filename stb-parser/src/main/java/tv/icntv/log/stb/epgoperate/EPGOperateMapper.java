@@ -104,7 +104,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 		epgOperateDomain.setSourceObjectId(EMPTY);
 
 
-		if(PAGE_NAME_EPG_HISTORY.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		if(PAGE_NAME_EPG_HISTORY.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("2");
 			//目标对象ID
@@ -113,7 +113,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("1");
-		}else if(PAGE_NAME_EPG_SEARCH.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		}else if(PAGE_NAME_EPG_SEARCH.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("1");
 			//目标对象ID
@@ -122,7 +122,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN));
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("21");
-		}else if(PAGE_NAME_ALBUM.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		}else if(PAGE_NAME_ALBUM.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("5");
 			//目标对象ID
@@ -131,7 +131,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("24");
-		}else if(PAGE_NAME_PANEL.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		}else if(PAGE_NAME_PANEL.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("1");
 			//目标对象ID
@@ -140,10 +140,10 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("11");
-		}else if(PAGE_NAME_EPG_DETAIL.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
-			if(!contentArr[1].trim().matches("\\d+")){
-				return;//节目id只能包含数字否则弃用本条日志
-			}
+		}else if(PAGE_NAME_EPG_DETAIL.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+//			if(!contentArr[1].trim().matches("\\d+")){
+//				return;//节目id只能包含数字否则弃用本条日志
+//			}
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("2");
 			//目标对象ID
@@ -152,7 +152,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("11");
-		}else if(PAGE_NAME_WEB_INDEX.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		}else if(PAGE_NAME_WEB_INDEX.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("1");
 			//目标对象ID
@@ -161,7 +161,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("11");
-		}else if(PAGE_NAME_EPG_LIST.equals(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
+		}else if(PAGE_NAME_EPG_LIST.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			if(!contentArr[1].trim().matches("\\d+")){
 				return;//节目id只能包含数字否则弃用本条日志
 			}
@@ -174,15 +174,16 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
 			epgOperateDomain.setOperType("11");
 		}else{
-//			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
-//			epgOperateDomain.setTargetObjectType(EMPTY);
-//			//目标对象ID
-//			epgOperateDomain.setTargetObjectId(EMPTY);
-//			//搜索关键词:当操作类型为搜索时该字段需要传值
-//			epgOperateDomain.setKeyword(EMPTY);
-//			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
-//			epgOperateDomain.setOperType(EMPTY);
-			return;
+			//TODO 测试，之后直接return
+			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
+			epgOperateDomain.setTargetObjectType(EMPTY);
+			//目标对象ID
+			epgOperateDomain.setTargetObjectId(EMPTY);
+			//搜索关键词:当操作类型为搜索时该字段需要传值
+			epgOperateDomain.setKeyword(EMPTY);
+			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
+			epgOperateDomain.setOperType("-1");
+//			return;
 		}
 
 
