@@ -92,8 +92,10 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         } else {
             stringBuffer.append(StringsUtils.getEncodeingStr(operateTime)).append(SPLIT);
         }
+        //5.url_addr 回看地址
+        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-        //5.channel频道
+        //6.channel频道
         uuid =  StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
         if (uuid == null || EMPTY.equals(uuid)) {
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
@@ -101,34 +103,22 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
             stringBuffer.append(StringsUtils.getEncodeingStr(uuid)).append(SPLIT);
         }
 
-        //6.programId 节目id
+        //7.programId 节目id
         programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
         if(!programId.matches("\\d+")){ //节目id只能包含数字否则弃用本条日志
             return;
         }
 
-        //programId 节目id
-//        programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
-//        if(!programId.matches("\\d+")){ //节目id只能包含数字否则启用本条日志
-//            return;
-//        }
-//
-//        if (programId == null || EMPTY.equals(programId)) {
-//            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
-//        } else {
-//            stringBuffer.append(StringsUtils.getEncodeingStr(programId));
-//        }
-
-        //7.EPGCode EPG版本编号,见EPGCode版本编号表
+        //8.EPGCode EPG版本编号,见EPGCode版本编号表
         stringBuffer.append(StringsUtils.getEncodeingStr("06")).append(SPLIT);
 
-        //8.DataSource系统来源1：易视腾2：云立方
+        //9.DataSource系统来源1：易视腾2：云立方
         stringBuffer.append(DATA_SOURCE).append(SPLIT);
 
-        //9.Fsource数据来源，见数据来源表
+        //10.Fsource数据来源，见数据来源表
         stringBuffer.append(F_SOURCE).append(SPLIT);
 
-        //10.resolution 视频码率,目前无此字段
+        //11.resolution 视频码率,目前无此字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
         values = null;
