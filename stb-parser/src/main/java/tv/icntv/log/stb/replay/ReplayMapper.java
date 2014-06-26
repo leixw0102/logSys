@@ -107,6 +107,8 @@ public class ReplayMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
         programId =  StringUtils.substringAfter(contentArr[2].trim(), EQUAL_SIGN);
         if(!programId.matches("\\d+")){ //节目id只能包含数字否则弃用本条日志
             return;
+        }else{
+            stringBuffer.append(StringsUtils.getEncodeingStr(programId)).append(SPLIT);
         }
 
         //8.EPGCode EPG版本编号,见EPGCode版本编号表
