@@ -61,6 +61,9 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         maps.put("CMOut",CONTENT_VIEW_JOB_OUTPUT);
         maps.put("LBMInput",LOOK_BACK_JOB_INPUT);
         maps.put("LBMOut",LOOK_BACK_JOB_OUTPUT);
+
+        maps.put("LEMInput",LOG_EPG_JOB_INPUT);
+        maps.put("LEMOut",LOG_EPG_JOB_OUTPUT);
 //        maps.put("-COut","stb.parser.content.view.dat.output");
     }
     @Override
@@ -106,6 +109,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         options.addOption("COut",true,"dat output file");
         options.addOption("LBMInput",true,"look back input");
         options.addOption("LBMOut",true,"look back output");
+        options.addOption("LEMInput",true,"log epg input");
+        options.addOption("LEMOut",true,"log epg output");
         return options;
     }
 

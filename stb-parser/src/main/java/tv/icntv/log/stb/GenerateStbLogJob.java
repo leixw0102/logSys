@@ -27,6 +27,7 @@ import tv.icntv.log.stb.commons.HadoopUtils;
 import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
 import org.apache.hadoop.io.Text;
+import tv.icntv.log.stb.epgoperate.EPGOperateMapper;
 import tv.icntv.log.stb.login.ParserLoginMapper;
 import tv.icntv.log.stb.player.PlayerMapper;
 import tv.icntv.log.stb.replay.ReplayMapper;
@@ -98,11 +99,25 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob replayControlledJob = new ControlledJob(configuration);
         replayControlledJob.setJob(replay);
 
-        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView");
+        //logEpg
+        Job logEpg=Job.getInstance(configuration,"log epg job");
+        logEpg.setJarByClass(getClass());
+        logEpg.setMapperClass(EPGOperateMapper.class);
+        logEpg.setOutputKeyClass(NullWritable.class);
+        logEpg.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(logEpg, new Path(maps.get(LOG_EPG_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(logEpg, new Path(maps.get(LOG_EPG_JOB_OUTPUT)));
+        logEpg.setNumReduceTasks(0);
+        ControlledJob logEpgControlledJob=new ControlledJob(configuration);
+        logEpgControlledJob.setJob(logEpg);
+
+        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView,logEpg");
         jobControl.addJob(userControlledJob);
         jobControl.addJob(playControlledJob);
         jobControl.addJob(contentViewControlledJob);
         jobControl.addJob(replayControlledJob);
+        jobControl.addJob(logEpgControlledJob);
+
         new Thread(jobControl).start();
         while (!jobControl.allFinished()) {
             Thread.sleep(5000);
