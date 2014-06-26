@@ -57,4 +57,6 @@ public interface ParserConstant {
     public String LOOK_BACK_JOB_INPUT="stb.parser.look.back.relative.input";
     public String LOOK_BACK_JOB_OUTPUT="stb.parser.look.back.hadoop.output";
 
+    public String LOG_EPG_JOB_INPUT="stb.parser.log.epg.relative.input";
+    public String LOG_EPG_JOB_OUTPUT="stb.parser.log.epg.hadoop.output";
 }
