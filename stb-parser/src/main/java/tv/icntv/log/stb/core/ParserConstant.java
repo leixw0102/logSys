@@ -59,4 +59,7 @@ public interface ParserConstant {
 
     public String LOG_EPG_JOB_INPUT="stb.parser.log.epg.relative.input";
     public String LOG_EPG_JOB_OUTPUT="stb.parser.log.epg.hadoop.output";
+
+    public String CDN_JOB_INPUT="stb.parser.log.cdn.relative.input";
+    public String CDN_JOB_OUTPUT="stb.parser.log.cdn.hadoop.output";
 }

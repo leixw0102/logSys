@@ -14,21 +14,14 @@ package tv.icntv.log.stb.core;/*
  *      limitations under the License.
  */
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+
 import com.google.common.collect.Maps;
 import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.icntv.log.stb.commons.LoadProperties;
-
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -64,6 +57,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
 
         maps.put("LEMInput",LOG_EPG_JOB_INPUT);
         maps.put("LEMOut",LOG_EPG_JOB_OUTPUT);
+        maps.put("CDNMInput",CDN_JOB_INPUT);
+        maps.put("CDNMOut",CDN_JOB_OUTPUT);
 //        maps.put("-COut","stb.parser.content.view.dat.output");
     }
     @Override
@@ -111,6 +106,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         options.addOption("LBMOut",true,"look back output");
         options.addOption("LEMInput",true,"log epg input");
         options.addOption("LEMOut",true,"log epg output");
+        options.addOption("CDNMInput",true,"cdn input");
+        options.addOption("CDNMOut",true,"cdn output");
         return options;
     }
 

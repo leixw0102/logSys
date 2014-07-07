@@ -17,22 +17,21 @@ package tv.icntv.log.stb;/*
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
-import tv.icntv.log.stb.commons.HadoopUtils;
+import tv.icntv.log.stb.cdn.CdnModuleMapper;
 import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
-import org.apache.hadoop.io.Text;
 import tv.icntv.log.stb.epgoperate.EPGOperateMapper;
 import tv.icntv.log.stb.login.ParserLoginMapper;
 import tv.icntv.log.stb.player.PlayerMapper;
 import tv.icntv.log.stb.replay.ReplayMapper;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 /**
@@ -111,13 +110,25 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob logEpgControlledJob=new ControlledJob(configuration);
         logEpgControlledJob.setJob(logEpg);
 
-        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView,logEpg");
+        //cdn
+        Job cdn=Job.getInstance(configuration,"cdn job");
+        cdn.setJarByClass(getClass());
+        cdn.setMapperClass(CdnModuleMapper.class);
+        cdn.setOutputKeyClass(NullWritable.class);
+        cdn.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(cdn, new Path(maps.get(CDN_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(cdn, new Path(maps.get(CDN_JOB_OUTPUT)));
+        cdn.setNumReduceTasks(0);
+        ControlledJob cdnControlledJob=new ControlledJob(configuration);
+        cdnControlledJob.setJob(cdn);
+
+        JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView,logEpg,cdn");
         jobControl.addJob(userControlledJob);
         jobControl.addJob(playControlledJob);
         jobControl.addJob(contentViewControlledJob);
         jobControl.addJob(replayControlledJob);
         jobControl.addJob(logEpgControlledJob);
-
+        jobControl.addJob(cdnControlledJob);
         new Thread(jobControl).start();
         while (!jobControl.allFinished()) {
             Thread.sleep(5000);
