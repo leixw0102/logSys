@@ -77,12 +77,20 @@ public class CdnModuleTest implements ContentView {
                 return ;
             }
 
+
             String[] arrTemp = contentArr[0].split(":");
+
             String status = arrTemp[1];
             if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
                     || "srverr".equals(status) || "timeout".equals(status)){
                 return;
             }
+            System.out.println("contentArr[3]:"+contentArr[3]);
+            System.out.println(contentArr[3].substring(0,contentArr[3].indexOf("(")));
+//            System.out.println(arrTemp[1].substring(0,arrTemp[1].indexOf("/")));
+
+
+
 
             StringBuffer stringBuffer=new StringBuffer();
             String programId = "";
@@ -113,27 +121,36 @@ public class CdnModuleTest implements ContentView {
             //TODO 7.CdnNodeIP	CDN的节点IP
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
-            //TODO 8.ConnectResult	节点连接情况 1.成功 2.超时 3.失败 4.302跳转
-            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            //8.ConnectResult	节点连接情况 1.成功 2.超时 3.失败 4.302跳转
+            stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
 
             //9.transDomain	302跳转域名
-            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
+
             //10.NodeSpeed	节点下载速度
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //11.VisitStartTime	访问开始时间: YYYYMMDD HH24MISS
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //12.VisitEndTime	访问结束时间:YYYYMMDD HH24MISS
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //13.programURL	节目URL
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //14.ProgramID	节目ID
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //15.SliceSize	分片大小
-            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
+
             //16.Reserved1	保留字段
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //17.Reserved2	保留字段
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
             //18.Reserved3	保留字段
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
