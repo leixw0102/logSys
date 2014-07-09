@@ -54,58 +54,69 @@ import java.util.regex.Pattern;
 public class CdnModuleTest implements ContentView {
     public static void main(String[]args) throws IOException {
         int cnt=0;
-        List<String> lines= Files.readLines(new File("e:\\test\\sample6.txt"), Charsets.UTF_8);
+        List<String> lines= Files.readLines(new File("e:\\test\\cdn_log\\cdn_m_temp.txt"), Charsets.UTF_8);
         System.out.println(lines.size());
         for(String value1 : lines){
+            System.out.println("cnt:"+cnt);
+
             String[] values = value1.split(SPLIT_T);
+
+            System.out.println("values.length:"+values.length);
             //logArr的第16个元素为日志内容，格式类似：operateDate=2014-04-25 17:59:59 621, operateType=STARTUP, deviceCode=010333501065233, versionId=, mac=10:48:b1:06:4d:23, platformId=00000032AmlogicMDZ-05-201302261821793, ipAddress=60.10.133.10
             if(values.length != 16){
                 continue;
             }
+            String action = values[14];
+            if(!"TaskState".equals(action)){
+                System.out.println("跳过非TaskStatus");
+                continue;
+            }
+
             String logContent = values[15];
 
             if(logContent==null || logContent.trim().length()<=0){
                 System.out.println("logContent为空");
                 return ;
             }
-
+            System.out.println("logContent:"+logContent);
             //过滤异常日志
             String[] contentArr = logContent.split(COMMA_SIGN);
-
+            System.out.println("contentArr长度"+contentArr.length);
             if(contentArr == null || contentArr.length == 0){
                 System.out.println("contentArr长度错误");
                 return ;
             }
 
-
+            System.out.println("1.2");
             String[] arrTemp = contentArr[0].split(":");
 
             String status = arrTemp[1];
+            System.out.println("status:"+status);
             if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
-                    || "srverr".equals(status) || "timeout".equals(status)){
+                    || "srverr".equals(status) || "timeout".equals(status) || "error".equals(status)){
                 return;
             }
-            System.out.println("contentArr[3]:"+contentArr[3]);
-            System.out.println(contentArr[3].substring(0,contentArr[3].indexOf("(")));
+            //System.out.println("contentArr[3]:"+contentArr[3]);
+            //System.out.println(contentArr[3].substring(0,contentArr[3].indexOf("(")));
 //            System.out.println(arrTemp[1].substring(0,arrTemp[1].indexOf("/")));
 
 
-
+            System.out.println("2");
 
             StringBuffer stringBuffer=new StringBuffer();
             String programId = "";
 
-
+            System.out.println("3");
             //1.CNTVID用户序列号
             stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
-
+            System.out.println("3.1");
             //2.用户IP
             if (null == values[7] || EMPTY.equals(values[7])) {
                 stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
             } else {
                 stringBuffer.append(StringsUtils.getEncodeingStr(values[7].trim())).append(SPLIT);
             }
-
+            System.out.println("3.2");
             //3.useragent	非必需
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
@@ -124,9 +135,12 @@ public class CdnModuleTest implements ContentView {
             //8.ConnectResult	节点连接情况 1.成功 2.超时 3.失败 4.302跳转
             stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
 
+            System.out.println("4");
+            //System.out.println("contentArr.length:"+contentArr.length);
+
             //9.transDomain	302跳转域名
             stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
-
+            System.out.println("5");
             //10.NodeSpeed	节点下载速度
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 

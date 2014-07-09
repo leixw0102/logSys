@@ -43,12 +43,15 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         if(null == values || values.length!=16){
             return;
         }
+
+        if(null == values[14] || !"TaskState".equals(values[14])){
+            System.out.println("跳过非TaskStatus");
+            return;
+        }
+
         String content=values[15];
         if(Strings.isNullOrEmpty(content)){
             return;
-        }
-        if(content.startsWith(CONTENT_PREFIX)){
-            content=content.replace(CONTENT_PREFIX,"");
         }
 
         //过滤异常日志
@@ -62,12 +65,11 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         String[] arrTemp = contentArr[0].split(":");
         String status = arrTemp[1];
         if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
-                || "srverr".equals(status) || "timeout".equals(status)){
+                || "srverr".equals(status) || "timeout".equals(status) || "error".equals(status)){
             return;
         }
 
 	    StringBuffer stringBuffer=new StringBuffer();
-	    String programId = "";
 
 
         //1.CNTVID用户序列号
@@ -128,12 +130,11 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         //18.Reserved3	保留字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
 
-
-
         values = null;
         content = null;
         contentArr = null;
-        programId = null;
+        arrTemp = null;
+        status = null;
 	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
 
