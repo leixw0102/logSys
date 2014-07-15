@@ -57,12 +57,22 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         //过滤异常日志
         String[] contentArr = content.split(COMMA_SIGN);
 
-        if(contentArr == null || contentArr.length == 0){
+        if( null == contentArr || contentArr.length < 4){
             System.out.println("contentArr长度错误");
             return ;
         }
 
         String[] arrTemp = contentArr[0].split(":");
+        if(!arrTemp[0].trim().matches("\\d+")){
+            System.out.println("task 编号错误!!"+arrTemp[0]);
+            return;
+        }
+
+        if(null == arrTemp[1] || arrTemp[1].trim().length() == 0){
+            System.out.println("获取task内容错误!!"+arrTemp[1]);
+            return;
+        }
+
         String status = arrTemp[1];
         if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
                 || "srverr".equals(status) || "timeout".equals(status) || "error".equals(status)){
@@ -101,7 +111,11 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
 
         //9.transDomain	302跳转域名
-        stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
+        if(contentArr[3].indexOf("(")>0){
+            stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
+        }else{
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+        }
 
         //10.NodeSpeed	节点下载速度
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
@@ -119,7 +133,11 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
 
         //15.SliceSize	分片大小
-        stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
+        if(arrTemp[1].indexOf("/")>0){
+            stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
+        }else{
+            stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("\\r")))).append(SPLIT);
+        }
 
         //16.Reserved1	保留字段
         stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
