@@ -14,6 +14,13 @@ package tv.icntv.log.stb.cdn;/*
  *      limitations under the License.
  */
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import tv.icntv.log.stb.core.AbstractJob;
 
 import java.util.Map;
@@ -32,4 +39,21 @@ public class CdnModuleJob extends AbstractJob {
         return true;
     }
 
+    @Override
+    public int run(String[] args) throws Exception {
+        Configuration configuration = super.getConf();
+        configuration.set("mapreduce.output.fileoutputformat.compress","true");
+        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        configuration.set("mapreduce.map.output.compress","true");
+        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        Job cdn=Job.getInstance(configuration,"cdn job");
+        cdn.setJarByClass(getClass());
+        cdn.setMapperClass(CdnModuleMapper.class);
+        cdn.setOutputKeyClass(NullWritable.class);
+        cdn.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(cdn, new Path(args[0]));
+        FileOutputFormat.setOutputPath(cdn, new Path(args[1]));
+        cdn.setNumReduceTasks(0);
+        return cdn.waitForCompletion(true)?0:1;
+    }
 }

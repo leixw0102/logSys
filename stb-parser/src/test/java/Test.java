@@ -130,12 +130,12 @@ public class Test implements LoginConstant{
 
     public static void main(String[]args) throws IOException {
 
-		 List<String>	lines=Files.readLines(new File("d:\\useroperepginfo_20140625.dat"),Charsets.UTF_8);
-	    Set s= Sets.newHashSet();
-	    for(String line:lines){
-		    s.add(Splitter.on("|").splitToList(line).get(7));
-	    }
-	    System.out.print(s.toString());
+//		 List<String>	lines=Files.readLines(new File("d:\\useroperepginfo_20140625.dat"),Charsets.UTF_8);
+//	    Set s= Sets.newHashSet();
+//	    for(String line:lines){
+//		    s.add(Splitter.on("|").splitToList(line).get(7));
+//	    }
+	    System.out.print(new Date(1403889597566L).toLocaleString());
 //        List<String> lines=Files.readLines(new File("d:\\userLogin-m-00023"), Charsets.UTF_8);
 //        System.out.println(lines.size());
 //        for(String value1 : lines){
