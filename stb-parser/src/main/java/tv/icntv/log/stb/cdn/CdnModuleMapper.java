@@ -35,125 +35,128 @@ import java.util.List;
  */
 public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements CdnModule {
     @Override
-    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        if(null == value|| Strings.isNullOrEmpty(value.toString())){
-            return;
-        }
-        String[] values= value.toString().split(SPLIT_T);
-        if(null == values || values.length!=16){
-            return;
-        }
+    protected void map(LongWritable key, Text value, Context context) {
+        try{
+            if(null == value|| Strings.isNullOrEmpty(value.toString())){
+                return;
+            }
+            String[] values= value.toString().split(SPLIT_T);
+            if(null == values || values.length!=16){
+                return;
+            }
 
-        if(null == values[14] || !"TaskState".equals(values[14])){
-            System.out.println("跳过非TaskStatus");
-            return;
-        }
+            if(null == values[14] || !"TaskState".equals(values[14])){
+                System.out.println("跳过非TaskStatus");
+                return;
+            }
 
-        String content=values[15];
-        if(Strings.isNullOrEmpty(content)){
-            return;
-        }
+            String content=values[15];
+            if(Strings.isNullOrEmpty(content)){
+                return;
+            }
 
-        //过滤异常日志
-        String[] contentArr = content.split(COMMA_SIGN);
+            //过滤异常日志
+            String[] contentArr = content.split(COMMA_SIGN);
 
-        if( null == contentArr || contentArr.length < 4){
-            System.out.println("contentArr长度错误");
-            return ;
-        }
+            if( null == contentArr || contentArr.length < 4){
+                System.out.println("contentArr长度错误");
+                return ;
+            }
+            String[] arrTemp;
+            arrTemp = contentArr[0].split(":");
+            if(!arrTemp[0].trim().matches("\\d+")){
+                System.out.println("task 编号错误!!"+arrTemp[0]);
+                return;
+            }
+            if(null == arrTemp[1] || arrTemp[1].trim().length() == 0){
+                System.out.println("获取task内容错误!!"+arrTemp[1]);
+                return;
+            }
 
-        String[] arrTemp = contentArr[0].split(":");
-        if(!arrTemp[0].trim().matches("\\d+")){
-            System.out.println("task 编号错误!!"+arrTemp[0]);
-            return;
-        }
+            String status = arrTemp[1];
+            if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
+                    || "srverr".equals(status) || "timeout".equals(status) || "error".equals(status)){
+                return;
+            }
 
-        if(null == arrTemp[1] || arrTemp[1].trim().length() == 0){
-            System.out.println("获取task内容错误!!"+arrTemp[1]);
-            return;
-        }
-
-        String status = arrTemp[1];
-        if("confail".equals(status) || "nofile".equals(status) || "srvclose".equals(status)
-                || "srverr".equals(status) || "timeout".equals(status) || "error".equals(status)){
-            return;
-        }
-
-	    StringBuffer stringBuffer=new StringBuffer();
+            StringBuffer stringBuffer=new StringBuffer();
 
 
-        //1.CNTVID用户序列号
-        stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
+            //1.CNTVID用户序列号
+            stringBuffer.append(StringsUtils.getEncodeingStr(values[3])).append(SPLIT);
 
-        //2.用户IP
-        if (null == values[7] || EMPTY.equals(values[7])) {
+            //2.用户IP
+            if (null == values[7] || EMPTY.equals(values[7])) {
+                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            } else {
+                stringBuffer.append(StringsUtils.getEncodeingStr(values[7].trim())).append(SPLIT);
+            }
+
+            //3.useragent	非必需
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-        } else {
-            stringBuffer.append(StringsUtils.getEncodeingStr(values[7].trim())).append(SPLIT);
-        }
 
-        //3.useragent	非必需
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //4.CdnFactory cdn厂家CDN厂家：1.蓝汛 2. 网宿  非必需
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //5.CarrierOperator	运营商
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //TODO 6.domain 访问域名
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //TODO 7.CdnNodeIP	CDN的节点IP
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //8.ConnectResult	节点连接情况 1.成功 2.超时 3.失败 4.302跳转
-        stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
-
-        //9.transDomain	302跳转域名
-        if(contentArr[3].indexOf("(")>0){
-            stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
-        }else{
+            //4.CdnFactory cdn厂家CDN厂家：1.蓝汛 2. 网宿  非必需
             stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //5.CarrierOperator	运营商
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //TODO 6.domain 访问域名
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //TODO 7.CdnNodeIP	CDN的节点IP
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //8.ConnectResult	节点连接情况 1.成功 2.超时 3.失败 4.302跳转
+            stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
+
+            //9.transDomain	302跳转域名
+            if(contentArr[3].indexOf("(")>0){
+                stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
+            }else{
+                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+            }
+
+            //10.NodeSpeed	节点下载速度
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //11.VisitStartTime	访问开始时间: YYYYMMDD HH24MISS
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //12.VisitEndTime	访问结束时间:YYYYMMDD HH24MISS
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //13.programURL	节目URL
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //14.ProgramID	节目ID
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //15.SliceSize	分片大小
+            if(arrTemp[1].indexOf("/")>0){
+                stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
+            }else{
+                stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("\\r")))).append(SPLIT);
+            }
+
+            //16.Reserved1	保留字段
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //17.Reserved2	保留字段
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
+
+            //18.Reserved3	保留字段
+            stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
+
+            values = null;
+            content = null;
+            contentArr = null;
+            arrTemp = null;
+            status = null;
+            context.write(NullWritable.get(),new Text(stringBuffer.toString()));
+        }catch (Exception e){
+            return;
         }
-
-        //10.NodeSpeed	节点下载速度
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //11.VisitStartTime	访问开始时间: YYYYMMDD HH24MISS
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //12.VisitEndTime	访问结束时间:YYYYMMDD HH24MISS
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //13.programURL	节目URL
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //14.ProgramID	节目ID
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //15.SliceSize	分片大小
-        if(arrTemp[1].indexOf("/")>0){
-            stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
-        }else{
-            stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("\\r")))).append(SPLIT);
-        }
-
-        //16.Reserved1	保留字段
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //17.Reserved2	保留字段
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
-
-        //18.Reserved3	保留字段
-        stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY));
-
-        values = null;
-        content = null;
-        contentArr = null;
-        arrTemp = null;
-        status = null;
-	    context.write(NullWritable.get(),new Text(stringBuffer.toString()));
     }
 
     @Override

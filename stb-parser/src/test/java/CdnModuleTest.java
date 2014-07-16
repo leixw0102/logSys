@@ -105,7 +105,7 @@ public class CdnModuleTest implements ContentView {
             }
 
             if(null == arrTemp[1] || arrTemp[1].trim().length() == 0){
-                return;
+                continue;
             }
             String status = arrTemp[1].trim();
             System.out.println("status:"+status);
