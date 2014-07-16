@@ -126,6 +126,7 @@
                     <archive>
                         <manifest>
                             <mainClass>tv.icntv.log.stb.ParserDriver</mainClass>
+                            <!--<mainClass>tv.icntv.log.stb.cdn.CdnModuleJob</mainClass>-->
                             <!-- <mainClass>tv.icntv.log.crawl.store.HdfsDefaultStore</mainClass> -->
                         </manifest>
                     </archive>
