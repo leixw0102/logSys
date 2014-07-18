@@ -16,13 +16,11 @@ package tv.icntv.log.stb.cdn;/*
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import tv.icntv.log.stb.commons.StringsUtils;
-import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,14 +54,32 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
             }
 
             //过滤异常日志
-            String[] contentArr = content.split(COMMA_SIGN);
 
-            if( null == contentArr || contentArr.length < 4){
+            String[] contentArr = content.split("\\\\r");
+
+            if(contentArr == null ){
                 System.out.println("contentArr长度错误");
-                return ;
+                return;
             }
+            boolean flag1 = false;
+            int i;
+            String[] arrRow = null;
+            for(i = 0;i<contentArr.length;i++){
+                arrRow = contentArr[i].split(COMMA_SIGN);
+                if(arrRow.length >= 4){
+                    flag1 = true;
+                    break;
+                }
+            }
+            if(!flag1){
+                return;
+            }
+
+
+
+
             String[] arrTemp;
-            arrTemp = contentArr[0].split(":");
+            arrTemp = arrRow[0].split(":");
             if(!arrTemp[0].trim().matches("\\d+")){
                 System.out.println("task 编号错误!!"+arrTemp[0]);
                 return;
@@ -111,8 +127,8 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
             stringBuffer.append(StringsUtils.getEncodeingStr("1")).append(SPLIT);
 
             //9.transDomain	302跳转域名
-            if(contentArr[3].indexOf("(")>0){
-                stringBuffer.append(StringsUtils.getEncodeingStr(contentArr[3].substring(0,contentArr[3].indexOf("(")))).append(SPLIT);
+            if(arrRow[3].indexOf("(")>0){
+                stringBuffer.append(StringsUtils.getEncodeingStr(arrRow[3].substring(0,arrRow[3].indexOf("(")))).append(SPLIT);
             }else{
                 stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
             }
@@ -136,7 +152,7 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
             if(arrTemp[1].indexOf("/")>0){
                 stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("/")))).append(SPLIT);
             }else{
-                stringBuffer.append(StringsUtils.getEncodeingStr(arrTemp[1].substring(0,arrTemp[1].indexOf("\\r")))).append(SPLIT);
+                stringBuffer.append(StringsUtils.getEncodeingStr(EMPTY)).append(SPLIT);
             }
 
             //16.Reserved1	保留字段
@@ -152,6 +168,7 @@ public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text>
             content = null;
             contentArr = null;
             arrTemp = null;
+            arrRow = null;
             status = null;
             context.write(NullWritable.get(),new Text(stringBuffer.toString()));
         }catch (Exception e){
