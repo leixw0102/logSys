@@ -57,12 +57,7 @@ public class FilterMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
             path_prefix+=File.separator;
         }
         fileKeys=context.getConfiguration().get(ParserConstant.OUTPUT_SUFFIX);
-//        List<String>files= Lists.transform(Lists.newArrayList(Splitter.on(ParserConstant.FILTER_SPILTER).split(fileKeys)),new Function<String,String>(){
-//            @Override
-//            public String apply( java.lang.String input) {
-//                return MessageFormat.format(input,time);  //To change body of implemented methods use File | Settings | File Templates.
-//            }
-//        });
+
         for(String str:fileKeys.split(ParserConstant.FILTER_SPILTER)){
             String[]kv=str.split("-");
             String[] keys=kv[0].split(",");

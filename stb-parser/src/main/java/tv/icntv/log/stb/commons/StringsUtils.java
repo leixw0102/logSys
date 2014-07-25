@@ -15,6 +15,7 @@ package tv.icntv.log.stb.commons;/*
  */
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by leixw
@@ -30,5 +31,22 @@ public class StringsUtils {
             str = str.replace("|", "%7C");
         }
         return str;
+    }
+    public static String getLogParam(String key, String join, String split, String content) {
+        if (StringUtils.isBlank(content) || StringUtils.isBlank(key)) {
+            return null;
+        }
+        String result = StringUtils.substringAfter(content, key.trim() + join);
+        if (StringUtils.isBlank(result)) {
+            return null;
+        }
+        if (result.contains(split)) {
+            result = StringUtils.substringBefore(result, split);
+        }
+        if (StringUtils.isNotBlank(result)) {
+            result = result.replace("\r","")
+                    .replace("\n", "");
+        }
+        return result;
     }
 }

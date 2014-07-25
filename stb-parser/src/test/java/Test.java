@@ -135,7 +135,7 @@ public class Test implements LoginConstant{
 //	    for(String line:lines){
 //		    s.add(Splitter.on("|").splitToList(line).get(7));
 //	    }
-	    System.out.print(new Date(1403889597566L).toLocaleString());
+	    System.out.print("aaa\rbbb\rccc".split("\r").length);
 //        List<String> lines=Files.readLines(new File("d:\\userLogin-m-00023"), Charsets.UTF_8);
 //        System.out.println(lines.size());
 //        for(String value1 : lines){

@@ -42,10 +42,17 @@ public class DateUtils {
         }
     }
     public static String getFormatDate(String dateStr){
-        if(Strings.isNullOrEmpty(dateStr)){
+        return getFormatDate(dateStr,defaultFormat);
+    }
+
+    public static String getFormatDate(String date,String toformat){
+        return getFormatDate(date,toformat,dateTimeFormatter);
+    }
+    public static String getFormatDate(String date,String toformat,DateTimeFormatter fromFormat){
+        if(Strings.isNullOrEmpty(date)){
             return "";
         }
-         DateTime time = DateTime.parse(dateStr,dateTimeFormatter);
-         return time.toString(defaultFormat);
+        DateTime time = DateTime.parse(date,fromFormat);
+        return time.toString(toformat);
     }
 }
