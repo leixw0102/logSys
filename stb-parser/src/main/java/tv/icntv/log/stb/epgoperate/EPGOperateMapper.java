@@ -107,8 +107,13 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 		if(PAGE_NAME_EPG_HISTORY.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("2");
-			//目标对象ID
-			epgOperateDomain.setTargetObjectId(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN));
+			String objId = StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
+			if(objId.matches("\\d*")){
+				//目标对象ID
+				epgOperateDomain.setTargetObjectId(objId);
+			}else{
+				return;
+			}
 			//搜索关键词:当操作类型为搜索时该字段需要传值
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
@@ -146,8 +151,13 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
 //			}
 			//目标对象类型:1. EPG页面,2. 节目集,3. 节目,4. 栏目,5. 页面节点 (推荐位或列表位)
 			epgOperateDomain.setTargetObjectType("2");
-			//目标对象ID
-			epgOperateDomain.setTargetObjectId(StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN));
+			String objId = StringUtils.substringAfter(contentArr[1].trim(), EQUAL_SIGN);
+			if(objId.matches("\\d*")){
+				//目标对象ID
+				epgOperateDomain.setTargetObjectId(objId);
+			}else{
+				return;
+			}
 			//搜索关键词:当操作类型为搜索时该字段需要传值
 			epgOperateDomain.setKeyword(EMPTY);
 			//操作类型标识 1-添加收藏,2-添加书签,11-跳转进入,12-跳转返回(保留),21-搜索,22-用户注册,23-在线帮助,24-专题,25-播放,30-退出,31-异常退出
