@@ -62,4 +62,8 @@ public interface ParserConstant {
 
     public String CDN_JOB_INPUT="stb.parser.log.cdn.relative.input";
     public String CDN_JOB_OUTPUT="stb.parser.log.cdn.hadoop.output";
+
+    //cdn adapter
+    public String CDN_ADAPTER_JOB_INPUT="stb.parser.log.cdn.adapter.relative.input";
+    public String CDN_ADAPTER_JOB_OUTPUT="stb.parser.log.cdn.adapter.hadoop.output";
 }

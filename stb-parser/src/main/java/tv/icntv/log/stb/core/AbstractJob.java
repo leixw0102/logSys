@@ -22,7 +22,8 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+
+import java.util.Map;
 
 /**
  * Created by leixw ,base hadoop mapreduce ,unit job to run.
@@ -59,6 +60,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         maps.put("LEMOut",LOG_EPG_JOB_OUTPUT);
         maps.put("CDNMInput",CDN_JOB_INPUT);
         maps.put("CDNMOut",CDN_JOB_OUTPUT);
+        maps.put("CDN_ADAPTER_MInput",CDN_ADAPTER_JOB_INPUT);
+        maps.put("CDN_ADAPTER_MOut",CDN_ADAPTER_JOB_OUTPUT);
 //        maps.put("-COut","stb.parser.content.view.dat.output");
     }
     @Override
@@ -108,6 +111,8 @@ public abstract class AbstractJob extends Configured implements Tool ,ParserCons
         options.addOption("LEMOut",true,"log epg output");
         options.addOption("CDNMInput",true,"cdn input");
         options.addOption("CDNMOut",true,"cdn output");
+        options.addOption("CDN_ADAPTER_MInput",true,"cdn adapter input");
+        options.addOption("CDN_ADAPTER_MOut",true,"cdn adapter output");
         return options;
     }
 

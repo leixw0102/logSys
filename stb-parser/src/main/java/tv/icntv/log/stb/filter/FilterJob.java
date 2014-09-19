@@ -61,6 +61,7 @@ public class FilterJob extends AbstractJob{
     @Override
     public boolean run(Map<String, String> maps) throws Exception {
         Configuration configuration=getConf();
+        // 避免资源浪费，但是存在任务失败时，重新等待执行结果
         configuration.setBoolean("mapreduce.reduce.speculative",false);
         configuration.setBoolean("mapreduce.map.speculative",false);
        //setting conf

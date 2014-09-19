@@ -129,15 +129,15 @@ public class CdnMapper extends Mapper<LongWritable,Text,Text,Text> {
 //        }
 //
 //
-//        DateFormat format = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.UK);
-//        DateFormat formatCN = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.CHINA);
-//        String rawTime = "23/Jul/2013:00:00:29 +0800";
-//        try {
-//            Date date = format.parse(rawTime);
-//            System.out.println("format date: " + date);
-//            System.out.println("format: " + formatCN.format(date));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        DateFormat format = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.US);
+        DateFormat formatCN = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.CHINA);
+        String rawTime = "27/Jul/2014:03:43:44 +0800";
+        try {
+            Date date = format.parse(rawTime);
+            System.out.println("format date: " + date);
+            System.out.println("format: " + formatCN.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

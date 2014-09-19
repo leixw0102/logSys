@@ -25,6 +25,7 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
 import tv.icntv.log.stb.cdn.CdnModuleMapper;
+import tv.icntv.log.stb.cdnadapter.CdnAdapterMapper;
 import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
 import tv.icntv.log.stb.epgoperate.EPGOperateMapper;
@@ -122,6 +123,19 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob cdnControlledJob=new ControlledJob(configuration);
         cdnControlledJob.setJob(cdn);
 
+        //cdn adapter
+
+        Job cdnAdapterJob = Job.getInstance(configuration,"cdn adapter job ");
+        cdnAdapterJob.setJarByClass(getClass());
+        cdnAdapterJob.setMapperClass(CdnAdapterMapper.class);
+        cdnAdapterJob.setOutputKeyClass(NullWritable.class);
+        cdnAdapterJob.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(cdnAdapterJob, new Path(maps.get(CDN_ADAPTER_JOB_INPUT)));
+        FileOutputFormat.setOutputPath(cdnAdapterJob, new Path(maps.get(CDN_ADAPTER_JOB_OUTPUT)));
+        cdnAdapterJob.setNumReduceTasks(0);
+        ControlledJob cdnAdapterControlleredJob = new ControlledJob(configuration);
+        cdnAdapterControlleredJob.setJob(cdnAdapterJob);
+
         JobControl jobControl=new JobControl("stb log parser .eg: userLogin,devicePlayer,contentView,logEpg,cdn");
         jobControl.addJob(userControlledJob);
         jobControl.addJob(playControlledJob);
@@ -129,6 +143,7 @@ public class GenerateStbLogJob extends AbstractJob {
         jobControl.addJob(replayControlledJob);
         jobControl.addJob(logEpgControlledJob);
         jobControl.addJob(cdnControlledJob);
+        jobControl.addJob(cdnAdapterControlleredJob);
         new Thread(jobControl).start();
         while (!jobControl.allFinished()) {
             Thread.sleep(5000);

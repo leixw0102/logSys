@@ -44,6 +44,7 @@ public class StbParserJob extends AbstractJob {
     public boolean run(Map<String, String> maps) throws Exception {
         if(null ==maps || maps.isEmpty()){
             logger.error("read file content,but null");
+            return false;
         }
         //execute filter job
 
