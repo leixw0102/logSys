@@ -120,7 +120,13 @@ public class ParserLoginMapper extends Mapper<LongWritable, Text, NullWritable, 
 			}
 
 		}
-		context.write(NullWritable.get(),new Text(userLogin.toString()));
+        String result=null;
+        try{
+            result=userLogin.toString();
+        }catch (Exception e){
+            return;
+        }
+		context.write(NullWritable.get(),new Text(result));
 	}
     private String ipRegular="[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}";
 

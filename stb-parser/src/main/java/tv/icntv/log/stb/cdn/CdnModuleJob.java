@@ -63,8 +63,8 @@ public class CdnModuleJob extends AbstractJob {
         cdn.setMapperClass(CdnModuleMapper.class);
         cdn.setOutputKeyClass(NullWritable.class);
         cdn.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(cdn, new Path("/icntv/parser/stb/filter/result/2014-07-15/cdn/1405440601"));
-        FileOutputFormat.setOutputPath(cdn, new Path("/icntv/parser/stb/cdn/middle/2014-07-15"));
+        FileInputFormat.addInputPath(cdn, new Path(args[0]));
+        FileOutputFormat.setOutputPath(cdn, new Path(args[1]));
         cdn.setNumReduceTasks(0);
         return cdn.waitForCompletion(true)?0:1;
     }

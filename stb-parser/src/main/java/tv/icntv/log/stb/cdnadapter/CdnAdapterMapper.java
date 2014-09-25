@@ -16,6 +16,7 @@ package tv.icntv.log.stb.cdnadapter;/*
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
@@ -43,7 +44,7 @@ public class CdnAdapterMapper  extends Mapper<LongWritable,Text,NullWritable,Tex
         if(null ==value){
             return ;
         }
-        List<String> values= Splitter.on(SPLIT_T).splitToList(value.toString());
+        List<String> values= Lists.newArrayList(Splitter.on(SPLIT_T).split(value.toString()));
         if(null == values|| values.isEmpty() || values.size()!=16){
             return ;
         }

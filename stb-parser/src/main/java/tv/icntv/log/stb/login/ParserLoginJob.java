@@ -25,6 +25,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
+import tv.icntv.log.stb.cdn.CdnModuleMapper;
 import tv.icntv.log.stb.commons.HadoopUtils;
 import tv.icntv.log.stb.core.AbstractJob;
 import tv.icntv.log.stb.filter.FilterMapper;
@@ -39,8 +40,27 @@ import java.util.Map;
  */
 public class ParserLoginJob extends AbstractJob {
 
-	@Override
+    @Override
+    public int run(String[] args) throws Exception {
+        Configuration configuration = super.getConf();
+        configuration.set("mapreduce.output.fileoutputformat.compress","true");
+        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        configuration.set("mapreduce.map.output.compress","true");
+        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        Job cdn= Job.getInstance(configuration, "user job");
+        cdn.setJarByClass(getClass());
+        cdn.setMapperClass(ParserLoginMapper.class);
+        cdn.setOutputKeyClass(NullWritable.class);
+        cdn.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(cdn, new Path(args[0]));
+        FileOutputFormat.setOutputPath(cdn, new Path(args[1]));
+        cdn.setNumReduceTasks(0);
+        return cdn.waitForCompletion(true)?0:1;
+    }
+
+    @Override
 	public boolean run(Map<String, String> maps) throws Exception {
+
         return true;
 //		Configuration configuration=getConf();
 //
@@ -61,9 +81,8 @@ public class ParserLoginJob extends AbstractJob {
 	}
 
 	public static void main(String[]args) throws Exception {
-//		Configuration configuration = new Configuration();
-//
-//		int result = ToolRunner.run(configuration, new ParserLoginJob(), args);
-//		System.exit(result);
+        Configuration configuration=new Configuration();
+        int result = ToolRunner.run(configuration, new ParserLoginJob(), args);
+        System.exit(result);
 	}
 }
