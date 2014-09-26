@@ -57,6 +57,26 @@ public class FilterJob extends AbstractJob{
 
     }
 
+    @Override
+    public int run(String[] args) throws Exception {
+        Configuration configuration=getConf();
+        Path input = new Path(args[0]);
+
+        Path output = new Path(args[1]);
+        Job stbFilterJob = Job.getInstance(configuration,"stb parser first:filter by rule file");
+        //setting job configuration .....
+        stbFilterJob.setMapperClass(FilterMapper.class);
+        stbFilterJob.setOutputKeyClass(NullWritable.class);
+        stbFilterJob.setOutputValueClass(Text.class);
+        FileInputFormat.setInputPaths(stbFilterJob, input);
+        stbFilterJob.setJarByClass(getClass());
+
+        FileOutputFormat.setOutputPath(stbFilterJob, output);
+        LazyOutputFormat.setOutputFormatClass(stbFilterJob, TextOutputFormat.class);
+
+        stbFilterJob.setNumReduceTasks(0);
+        return stbFilterJob.waitForCompletion(true)?0:1;
+    }
 
     @Override
     public boolean run(Map<String, String> maps) throws Exception {
@@ -101,7 +121,7 @@ public class FilterJob extends AbstractJob{
 
        if(stbFilterJob.waitForCompletion(true)){;
             for(Path path:in){
-                HadoopUtils.rename(new Path(path,parseing_suffix),new Path(path,parsed_suffix));
+                HadoopUtils.rename(new Path(path+parseing_suffix),new Path(path+parsed_suffix));
             }
            return true;
        }
