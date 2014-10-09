@@ -127,7 +127,7 @@ public class CdnAdapterDomain {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(this.getIcntvId()).append("|")
-                .append(this.getDate())
+                .append(this.getDate()).append("|")
                 .append(this.getId()).append("|")
                 .append(this.getUrl()).append("|")
                 .append(this.getOpenTimeCost()).append("|")
