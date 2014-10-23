@@ -35,10 +35,8 @@ import tv.icntv.log.stb.util.DateUtil;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by leixw
@@ -135,7 +133,13 @@ public class Test implements LoginConstant{
 //	    for(String line:lines){
 //		    s.add(Splitter.on("|").splitToList(line).get(7));
 //	    }
-	    System.out.print("aaa\rbbb\rccc".split("\r").length);
+        Pattern pattern = Pattern.compile("(.*)|(.*)");
+        String abc="sdf|dsf|dfdd|[s|b]";
+        Iterator<String> it=Splitter.on("|").limit(4).split(abc).iterator();
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+//	    System.out.print("aaa\rbbb\rccc".split("\r").length);
 //        List<String> lines=Files.readLines(new File("d:\\userLogin-m-00023"), Charsets.UTF_8);
 //        System.out.println(lines.size());
 //        for(String value1 : lines){

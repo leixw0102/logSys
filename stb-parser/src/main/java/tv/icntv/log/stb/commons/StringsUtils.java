@@ -49,4 +49,11 @@ public class StringsUtils {
         }
         return result;
     }
+
+    public static String firstLetterCapital(String src) {
+        if (src.length() == 1) {
+            return src.toUpperCase();
+        }
+        return src.substring(0, 1).toUpperCase() + src.substring(1);
+    }
 }

@@ -19,6 +19,7 @@
        <slf4j.api.version>1.7.5</slf4j.api.version>
        <logback.version>1.0.9</logback.version>
        <hadoop.version>2.2.0</hadoop.version>
+       <java.version>1.6</java.version>
    </properties>
     <dependencyManagement>
             <dependencies>
@@ -89,5 +90,19 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                    <goal>compile</goal>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

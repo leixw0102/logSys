@@ -14,7 +14,6 @@ package tv.icntv.log.crawl2;/*
  *      limitations under the License.
  */
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;

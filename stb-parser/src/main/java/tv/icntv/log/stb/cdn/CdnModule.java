@@ -21,6 +21,7 @@ import java.util.List;
  * Date: 2014/06/04
  * Time: 10:50
  */
+@Deprecated
 public interface CdnModule {
 
     String KEY_PLAYER_TIMELINE = "TimeLine";

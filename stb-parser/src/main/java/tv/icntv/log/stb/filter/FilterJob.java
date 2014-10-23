@@ -15,32 +15,21 @@ package tv.icntv.log.stb.filter;/*
  */
 
 
-import com.google.common.base.Strings;
-
-import com.google.common.collect.Maps;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
-
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
-import org.joda.time.DateTime;
 import tv.icntv.log.stb.commons.HadoopUtils;
-import tv.icntv.log.stb.commons.LoadProperties;
 import tv.icntv.log.stb.core.AbstractJob;
 
-
-import java.text.MessageFormat;
-import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by leixw

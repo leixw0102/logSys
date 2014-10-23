@@ -31,6 +31,7 @@ import java.util.List;
  * Time: 15:56
  * current version:统分二期需求文档1.5
  */
+@Deprecated
 public class CdnModuleMapper extends Mapper<LongWritable,Text,NullWritable,Text> implements CdnModule {
     @Override
     protected void map(LongWritable key, Text value, Context context) {

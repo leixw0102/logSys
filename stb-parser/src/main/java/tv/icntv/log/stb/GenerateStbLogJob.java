@@ -25,6 +25,7 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
 import tv.icntv.log.stb.cdn.CdnModuleMapper;
+import tv.icntv.log.stb.cdnModule.CdnStbMapper;
 import tv.icntv.log.stb.cdnadapter.CdnAdapterMapper;
 import tv.icntv.log.stb.contentview.ContentViewMapper;
 import tv.icntv.log.stb.core.AbstractJob;
@@ -111,18 +112,28 @@ public class GenerateStbLogJob extends AbstractJob {
         ControlledJob logEpgControlledJob=new ControlledJob(configuration);
         logEpgControlledJob.setJob(logEpg);
 
-        //cdn
-        Job cdn=Job.getInstance(configuration,"cdn job");
-        cdn.setJarByClass(getClass());
-        cdn.setMapperClass(CdnModuleMapper.class);
-        cdn.setOutputKeyClass(NullWritable.class);
+//        //cdn
+//        Job cdn=Job.getInstance(configuration,"cdn job");
+//        cdn.setJarByClass(getClass());
+//        cdn.setMapperClass(CdnModuleMapper.class);
+//        cdn.setOutputKeyClass(NullWritable.class);
+//        cdn.setOutputValueClass(Text.class);
+//        FileInputFormat.addInputPath(cdn, new Path(maps.get(CDN_JOB_INPUT)));
+//        FileOutputFormat.setOutputPath(cdn, new Path(maps.get(CDN_JOB_OUTPUT)));
+//        cdn.setNumReduceTasks(0);
+//        ControlledJob cdnControlledJob=new ControlledJob(configuration);
+//        cdnControlledJob.setJob(cdn);
+        //cdn stb
+        Job cdn = Job.getInstance(configuration,"cdn stb job");
+        cdn.setJarByClass(this.getClass());
+        cdn.setMapperClass(CdnStbMapper.class);
         cdn.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(cdn, new Path(maps.get(CDN_JOB_INPUT)));
+        cdn.setOutputKeyClass(NullWritable.class);
+        FileInputFormat.addInputPath(cdn,new Path(maps.get(CDN_JOB_INPUT)));
         FileOutputFormat.setOutputPath(cdn, new Path(maps.get(CDN_JOB_OUTPUT)));
         cdn.setNumReduceTasks(0);
         ControlledJob cdnControlledJob=new ControlledJob(configuration);
         cdnControlledJob.setJob(cdn);
-
         //cdn adapter
 
         Job cdnAdapterJob = Job.getInstance(configuration,"cdn adapter job ");
