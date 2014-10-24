@@ -37,15 +37,15 @@ public class CdnStbDomain {
     private String userIp="",taskCnt="",sucCnt="",failCnt="",conFailCnt="",timeOutCnt="",nooFileErrorCnt="",srvCloseCnt="",srvErrorCnt="",socketErrorCnt="",revByte="",revSpeed="",dnsAvgTime="",dnsMaxTime="",dnsMinTime="",conAvgTime="",conMaxTime="",conMinTime="",dnsRedList="";
 
     private String mark1="";
-    protected String getResolutionType(){
+    protected void getResolutionType(){
         if(this.getUrl().contains("HD1M")){
-            return "1";
+             this.setResolution("1");
         }else if (this.getUrl().contains("HD2M")){
-            return "3";
+            this.setResolution("3");
         } else if( this.getUrl().contains("SD")){
-            return "2";
+            this.setResolution("2");
         }
-        return "99";
+        this.setResolution("99");
     }
 
     public String getCntvId() {
@@ -267,12 +267,14 @@ public class CdnStbDomain {
 
     @Override
     public String toString() {
+        try{
+        this.getResolutionType();
         StringBuffer sb = new StringBuffer();
         sb.append(this.getCntvId()).append("|")
                 .append(this.getUserIp()).append("|")
                 .append(this.getUrl()).append("|")
                 .append(this.getId()).append("|")
-                .append(getResolutionType()).append("|")
+                .append(this.getResolution()).append("|")
                 .append(this.getStartTime()).append("|")
                 .append(this.getEndTime()).append("|")
                 .append(this.getHost()).append("|")
@@ -295,5 +297,9 @@ public class CdnStbDomain {
                 .append(this.getDnsRedList()).append("|")
                 .append(this.getMark1());
         return sb.toString();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
     }
 }
