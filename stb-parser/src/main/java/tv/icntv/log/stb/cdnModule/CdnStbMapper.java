@@ -32,6 +32,7 @@ import tv.icntv.log.stb.commons.ReflectUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by leixw
@@ -77,14 +78,26 @@ public class CdnStbMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 
     }
     public static void main(String[]args) throws IOException {
-//        String test="id=493&url=http://hot.sp.media.ysten.com/media/new/2013/icntv2/media/2014/09/04/HD1M2d97d9a54\n" +
-//                "75f48cb8b368bfb6f6714a4.ts&block3=0&block5=0&block10=0&host=111.20.240.41&taskCnt=4&sucCnt=4&failCnt=0&conFailCnt=0&timeOutCnt=0&nooFileErrorCnt=0&srvCloseCnt=0&srvErrorCnt=0&socketErrorCnt=0&reqUn\n" +
-//                "acceptCnt=0&revByte=5914kB&revSpeed=552kB/s&dnsAvgTime=0ms&dnsMaxTime=0ms&dnsMinTime=0ms&conAvgTime=28ms&conMaxTime=73ms&conMinTime=0ms&dnsRedList=111.20.240.41(,120.192.247.55),120.192.247.55(),";
-//        Map<String,String> maps = Splitter.on("&").withKeyValueSeparator("=").split(test);
+        String test="id=493&url=http://hot.sp.media.ysten.com/media/new/2013/icntv2/media/2014/09/04/HD1M2d97d9a54\n" +
+                "75f48cb8b368bfb6f6714a4.ts&block3=0&block5=0&block10=0&host=111.20.240.41&taskCnt=4&sucCnt=4&failCnt=0&conFailCnt=0&timeOutCnt=0&nooFileErrorCnt=0&srvCloseCnt=0&srvErrorCnt=0&socketErrorCnt=0&reqUn\n" +
+                "acceptCnt=0&revByte=5914kB&revSpeed=552kB/s&dnsAvgTime=0ms&dnsMaxTime=0ms&dnsMinTime=0ms&conAvgTime=28ms&conMaxTime=73ms&conMinTime=0ms&dnsRedList=111.20.240.41(,120.192.247.55),120.192.247.55(),";
+        Map<String,String> maps = Splitter.on("&").withKeyValueSeparator("=").split(test);
 //        Set<String> keys = maps.keySet();
 //        for(String key:keys){
 //            System.out.println(key+"\t"+maps.get(key));
 //        }
+
+        List<String> fieldValue=Lists.newArrayList("dnsRedList", "conMinTime", "conMaxTime", "conAvgTime", "dnsMinTime", "dnsMaxTime", "dnsAvgTime", "revSpeed", "revByte", "socketErrorCnt", "srvErrorCnt", "srvCloseCnt", "nooFileErrorCnt", "timeOutCnt", "conFailCnt", "failCnt", "sucCnt", "taskCnt", "host", "url");
+//        Map<String,String> maps = Splitter.on("&").omitEmptyStrings().withKeyValueSeparator("=").split(content);
+        CdnStbDomain cdnStbDomain = new CdnStbDomain();
+        for(String filed:fieldValue){
+            try {
+                ReflectUtils.setFieldValue(cdnStbDomain.getClass().getDeclaredField(filed), cdnStbDomain, new String[]{maps.get(filed)});
+            } catch (NoSuchFieldException e) {
+                System.out.println("reflect error"+e);
+            }
+        }
+        System.out.println(cdnStbDomain.toString());
 
     }
 

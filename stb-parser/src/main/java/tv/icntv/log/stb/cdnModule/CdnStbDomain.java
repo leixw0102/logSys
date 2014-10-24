@@ -27,22 +27,22 @@ import java.util.Map;
  * Time: 09:23
  */
 public class CdnStbDomain {
-    private String cntvId;
-    private String host;
-    private String url;
-    private String id;
-    private String resolution;
-    private String startTime;
-    private String endTime;
-    private String userIp,taskCnt,sucCnt,failCnt,conFailCnt,timeOutCnt,nooFileErrorCnt,srvCloseCnt,srvErrorCnt,socketErrorCnt,revByte,revSpeed,dnsAvgTime,dnsMaxTime,dnsMinTime,conAvgTime,conMaxTime,conMinTime,dnsRedList;
+    private String cntvId="";
+    private String host="";
+    private String url="";
+    private String id="";
+    private String resolution="";
+    private String startTime="";
+    private String endTime="";
+    private String userIp="",taskCnt="",sucCnt="",failCnt="",conFailCnt="",timeOutCnt="",nooFileErrorCnt="",srvCloseCnt="",srvErrorCnt="",socketErrorCnt="",revByte="",revSpeed="",dnsAvgTime="",dnsMaxTime="",dnsMinTime="",conAvgTime="",conMaxTime="",conMinTime="",dnsRedList="";
 
-    private String mark1;
+    private String mark1="";
     protected String getResolutionType(){
-        if(this.getResolution().contains("HD1M")){
+        if(this.getUrl().contains("HD1M")){
             return "1";
-        }else if (this.getResolution().contains("HD2M")){
+        }else if (this.getUrl().contains("HD2M")){
             return "3";
-        } else if( this.getResolution().contains("SD")){
+        } else if( this.getUrl().contains("SD")){
             return "2";
         }
         return "99";
