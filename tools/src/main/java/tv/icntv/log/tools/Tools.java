@@ -14,8 +14,13 @@ package tv.icntv.log.tools;/*
  *      limitations under the License.
  */
 
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.apache.commons.cli.*;
 import org.apache.hadoop.fs.Path;
+
+import java.util.List;
 
 /**
  * Created by leixw
@@ -40,7 +45,14 @@ public class Tools {
         CommandLine line= parser.parse(init(),args);
         Api api = new FileApi();
         long time=System.nanoTime();
-        boolean test=api.writeDat(new Path(line.getOptionValue("I")),new Path(line.getOptionValue("Out")));
+        List<String> inputStr = Splitter.on(",").omitEmptyStrings().splitToList(line.getOptionValue("I"));
+        List<Path> paths = Lists.transform(inputStr,new Function<String, Path>() {
+            @Override
+            public Path apply(java.lang.String input) {
+                return new Path(input);  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+        boolean test=api.writeDat(paths.toArray(new Path[paths.size()]),"part-m-\\d*.lzo",new Path(line.getOptionValue("Out")));
         System.out.println(test+"\t"+(System.nanoTime()-time)/Math.pow(10,9));
     }
 }

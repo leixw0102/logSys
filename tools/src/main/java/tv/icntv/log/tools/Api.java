@@ -26,4 +26,6 @@ import org.apache.hadoop.fs.Path;
 public interface Api {
     public boolean writeDat(Path input,String regular,Path output);
     public boolean writeDat(Path intput ,Path output);
+    public boolean writeDat(Path output,Path[]inputs);
+    public boolean writeDat(Path[] inputs,String regular,Path output);
 }

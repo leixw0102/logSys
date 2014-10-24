@@ -17,7 +17,10 @@ package tv.icntv.log.stb.cdnserver;/*
  * under the License.
  */
 
+import org.joda.time.format.DateTimeFormat;
 import tv.icntv.log.stb.commons.DateUtils;
+
+import java.text.DateFormat;
 
 /**
  * Created by leixw
@@ -137,7 +140,8 @@ public class CdnServer  {
         this.setDomain(vs[1]);
         this.setUserIp(vs[2]);
         this.setSliceSize(vs[3]);
-        this.setTime(DateUtils.getFormatDate(vs[5]));
+//        this.setTime(DateUtils.getFormatDate(vs[5], DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+        this.setTime(vs[5]);
         this.setUa(vs[6]);
     }
 

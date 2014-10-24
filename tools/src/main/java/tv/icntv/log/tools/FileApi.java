@@ -44,13 +44,67 @@ public class FileApi implements Api {
 
     @Override
     public synchronized boolean writeDat(Path input, final String regular, Path output) {
+        return writeDat(new Path[]{input},regular,output);
+//        FileSystem fileSystem=null;
+//        BufferedReader reader=null;
+//        FSDataOutputStream outputStream=null;
+//        try{
+//            fileSystem=FileSystem.get(conf);
+//            ;
+//            FileStatus[] fileStatuses=fileSystem.listStatus(input,new PathFilter() {
+//                @Override
+//                public boolean accept(Path path) {
+//                    return path.getName().matches(regular);  //To change body of implemented methods use File | Settings | File Templates.
+//                }
+//            });
+//            if(null == fileStatuses||fileStatuses.length==0){
+//                System.out.println("null...");
+//                return false;
+//            }
+//            System.out.println(fileStatuses.length);
+//            outputStream=fileSystem.create(output,true,40960);
+//            for(FileStatus status:fileStatuses){
+//                reader=new BufferedReader(new InputStreamReader(lzopInputStream.createInputStream(fileSystem.open(status.getPath())),"utf-8"));
+//                String line=null;
+//                while(null != (line=reader.readLine())){
+//                    byte[] lineByte=(line+"\r\n").getBytes("utf-8");
+//                    outputStream.write(lineByte,0,lineByte.length);
+//                }
+//            }
+//        }catch (IOException e){
+//            System.out.println(e);
+//            e.printStackTrace();
+//            return false;
+//        }finally {
+//            IOUtils.closeStream(reader);
+//            IOUtils.closeStream(outputStream);
+//            IOUtils.closeStream(fileSystem);
+//        }
+//
+//        return true;
+    }
+
+    @Override
+    public synchronized boolean writeDat(Path intput, Path output) {
+        //To change body of implemented methods use File | Settings | File Templates.
+        return writeDat(intput,"part-m-\\d*.lzo",output);
+    }
+
+    @Override
+    public synchronized boolean writeDat( Path output,Path[] inputs) {
+//         return writeDat(inputs,"part-m-\\d*.lzo" output);
+        return  writeDat(inputs,"part-m-\\d*.lzo",output);
+    }
+
+    @Override
+    public synchronized boolean writeDat(Path[] inputs, final String regular, Path output) {
         FileSystem fileSystem=null;
         BufferedReader reader=null;
         FSDataOutputStream outputStream=null;
         try{
             fileSystem=FileSystem.get(conf);
-            ;
-            FileStatus[] fileStatuses=fileSystem.listStatus(input,new PathFilter() {
+//
+            FileStatus[] fileStatuses=fileSystem.listStatus(inputs,new PathFilter() {
                 @Override
                 public boolean accept(Path path) {
                     return path.getName().matches(regular);  //To change body of implemented methods use File | Settings | File Templates.
@@ -81,12 +135,7 @@ public class FileApi implements Api {
         }
 
         return true;
-    }
 
-    @Override
-    public synchronized boolean writeDat(Path intput, Path output) {
-        //To change body of implemented methods use File | Settings | File Templates.
-        return writeDat(intput,"part-m-\\d*.lzo",output);
     }
 
 }

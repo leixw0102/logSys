@@ -55,4 +55,12 @@ public class DateUtils {
         DateTime time = DateTime.parse(date,fromFormat);
         return time.toString(toformat);
     }
+
+    public static String getFormatDate(String date,DateTimeFormatter formatter){
+        return getFormatDate(date,defaultFormat,formatter);
+    }
+
+    public static void main(String []args){
+        System.out.println(getFormatDate("2014-10-22 00:32:21",defaultFormat,DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+    }
 }

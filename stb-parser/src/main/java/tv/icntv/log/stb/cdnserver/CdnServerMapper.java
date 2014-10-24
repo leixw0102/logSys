@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  */
 public class CdnServerMapper extends Mapper<LongWritable,Text,Text,Text> {
     static Pattern pattern = Pattern.compile( "([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3})\\s-\\s-\\s\\[([^]]+)]\\s\"([^\"]+)\"\\s(\\d+)\\s(\\d+)\\s(.+)\\s\"-\"\\s\"([^]]+)\"");
-    static DateFormat formatCN = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+    static DateFormat formatCN = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.CHINA);
     static DateFormat format = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.US);
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
