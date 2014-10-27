@@ -45,7 +45,7 @@ public class Tools {
         CommandLine line= parser.parse(init(),args);
         Api api = new FileApi();
         long time=System.nanoTime();
-        List<String> inputStr = Splitter.on(",").omitEmptyStrings().splitToList(line.getOptionValue("I"));
+        List<String> inputStr = Lists.newArrayList(Splitter.on(",").omitEmptyStrings().split(line.getOptionValue("I")));
         List<Path> paths = Lists.transform(inputStr,new Function<String, Path>() {
             @Override
             public Path apply(java.lang.String input) {

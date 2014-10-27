@@ -55,6 +55,7 @@ public class CdnStbMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
             return;
         }
         CdnStbDomain cdnStbDomain = new CdnStbDomain();
+        cdnStbDomain.setMac(values[6]);
         cdnStbDomain.setCntvId(values[3].trim());
         cdnStbDomain.setUserIp(values[7]);
         cdnStbDomain.setEndTime(DateUtils.getFormatDate(values[8]));
@@ -116,6 +117,6 @@ public class CdnStbMapper extends Mapper<LongWritable,Text,NullWritable,Text> im
 
     @Override
     public List<String> getKeys() {
-        return Lists.newArrayList("dnsRedList","conMinTime","conMaxTime","conAvgTime","dnsMinTime","dnsMaxTime","dnsAvgTime","revSpeed","revByte","socketErrorCnt","srvErrorCnt","srvCloseCnt","nooFileErrorCnt","timeOutCnt","conFailCnt","failCnt","sucCnt","taskCnt","host","url");  //To change body of implemented methods use File | Settings | File Templates.
+        return Lists.newArrayList("dnsRedList","conMinTime","conMaxTime","conAvgTime","dnsMinTime","dnsMaxTime","dnsAvgTime","revSpeed","revByte","socketErrorCnt","srvErrorCnt","srvCloseCnt","nooFileErrorCnt","timeOutCnt","conFailCnt","failCnt","sucCnt","taskCnt","host","url","id");  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

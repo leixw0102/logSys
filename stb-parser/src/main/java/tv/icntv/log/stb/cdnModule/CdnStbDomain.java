@@ -30,11 +30,29 @@ public class CdnStbDomain {
     private String cntvId="";
     private String host="";
     private String url="";
-    private String id="";
+    private String programId="";
     private String resolution="";
     private String startTime="";
     private String endTime="";
-    private String userIp="",taskCnt="",sucCnt="",failCnt="",conFailCnt="",timeOutCnt="",nooFileErrorCnt="",srvCloseCnt="",srvErrorCnt="",socketErrorCnt="",revByte="",revSpeed="",dnsAvgTime="",dnsMaxTime="",dnsMinTime="",conAvgTime="",conMaxTime="",conMinTime="",dnsRedList="";
+    private String mac;
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
+    }
+
+    private String id="", userIp="",taskCnt="",sucCnt="",failCnt="",conFailCnt="",timeOutCnt="",nooFileErrorCnt="",srvCloseCnt="",srvErrorCnt="",socketErrorCnt="",revByte="",revSpeed="",dnsAvgTime="",dnsMaxTime="",dnsMinTime="",conAvgTime="",conMaxTime="",conMinTime="",dnsRedList="";
+
+    public String getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
+    }
 
     private String mark1="";
     protected void getResolutionType(){
@@ -270,7 +288,9 @@ public class CdnStbDomain {
         try{
         this.getResolutionType();
         StringBuffer sb = new StringBuffer();
-        sb.append(this.getCntvId()).append("|")
+        sb.append(this.getId()).append("|")
+                .append(this.getCntvId()).append("|")
+                .append(this.getMac()).append("|")
                 .append(this.getUserIp()).append("|")
                 .append(this.getUrl()).append("|")
                 .append(this.getId()).append("|")
