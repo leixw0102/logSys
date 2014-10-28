@@ -58,6 +58,10 @@ public class CdnServerJob extends Configured implements Tool {
     @Override
     public int run(final String[] args) throws Exception {
         Configuration configuration = super.getConf();
+        configuration.set("mapreduce.output.fileoutputformat.compress","true");
+        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        configuration.set("mapreduce.map.output.compress","true");
+        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
 //        List<Path> inputs = Lists.newArrayList();
 //        for(String str:path){
 //            String fileName=MessageFormat.format(str,args[0],args[1]);
@@ -106,6 +110,7 @@ public class CdnServerJob extends Configured implements Tool {
 
     public static void main(String[]args) throws Exception {
         Configuration configuration = new Configuration();
+
         int result = ToolRunner.run(configuration, new CdnServerJob(), args);
         System.exit(result);
     }
