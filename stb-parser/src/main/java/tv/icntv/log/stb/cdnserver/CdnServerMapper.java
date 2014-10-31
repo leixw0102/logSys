@@ -18,6 +18,7 @@ package tv.icntv.log.stb.cdnserver;/*
  */
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import org.apache.hadoop.io.LongWritable;
@@ -77,26 +78,42 @@ public class CdnServerMapper extends Mapper<LongWritable,Text,Text,Text> {
 
     public static void main(String[]args) throws IOException, ParseException {
 
-        List<String> list=Files.readLines(new File("d:\\cdn-server"), Charsets.UTF_8);
-//        for(String line:list){
-
-        Matcher matcher = pattern.matcher(list.get(0));
-        int i=1;
-        while (matcher.find()) {
-             System.out.println(matcher.groupCount());
-//            if(i<=matcher.groupCount()){
-            System.out.println(matcher.group(1));
-            System.out.println(matcher.group(2));
-            System.out.println(matcher.group(3));
-            System.out.println();//,"dd/MM/yyyy:hh:mm:ss Z"));
-            System.out.println(matcher.group(4));
-            System.out.println(matcher.group(5));
-            System.out.println(matcher.group(6));
-            System.out.println(matcher.group(7));
-            System.out.println(matcher.group(8));
-            System.out.println(matcher.group(4).split(" ")[1]);
-//            }
-
-        }}}
-////        }
+        List<String> list=Files.readLines(new File("d:\\test.txt"), Charsets.UTF_8);
+        for(String st:list){
+            System.out.println(st);
+            List<String> list1 = Splitter.on(" ").splitToList(st);
+            for(int i=0;i<list1.size();i++){
+                if(i==7){
+                   String url = list1.get(i);
+                   if(url.endsWith("\"")){
+                       url = url.substring(0,url.length()-1);
+                   }
+                    System.out.println(i+"\t"+url);
+                }else{
+                System.out.println(i+"\t"+list1.get(i));
+                }
+            };
+        }
+        //        for(String line:list){
+//
+//        Matcher matcher = pattern.matcher(list.get(0));
+//        int i=1;
+//        while (matcher.find()) {
+//             System.out.println(matcher.groupCount());
+////            if(i<=matcher.groupCount()){
+//            System.out.println(matcher.group(1));
+//            System.out.println(matcher.group(2));
+//            System.out.println(matcher.group(3));
+//            System.out.println();//,"dd/MM/yyyy:hh:mm:ss Z"));
+//            System.out.println(matcher.group(4));
+//            System.out.println(matcher.group(5));
+//            System.out.println(matcher.group(6));
+//            System.out.println(matcher.group(7));
+//            System.out.println(matcher.group(8));
+//            System.out.println(matcher.group(4).split(" ")[1]);
+////            }
+//
+//        }}}
+        }
+}
 

@@ -62,6 +62,8 @@ public class CdnServerJob extends Configured implements Tool {
         configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
         configuration.set("mapreduce.map.output.compress","true");
         configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+//        configuration.setLong("mapred.min.split.size",1024*1024*1024L);
+        configuration.set("mapreduce.output.fileoutputformat.compress.type","BLOCK");
 //        List<Path> inputs = Lists.newArrayList();
 //        for(String str:path){
 //            String fileName=MessageFormat.format(str,args[0],args[1]);
@@ -95,7 +97,7 @@ public class CdnServerJob extends Configured implements Tool {
 
         Job cdnServerJob=Job.getInstance(configuration,"统分二期CDN SERVER日志解析 ");
         cdnServerJob.setJarByClass(this.getClass());
-        cdnServerJob.setMapperClass(CdnServerMapper.class);
+        cdnServerJob.setMapperClass(CdnServerParserMaper.class);
         cdnServerJob.setMapOutputKeyClass(org.apache.hadoop.io.Text.class);
         cdnServerJob.setMapOutputValueClass(org.apache.hadoop.io.Text.class);
         cdnServerJob.setReducerClass(CdnServerReducer.class);
