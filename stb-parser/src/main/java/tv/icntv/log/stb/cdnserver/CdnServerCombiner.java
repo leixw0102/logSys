@@ -18,15 +18,11 @@ package tv.icntv.log.stb.cdnserver;/*
  */
 
 import com.google.common.collect.Maps;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,15 +30,15 @@ import java.util.Set;
  * Created by leixw
  * <p/>
  * Author: leixw
- * Date: 2014/10/22
- * Time: 14:34
+ * Date: 2014/11/01
+ * Time: 20:26
  */
-public class CdnServerReducer extends Reducer<Text,Text,NullWritable,Text> {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+public class CdnServerCombiner extends Reducer<Text,Text, Text,Text> {
+
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-//        Iterator<Text> it = values.iterator();
-        Map<String,String> maps = new HashMap<String, String>(); //Maps.newHashMap();
+
+        Map<String,String> maps = Maps.newHashMap();
         for (Text text :values){
             String temp = text.toString();
             String[] vs = temp.split("\\|");
@@ -52,14 +48,9 @@ public class CdnServerReducer extends Reducer<Text,Text,NullWritable,Text> {
             }
             maps.put(tempKey,vs[2]+"|"+vs[3]);
         }
-//        logger.info("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
-//        System.out.println("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
-        CdnServer server = new CdnServer();
-        Set<String> sets=maps.keySet();
-        for(String str:sets){
-           CdnServer temp = server.clone();
-            temp.parser(key.toString()+"|"+str+"|"+maps.get(str));
-            context.write(NullWritable.get(),new Text(temp.toString()));
+        Set<String> sets = maps.keySet();
+        for(String k : sets){
+            context.write(key,new Text(k+"|"+maps.get(k)));
         }
     }
 }

@@ -39,31 +39,7 @@
         <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
         <description>The FileSystem for hdfs: uris.</description>
     </property>
-    <property>
-        <name>mapreduce.output.fileoutputformat.compress</name>
-        <value>true</value>
-        <description>Should the job outputs be compressed?
-        </description>
-    </property>
-    <property>
-        <name>mapreduce.output.fileoutputformat.compress.codec</name>
-        <value>com.hadoop.compression.lzo.LzopCodec</value>
-    </property>
-    <property>
-        <name>mapreduce.map.output.compress</name>
-        <value>true</value>
-        <description>Should the outputs of the maps be compressed before being
-            sent across the network. Uses SequenceFile compression.
-        </description>
-    </property>
 
-    <property>
-        <name>mapreduce.map.output.compress.codec</name>
-        <value>com.hadoop.compression.lzo.LzopCodec</value>
-        <description>If the map outputs are compressed, how should they be
-            compressed?
-        </description>
-    </property>
     <property>
         <name>mapreduce.map.speculative</name>
         <value>true</value>

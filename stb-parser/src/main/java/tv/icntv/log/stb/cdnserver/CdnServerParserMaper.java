@@ -55,11 +55,11 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String v = value.toString();
-        if (Strings.isNullOrEmpty(v)) {
+        if (Strings.isNullOrEmpty(v) ) {
             return;
         }
         List<String> results = Lists.newArrayList(Splitter.on(" ").split(v));
-        if (null == results || results.isEmpty() || results.size() != 15) {
+        if (null == results || results.isEmpty() || results.size() != 15 || Strings.isNullOrEmpty(results.get(0))) {
             logger.error("cdn server log error size "+results.size());
             return;
         }
@@ -86,6 +86,8 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
         String ua = results.get(12) + " " + results.get(13) + " " + results.get(14);
         try {
             String mValue = results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;
+//            logger.info("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
+//            System.out.println("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
             context.write(new Text(k), new Text(mValue));
         } catch (ParseException e) {
             logger.error(" parser time error", e);
@@ -94,48 +96,6 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
 
     }
 
-    public static void main(String[] args) throws IOException {
-        List<String> values = Files.readLines(new File("d:\\test.txt"), Charsets.UTF_8);
-        for (String value : values) {
-            String v = value.toString();
-            if (Strings.isNullOrEmpty(v)) {
-                return;
-            }
-            List<String> results = Lists.newArrayList(Splitter.on(" ").split(v));
-            if (null == results || results.isEmpty() || results.size() != 15) {
-                System.out.println("...");
-                continue;
-            }
-            String icntvId = results.get(12).split("#")[0];
 
-            if (Strings.isNullOrEmpty(icntvId) ) {
-
-                continue;
-            }
-                icntvId = icntvId.replace("\"","");
-            if(!icntvId.matches("\\d{15}")){
-                continue;
-            }
-            String url = results.get(7);
-            if (url.endsWith("\"")) {
-                url = url.substring(0, url.length() - 1);
-            }
-            String k = icntvId + split + results.get(0) + split + url;
-            String time = results.get(4) + " " + results.get(5);
-            if (Strings.isNullOrEmpty(time)) {
-                return;
-            }
-            time = time.replace("[", "").replace("]", "");
-            String ua = results.get(12) + " " + results.get(13) + " " + results.get(14);
-            try {
-                String mValue = results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;
-//            context.write(new Text(k),new Text(mValue));
-                System.out.println(k + "\t" + mValue);
-            } catch (ParseException e) {
-                System.out.println(" parser time error" + e);
-                return;
-            }
-        }
-    }
 
 }

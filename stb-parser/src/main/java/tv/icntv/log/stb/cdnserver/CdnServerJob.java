@@ -17,23 +17,23 @@ package tv.icntv.log.stb.cdnserver;/*
  * under the License.
  */
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.hadoop.mapreduce.LzoTextInputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.icntv.log.stb.commons.HadoopUtils;
+import org.apache.hadoop.io.Text;
 
-import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public class CdnServerJob extends Configured implements Tool {
         configuration.set("mapreduce.map.output.compress","true");
         configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
 //        configuration.setLong("mapred.min.split.size",1024*1024*1024L);
-        configuration.set("mapreduce.output.fileoutputformat.compress.type","BLOCK");
+//        configuration.set("mapreduce.output.fileoutputformat.compress.type","BLOCK");
 //        List<Path> inputs = Lists.newArrayList();
 //        for(String str:path){
 //            String fileName=MessageFormat.format(str,args[0],args[1]);
@@ -95,14 +95,16 @@ public class CdnServerJob extends Configured implements Tool {
 //            return 1;
 //        }
 
-        Job cdnServerJob=Job.getInstance(configuration,"统分二期CDN SERVER日志解析 ");
+        Job cdnServerJob=Job.getInstance(configuration,"统分二期CDN SERVER日志解析 "+args[0]);
         cdnServerJob.setJarByClass(this.getClass());
+        cdnServerJob.setInputFormatClass(LzoTextInputFormat.class);
         cdnServerJob.setMapperClass(CdnServerParserMaper.class);
-        cdnServerJob.setMapOutputKeyClass(org.apache.hadoop.io.Text.class);
-        cdnServerJob.setMapOutputValueClass(org.apache.hadoop.io.Text.class);
+        cdnServerJob.setMapOutputKeyClass(Text.class);
+        cdnServerJob.setMapOutputValueClass(Text.class);
         cdnServerJob.setReducerClass(CdnServerReducer.class);
         cdnServerJob.setOutputKeyClass(NullWritable.class);
-        cdnServerJob.setOutputValueClass(org.apache.hadoop.io.Text.class);
+        cdnServerJob.setOutputValueClass(Text.class);
+        cdnServerJob.setCombinerClass(CdnServerCombiner.class);
 //        cdnServerJob.setNumReduceTasks(7);
 //        FileInputFormat.setInputPaths(cdnServerJob, inputs.toArray(new Path[inputs.size()]));
         FileInputFormat.setInputPaths(cdnServerJob,new Path(args[0]));
