@@ -29,7 +29,7 @@ public class CdnAdapterDomain {
     private String seekTimeAverTimeCost;
     private String playTotalTimeCost;
     private String buffCount;
-    private String buffAverTimeCost;
+    private String buffAverTimeCost;    //ms
     private String error;
     private String icntvId;
 

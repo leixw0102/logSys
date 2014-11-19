@@ -293,7 +293,7 @@ public class CdnStbDomain {
                 .append(this.getMac()).append("|")
                 .append(this.getUserIp()).append("|")
                 .append(this.getUrl()).append("|")
-                .append(this.getId()).append("|")
+                .append(this.getProgramId()).append("|")
                 .append(this.getResolution()).append("|")
                 .append(this.getStartTime()).append("|")
                 .append(this.getEndTime()).append("|")
@@ -314,8 +314,9 @@ public class CdnStbDomain {
                 .append(this.getDnsMinTime()).append("|")
                 .append(this.getConAvgTime()).append("|")
                 .append(this.getConMaxTime()).append("|")
-                .append(this.getDnsRedList()).append("|")
-                .append(this.getMark1());
+                .append(this.getConMinTime()).append("|")
+                .append(this.getDnsRedList()).append("|");
+//                .append(this.getMark1());
         return sb.toString();
         }catch (Exception e){
             e.printStackTrace();

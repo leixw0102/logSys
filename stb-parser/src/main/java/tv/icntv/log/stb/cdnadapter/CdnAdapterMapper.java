@@ -90,9 +90,13 @@ public class CdnAdapterMapper  extends Mapper<LongWritable,Text,NullWritable,Tex
         cdnAdapterDomain.setPlayTotalTimeCost(StringsUtils.getLogParam(
                 PlayTotalTimeCost, EQUAL_SIGN,
                 AND, content));
-        cdnAdapterDomain.setError(StringsUtils.getLogParam(
+        String error =  StringsUtils.getLogParam(
                 Error, EQUAL_SIGN,
-                AND, content));
+                AND, content);
+//        if(!"no".equalsIgnoreCase(error) && error.length()>10){
+//            return ;
+//        }
+        cdnAdapterDomain.setError(error);
         context.write(NullWritable.get(),new Text(cdnAdapterDomain.toString()));
     }
 }
