@@ -17,7 +17,6 @@ package tv.icntv.log.stb.cdnserver;/*
  * under the License.
  */
 
-import com.google.common.collect.Maps;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,24 +34,23 @@ import java.util.Set;
  * Author: leixw
  * Date: 2014/10/22
  * Time: 14:34
+ *  * key = icntv+ip  + url
+ * value=  ip sliceSize status  time  useragent
  */
 public class CdnServerReducer extends Reducer<Text,Text,NullWritable,Text> {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-//        Iterator<Text> it = values.iterator();
         Map<String,String> maps = new HashMap<String, String>(); //Maps.newHashMap();
         for (Text text :values){
             String temp = text.toString();
             String[] vs = temp.split("\\|");
-            String tempKey=vs[0].trim()+"|"+vs[1].trim();
+            String tempKey=vs[1].trim()+"|"+vs[2].trim();
             if(maps.containsKey(tempKey)){
                 continue;
             }
-            maps.put(tempKey,vs[2]+"|"+vs[3]);
+            maps.put(tempKey,vs[3]+"|"+vs[4]+"|"+vs[0]);
         }
-//        logger.info("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
-//        System.out.println("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
         CdnServer server = new CdnServer();
         Set<String> sets=maps.keySet();
         for(String str:sets){

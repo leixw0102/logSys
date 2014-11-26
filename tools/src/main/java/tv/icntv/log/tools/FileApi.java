@@ -117,7 +117,11 @@ public class FileApi implements Api {
             System.out.println(fileStatuses.length);
             outputStream=fileSystem.create(output,true,40960);
             for(FileStatus status:fileStatuses){
-                reader=new BufferedReader(new InputStreamReader(lzopInputStream.createInputStream(fileSystem.open(status.getPath())),"utf-8"));
+                if(regular.endsWith("lzo")){
+                    reader=new BufferedReader(new InputStreamReader(lzopInputStream.createInputStream(fileSystem.open(status.getPath())),"utf-8"));
+                } else {
+                    reader = new BufferedReader(new InputStreamReader(fileSystem.open(status.getPath())));
+                }
                 String line=null;
                 while(null != (line=reader.readLine())){
                     byte[] lineByte=(line+"\r\n").getBytes("utf-8");

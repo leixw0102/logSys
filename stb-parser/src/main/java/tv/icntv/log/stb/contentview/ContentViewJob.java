@@ -14,6 +14,14 @@ package tv.icntv.log.stb.contentview;/*
  *      limitations under the License.
  */
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.ToolRunner;
 import tv.icntv.log.stb.core.AbstractJob;
 
 import java.util.Map;
@@ -28,8 +36,29 @@ import java.util.Map;
 public class ContentViewJob extends AbstractJob {
     @Override
     public boolean run(Map<String, String> maps) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+
         return true;
     }
 
+    @Override
+    public int run(String[] args) throws Exception {
+
+        Configuration configuration=getConf();
+        Job contentViewJob= Job.getInstance(configuration, "content view test");
+        contentViewJob.setMapperClass(ContentViewMapper.class);
+        contentViewJob.setJarByClass(this.getClass());
+        contentViewJob.setOutputKeyClass(NullWritable.class);
+        contentViewJob.setOutputValueClass(Text.class);
+
+        FileInputFormat.addInputPath(contentViewJob, new Path(args[0]));
+        FileOutputFormat.setOutputPath(contentViewJob, new Path(args[1]));
+        contentViewJob.setNumReduceTasks(0);
+        return contentViewJob.waitForCompletion(true)?0:1;
+    }
+
+    public static void main(String[]args) throws Exception {
+        Configuration configuration = new Configuration();
+        int i=ToolRunner.run(configuration,new ContentViewJob(),args);
+        System.exit(i);
+    }
 }

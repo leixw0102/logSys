@@ -24,10 +24,9 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
-import tv.icntv.log.stb.cdn.CdnModuleMapper;
 import tv.icntv.log.stb.cdnModule.CdnStbMapper;
 import tv.icntv.log.stb.cdnadapter.CdnAdapterMapper;
-import tv.icntv.log.stb.contentview.ContentViewMapper;
+import tv.icntv.log.stb.contentview.ContentViewMapperBack;
 import tv.icntv.log.stb.core.AbstractJob;
 import tv.icntv.log.stb.epgoperate.EPGOperateMapper;
 import tv.icntv.log.stb.login.ParserLoginMapper;
@@ -77,7 +76,7 @@ public class GenerateStbLogJob extends AbstractJob {
         //contentView
         Job contentView = Job.getInstance(configuration,"content view job");
         contentView.setJarByClass(getClass());
-        contentView.setMapperClass(ContentViewMapper.class);
+        contentView.setMapperClass(ContentViewMapperBack.class);
         contentView.setOutputKeyClass(NullWritable.class);
         contentView.setOutputValueClass(Text.class);
         //System.out.println(MessageFormat.format(maps.get(OUTPUT_PREFIX),day)+MessageFormat.format(maps.get(CONTENT_VIEW_JOB_INPUT),configuration.getLong(FILTER_TIME,0L)));

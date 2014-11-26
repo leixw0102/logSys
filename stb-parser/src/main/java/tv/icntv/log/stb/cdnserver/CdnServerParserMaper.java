@@ -17,25 +17,21 @@ package tv.icntv.log.stb.cdnserver;/*
  * under the License.
  */
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
 
 /**
  * Created by leixw
@@ -44,7 +40,7 @@ import java.util.regex.Matcher;
  * Date: 2014/10/30
  * Time: 12:52
  * * key = icntv+ip  + url
- * value=  sliceSize status  time  useragent
+ * value=  ip sliceSize status  time  useragent
  */
 public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text> {
     private static String split = "|";
@@ -85,7 +81,7 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
         time = time.replace("[", "").replace("]", "");
         String ua = results.get(12) + " " + results.get(13) + " " + results.get(14);
         try {
-            String mValue = results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;
+            String mValue = results.get(1)+split+results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;
 //            logger.info("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
 //            System.out.println("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
             context.write(new Text(k), new Text(mValue));

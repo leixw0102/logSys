@@ -131,18 +131,19 @@ public class CdnServer  {
     }
 
     /**
-     * icntv+url+ip+sliceSize+status+time+ua
+     * icntv+ip  + url+ ip+sliceSize+status+time+ua
      * @param value
      */
     public void parser(String value){
         String[] vs=value.split("\\|");
         this.setIcntvId(vs[0]);
-        this.setDomain(vs[1]);
-        this.setUserIp(vs[2]);
+        this.setDomain(vs[2]);
+        this.setUserIp(vs[1]);
         this.setSliceSize(vs[3]);
 //        this.setTime(DateUtils.getFormatDate(vs[5], DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
         this.setTime(vs[5]);
         this.setUa(vs[6]);
+        this.setMark1(vs[7]);
     }
 
     @Override
