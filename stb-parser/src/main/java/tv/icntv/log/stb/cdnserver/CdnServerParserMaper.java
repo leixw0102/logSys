@@ -81,9 +81,7 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
         time = time.replace("[", "").replace("]", "");
         String ua = results.get(12) + " " + results.get(13) + " " + results.get(14);
         try {
-            String mValue = results.get(1)+split+results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;
-//            logger.info("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
-//            System.out.println("writed ..."+context.getMaxMapAttempts()+"\t"+context.getMaxReduceAttempts());
+            String mValue = results.get(1) + split + results.get(9) + split + results.get(8) + split + formatCN.format(format.parse(time)) + split + ua;//results.get(1)+split+
             context.write(new Text(k), new Text(mValue));
         } catch (ParseException e) {
             logger.error(" parser time error", e);

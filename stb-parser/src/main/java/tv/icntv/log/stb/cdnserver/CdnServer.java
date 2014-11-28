@@ -139,11 +139,11 @@ public class CdnServer  {
         this.setIcntvId(vs[0]);
         this.setDomain(vs[2]);
         this.setUserIp(vs[1]);
-        this.setSliceSize(vs[3]);
+        this.setSliceSize(vs[4]);
 //        this.setTime(DateUtils.getFormatDate(vs[5], DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-        this.setTime(vs[5]);
-        this.setUa(vs[6]);
-        this.setMark1(vs[7]);
+        this.setTime(vs[6]);
+        this.setUa(vs[7]);
+        this.setMark1(vs[3]);
     }
 
     @Override

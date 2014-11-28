@@ -45,11 +45,14 @@ public class CdnServerReducer extends Reducer<Text,Text,NullWritable,Text> {
         for (Text text :values){
             String temp = text.toString();
             String[] vs = temp.split("\\|");
-            String tempKey=vs[1].trim()+"|"+vs[2].trim();
+            if(null == vs || vs.length !=5){
+                continue;
+            }
+            String tempKey=vs[0].trim()+"|"+vs[1].trim()+"|"+vs[2].trim();
             if(maps.containsKey(tempKey)){
                 continue;
             }
-            maps.put(tempKey,vs[3]+"|"+vs[4]+"|"+vs[0]);
+            maps.put(tempKey,vs[3]+"|"+vs[4]);//+"|"+vs[0]);
         }
         CdnServer server = new CdnServer();
         Set<String> sets=maps.keySet();

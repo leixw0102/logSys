@@ -42,11 +42,14 @@ public class CdnServerCombiner extends Reducer<Text,Text, Text,Text> {
         for (Text text :values){
             String temp = text.toString();
             String[] vs = temp.split("\\|");
-            String tempKey=vs[0].trim()+"|"+vs[1].trim();
+            if(null == vs || vs.length!=5){
+                continue;
+            }
+            String tempKey=vs[0].trim()+"|"+vs[1].trim()+"|"+vs[2].trim();
             if(maps.containsKey(tempKey)){
                 continue;
             }
-            maps.put(tempKey,vs[2]+"|"+vs[3]);
+            maps.put(tempKey,vs[3]+"|"+vs[4]);
         }
         Set<String> sets = maps.keySet();
         for(String k : sets){
