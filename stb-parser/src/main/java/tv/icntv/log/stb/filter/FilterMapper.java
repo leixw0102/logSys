@@ -112,7 +112,8 @@ public class FilterMapper extends Mapper<LongWritable,Text,NullWritable,Text> {
         }
         // TODO Auto-generated method stub
         return lineSplit.get(0).matches("\\d{36}") && lineSplit.get(2).matches("(\\d*)") && lineSplit.get(3).matches("\\d{15}")
-                &&lineSplit.get(7).matches("[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}")
+                //&&lineSplit.get(7).matches("[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}")
+                //&&lineSplit.get(7).matches("([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3},?).*")
                 &&lineSplit.get(8).matches("\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{0,3}")
                 &&lineSplit.get(9).matches("\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{0,3}")
                 &&lineSplit.get(10).matches("\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{0,3}")
