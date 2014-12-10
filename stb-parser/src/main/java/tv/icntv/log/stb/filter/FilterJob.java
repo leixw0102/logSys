@@ -15,6 +15,7 @@ package tv.icntv.log.stb.filter;/*
  */
 
 
+import com.google.common.collect.Lists;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
@@ -26,9 +27,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
+import org.joda.time.DateTime;
 import tv.icntv.log.stb.commons.HadoopUtils;
 import tv.icntv.log.stb.core.AbstractJob;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,12 +99,21 @@ public class FilterJob extends AbstractJob{
             logger.info("input not exist;");
             return false;
         }
+        List<Path> inTemp = Lists.newArrayList(in);
+        String day=DateTime.now().toString("yyyy-MM-dd");
+        Path nextPath = new Path(input.getParent()+ File.separator+day ,"stb-"+day+"-00.lzo");
+        if(HadoopUtils.isExist(new Path(nextPath,".writed"))){
+            logger.info("add today path= {}",nextPath.toString());
+            inTemp.add(nextPath);
+        }
+        logger.info("input size = {}",inTemp.size());
+//        inTemp.add(new Path(input.getParent()+ File.separator+ DateTime.now().toString("yyyy-MM-dd"),"")
         Job stbFilterJob = Job.getInstance(configuration,"stb parser first:filter by rule file");
         //setting job configuration .....
         stbFilterJob.setMapperClass(FilterMapper.class);
         stbFilterJob.setOutputKeyClass(NullWritable.class);
         stbFilterJob.setOutputValueClass(Text.class);
-        FileInputFormat.setInputPaths(stbFilterJob, in);
+        FileInputFormat.setInputPaths(stbFilterJob, inTemp.toArray(new Path[inTemp.size()]));
         stbFilterJob.setJarByClass(getClass());
 
         FileOutputFormat.setOutputPath(stbFilterJob, output);

@@ -127,18 +127,19 @@ public class Test implements LoginConstant{
 
 
     public static void main(String[]args) throws IOException {
-
+        Path abc=new Path("/d/d/sd/df/","dsfsd.lzo");
+        System.out.println(abc.toString());
 //		 List<String>	lines=Files.readLines(new File("d:\\useroperepginfo_20140625.dat"),Charsets.UTF_8);
 //	    Set s= Sets.newHashSet();
 //	    for(String line:lines){
 //		    s.add(Splitter.on("|").splitToList(line).get(7));
 //	    }
-        Pattern pattern = Pattern.compile("(.*)|(.*)");
-        String abc="sdf|dsf|dfdd|[s|b]";
-        Iterator<String> it=Splitter.on("|").limit(4).split(abc).iterator();
-        while(it.hasNext()){
-            System.out.println(it.next());
-        }
+//        Pattern pattern = Pattern.compile("(.*)|(.*)");
+//        String abc="sdf|dsf|dfdd|[s|b]";
+//        Iterator<String> it=Splitter.on("|").limit(4).split(abc).iterator();
+//        while(it.hasNext()){
+//            System.out.println(it.next());
+//        }
 //	    System.out.print("aaa\rbbb\rccc".split("\r").length);
 //        List<String> lines=Files.readLines(new File("d:\\userLogin-m-00023"), Charsets.UTF_8);
 //        System.out.println(lines.size());
