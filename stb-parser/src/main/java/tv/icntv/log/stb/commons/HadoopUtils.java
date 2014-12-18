@@ -150,6 +150,27 @@ public class HadoopUtils {
             }
         }
     }
+
+    public static boolean isLzo(Path path) throws IOException {
+        FileSystem fileSystem = null;
+        try{
+            fileSystem=FileSystem.get(configuration);
+            Path[] paths = FileUtil.stat2Paths(fileSystem.listStatus(path));
+            for(Path p : paths){
+                if(!p.getName().contains(".lzo")){
+                    return false;
+                }
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally{
+            if(null != fileSystem){
+                fileSystem.close();
+            }
+        }
+        return true;
+    }
     public static void main(String[]args) throws IOException {
         System.out.print(args.length+"\t"+args[0]+"\t"+args[1]);
         // mv(new Path(args[0]),new Path(args[1]));

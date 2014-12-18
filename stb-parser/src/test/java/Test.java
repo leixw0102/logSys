@@ -128,7 +128,7 @@ public class Test implements LoginConstant{
 
     public static void main(String[]args) throws IOException {
         Path abc=new Path("/d/d/sd/df","dsfsd.lzo");
-        System.out.println(abc.toString());
+        System.out.println(abc.getName());
 //		 List<String>	lines=Files.readLines(new File("d:\\useroperepginfo_20140625.dat"),Charsets.UTF_8);
 //	    Set s= Sets.newHashSet();
 //	    for(String line:lines){

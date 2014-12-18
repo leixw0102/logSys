@@ -28,8 +28,10 @@ import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.ToolRunner;
 import org.joda.time.DateTime;
+import tv.icntv.log.stb.commons.DateUtils;
 import tv.icntv.log.stb.commons.HadoopUtils;
 import tv.icntv.log.stb.core.AbstractJob;
+import tv.icntv.log.stb.util.DateUtil;
 
 import java.io.File;
 import java.util.List;
@@ -100,15 +102,17 @@ public class FilterJob extends AbstractJob{
             return false;
         }
         List<Path> inTemp = Lists.newArrayList(in);
-        String day=DateTime.now().toString("yyyy-MM-dd");
-        Path nextPath = new Path(input.getParent() ,"stb-"+day+"-00.lzo");
-        logger.info("next path ={},writed path={}",nextPath.toString(),new Path(input.getParent(),"stb-"+day+"-00.lzo.writed"));
-        if(HadoopUtils.isExist(new Path(input.getParent(),"stb-"+day+"-00.lzo.writed"))){
+        String ye=DateUtils.addDay(input.getName(),"yyyy-MM-dd",-1);
+        inTemp.add(new Path(input.getParent()+File.separator+ye,"stb-"+ye+"-23.lzo"));
+
+        String day= DateUtils.addDay(input.getName(),"yyyy-MM-dd",1);
+        Path nextPath = new Path(input.getParent()+File.separator+day ,"stb-"+day+"-00.lzo");
+        logger.info("next path ={},writed path={}",nextPath.toString(),new Path(input.getParent()+File.separator+day,"stb-"+day+"-00.lzo.writed"));
+        if(HadoopUtils.isExist(new Path(input.getParent()+File.separator+day,"stb-"+day+"-00.lzo.writed"))){
             logger.info("add today path= {}",nextPath.toString());
             inTemp.add(nextPath);
-        } else {
-
         }
+
         logger.info("input size = {}",inTemp.size());
 //        inTemp.add(new Path(input.getParent()+ File.separator+ DateTime.now().toString("yyyy-MM-dd"),"")
         Job stbFilterJob = Job.getInstance(configuration,"stb parser first:filter by rule file");

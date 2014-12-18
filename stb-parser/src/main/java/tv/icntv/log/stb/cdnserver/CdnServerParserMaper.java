@@ -31,6 +31,7 @@ import tv.icntv.log.stb.core.ParserConstant;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,10 +52,18 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
     static DateFormat formatCN = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.CHINA);
     static DateFormat format = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss Z", Locale.US);
     private static Logger logger = LoggerFactory.getLogger(CdnServerParserMaper.class);
-
+    public static Text transformTextToUTF8(Text text, String encoding) {
+        String value = null;
+        try {
+            value = new String(text.getBytes(), 0, text.getLength(), encoding);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return new Text(value);
+    }
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String v = value.toString();
+        String v = transformTextToUTF8(value,"gbk").toString();
         if (Strings.isNullOrEmpty(v)) {
             return;
         }
@@ -69,10 +78,10 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
             return;
         }
         icntvId = icntvId.replace("\"", "");
-        if (!icntvId.matches("\\d{15}")) {
-            logger.error("icntvId ={} error", icntvId);
-            return;
-        }
+//        if (!icntvId.matches("\\d{15}")) {
+//            logger.error("icntvId ={} error", icntvId);
+//            return;
+//        }
         String url = results.get(7);
         if (url.endsWith("\"")) {
             url = url.substring(0, url.length() - 1);
@@ -113,8 +122,9 @@ public class CdnServerParserMaper extends Mapper<LongWritable, Text, Text, Text>
 //        List<String> str = Files.readLines(new File("d:\\abc.txt"), Charsets.UTF_8);
 //        for (String v : str) {
         String v="015168004002859201412032111331580000/20141203211133157/0/015168004002859////10.207.43.154, 117.136.29.137/2014-12-03 21:11:33 157/2014-12-03 21:11:33 157/2014-12-03 21:11:33 158/2014-12-03 21:11:33 158/1/900/ConsumAction/catgId=219109, startDate=, endReason=, deviceCode=015168004002859, endDate=2014-12-03 21:11:33 157, contentType=MOVIE, videoType=, id=, programId=9989870, bufferingTotalTime=, programSeriesName=, bufferingCnt=, chargeType=0, epgCode=, outerCode=983404, ipAddress=, programName=";
-        List<String> lineSplit=Lists.newArrayList(Splitter.on(ParserConstant.STB_SPLITER).limit(16).split(v.toString()));
-        System.out.println(lineSplit.get(7).matches("([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3},?).*")+"\t"+lineSplit.get(7));
+        System.out.println( new String(v.getBytes(), 0, v.length(), "gbk"));
+//        List<String> lineSplit=Lists.newArrayList(Splitter.on(ParserConstant.STB_SPLITER).limit(16).split(v.toString()));
+//        System.out.println(lineSplit.get(7).matches("([\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3}\\.[\\d]{1,3},?).*")+"\t"+lineSplit.get(7));
 //        for(int i=0;i<lineSplit.size();i++){
 //            System.out.println(lineSplit.get(i) + lineSplit);
 //        }

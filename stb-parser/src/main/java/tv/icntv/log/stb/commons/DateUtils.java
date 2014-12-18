@@ -41,6 +41,10 @@ public class DateUtils {
             return "";
         }
     }
+
+    public static String addDay(String day,String format,int i){
+        return DateTime.parse(day).plusDays(i).toString(format);
+    }
     public static String getFormatDate(String dateStr){
         return getFormatDate(dateStr,defaultFormat);
     }
@@ -61,6 +65,7 @@ public class DateUtils {
     }
 
     public static void main(String []args){
-        System.out.println(getFormatDate("2014-10-22 00:32:21",defaultFormat,DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+//        System.out.println(getFormatDate("2014-10-22 00:32:21",defaultFormat,DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+//        System.out.println(addDay("2014-12-31","yyyy-MM-dd","yyyy-MM-dd",1));
     }
 }
