@@ -103,8 +103,12 @@ public class FilterJob extends AbstractJob{
         }
         List<Path> inTemp = Lists.newArrayList(in);
         String ye=DateUtils.addDay(input.getName(),"yyyy-MM-dd",-1);
-        inTemp.add(new Path(input.getParent()+File.separator+ye,"stb-"+ye+"-23.lzo"));
-
+        Path prefix=new Path(input.getParent()+File.separator+ye,"stb-"+ye+"-23.lzo");
+        logger.info("prefix path ={}",prefix.toString());
+        if(HadoopUtils.isExist(prefix)){
+            logger.info("add today path= {}",prefix.toString());
+            inTemp.add(prefix);
+        }
         String day= DateUtils.addDay(input.getName(),"yyyy-MM-dd",1);
         Path nextPath = new Path(input.getParent()+File.separator+day ,"stb-"+day+"-00.lzo");
         logger.info("next path ={},writed path={}",nextPath.toString(),new Path(input.getParent()+File.separator+day,"stb-"+day+"-00.lzo.writed"));

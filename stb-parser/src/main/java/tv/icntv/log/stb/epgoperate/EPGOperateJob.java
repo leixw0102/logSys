@@ -15,6 +15,13 @@
  */
 package tv.icntv.log.stb.epgoperate;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import tv.icntv.log.stb.core.AbstractJob;
 
 import java.util.Map;
@@ -30,4 +37,24 @@ public class EPGOperateJob extends AbstractJob {
 	public boolean run(Map<String, String> maps) throws Exception {
 		return true;
 	}
+
+    @Override
+    public int run(String[] args) throws Exception {
+
+        Configuration configuration=getConf();
+        configuration.set("mapreduce.output.fileoutputformat.compress","true");
+        configuration.set("mapreduce.output.fileoutputformat.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        configuration.set("mapreduce.map.output.compress","true");
+        configuration.set("mapreduce.map.output.compress.codec","com.hadoop.compression.lzo.LzopCodec");
+        Job contentViewJob= Job.getInstance(configuration, "content view test");
+        contentViewJob.setMapperClass(EPGOperateMapper.class);
+        contentViewJob.setJarByClass(this.getClass());
+        contentViewJob.setOutputKeyClass(NullWritable.class);
+        contentViewJob.setOutputValueClass(Text.class);
+
+        FileInputFormat.addInputPath(contentViewJob, new Path(args[0]));
+        FileOutputFormat.setOutputPath(contentViewJob, new Path(args[1]));
+        contentViewJob.setNumReduceTasks(0);
+        return contentViewJob.waitForCompletion(true)?0:1;
+    }
 }

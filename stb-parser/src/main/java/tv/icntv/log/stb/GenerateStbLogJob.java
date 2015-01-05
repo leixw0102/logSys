@@ -28,7 +28,7 @@ import tv.icntv.log.stb.cdnModule.CdnStbMapper;
 import tv.icntv.log.stb.cdnadapter.CdnAdapterMapper;
 import tv.icntv.log.stb.contentview.ContentViewMapperBack;
 import tv.icntv.log.stb.core.AbstractJob;
-import tv.icntv.log.stb.epgoperate.EPGOperateMapper;
+import tv.icntv.log.stb.epgoperate.EPGOperateMapperVersion1;
 import tv.icntv.log.stb.login.ParserLoginMapper;
 import tv.icntv.log.stb.player.PlayerMapper;
 import tv.icntv.log.stb.replay.ReplayMapper;
@@ -102,7 +102,7 @@ public class GenerateStbLogJob extends AbstractJob {
         //logEpg
         Job logEpg=Job.getInstance(configuration,"log epg job");
         logEpg.setJarByClass(getClass());
-        logEpg.setMapperClass(EPGOperateMapper.class);
+        logEpg.setMapperClass(EPGOperateMapperVersion1.class);
         logEpg.setOutputKeyClass(NullWritable.class);
         logEpg.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(logEpg, new Path(maps.get(LOG_EPG_JOB_INPUT)));
