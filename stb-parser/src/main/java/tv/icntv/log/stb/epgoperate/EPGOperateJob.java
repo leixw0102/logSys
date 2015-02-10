@@ -22,6 +22,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.ToolRunner;
 import tv.icntv.log.stb.core.AbstractJob;
 
 import java.util.Map;
@@ -56,5 +57,11 @@ public class EPGOperateJob extends AbstractJob {
         FileOutputFormat.setOutputPath(contentViewJob, new Path(args[1]));
         contentViewJob.setNumReduceTasks(0);
         return contentViewJob.waitForCompletion(true)?0:1;
+    }
+    public static void main(String[]args) throws Exception {
+        Configuration configuration = new Configuration();
+        int result = ToolRunner.run(configuration,new EPGOperateJob(),args);
+        System.exit(result);
+
     }
 }

@@ -21,6 +21,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import tv.icntv.log.stb.commons.DateUtils;
 import tv.icntv.log.stb.commons.StringsUtils;
 
 import java.io.IOException;
@@ -92,7 +93,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
         //EPGOperateDomain epgOperateDomain = new EPGOperateDomain();
         StringBuffer resultBuffer = new StringBuffer();
         //--1.cntvid
-        resultBuffer.append(values[3].trim());
+        resultBuffer.append(values[3].trim()).append(SPLIT);
 
         if(PAGE_NAME_PANEL.equalsIgnoreCase(StringUtils.substringAfter(contentArr[0].trim(), EQUAL_SIGN))){
             if("URL=panelhome".equalsIgnoreCase(contentArr[1].trim())&&contentArr.length==2){
@@ -304,7 +305,7 @@ public class EPGOperateMapper extends Mapper<LongWritable,Text,NullWritable,Text
         }
 
         //--12.opTime
-        resultBuffer.append(values[10].trim()).append(SPLIT);
+        resultBuffer.append(DateUtils.getFormatDate(values[10].trim())).append(SPLIT);
         //--13.DataSource
         resultBuffer.append(DATA_SOURCE).append(SPLIT);
         //--14.Fsource
